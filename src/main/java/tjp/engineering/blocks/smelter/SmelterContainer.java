@@ -10,6 +10,43 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class SmelterContainer extends Container {
+	
+	public class SmeltableSlotHandler extends SlotItemHandler {
+		public SmeltableSlotHandler(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+			super(itemHandler, index, xPosition, yPosition);
+		}
+		
+		@Override
+		public boolean isItemValid(ItemStack stack) {
+			return SmelterTileEntity.isItemValidInput(stack);
+		}
+	}
+	
+	public class FuelSlotHandler extends SlotItemHandler {
+		public FuelSlotHandler(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+			super(itemHandler, index, xPosition, yPosition);
+		}
+		
+		@Override
+		public boolean isItemValid(ItemStack stack) {
+			return SmelterTileEntity.isItemValidFuel(stack);
+		}
+	}
+	
+	public class OutputSlotHandler extends SlotItemHandler {
+		public OutputSlotHandler(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+			super(itemHandler, index, xPosition, yPosition);
+		}
+		
+		@Override
+		public boolean isItemValid(ItemStack stack) {
+			//return SmelterTileEntity.isItemValidOutput(stack);
+			// NO!
+			return false;
+		}
+	}
+	
+	
 	private SmelterTileEntity te;
 	
 	
@@ -42,11 +79,11 @@ public class SmelterContainer extends Container {
 		IItemHandler itemHandler = this.te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 		
 		//Fuel Slot
-		addSlotToContainer(new SlotItemHandler(itemHandler, 0, 56, 53));
+		addSlotToContainer(new FuelSlotHandler(itemHandler, 0, 56, 53));
 		//Input Slot
-		addSlotToContainer(new SlotItemHandler(itemHandler, 1, 56, 17));
+		addSlotToContainer(new SmeltableSlotHandler(itemHandler, 1, 56, 17));
 		//Output Slot
-		addSlotToContainer(new SlotItemHandler(itemHandler, 2, 116, 35));
+		addSlotToContainer(new OutputSlotHandler(itemHandler, 2, 116, 35));
 	}
 	
 	@Override
