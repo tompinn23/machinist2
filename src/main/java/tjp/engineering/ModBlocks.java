@@ -4,7 +4,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tjp.engineering.blocks.MachineFrame;
-import tjp.engineering.blocks.Smelter;
+import tjp.engineering.blocks.smelter.Smelter;
 
 public class ModBlocks {
 
