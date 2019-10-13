@@ -1,5 +1,6 @@
 package tjp.engineering;
 
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -21,6 +22,8 @@ public class Engineering {
     @Mod.Instance
     public static Engineering instance;
 
+    public static boolean ic2Loaded = false;
+    
     public static Logger logger;
 
     @Mod.EventHandler
@@ -36,6 +39,7 @@ public class Engineering {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent e) {
+    	ic2Loaded = Loader.isModLoaded("ic2");
         proxy.postInit(e);
     }
 

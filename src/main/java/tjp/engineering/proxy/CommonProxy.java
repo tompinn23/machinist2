@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import tjp.engineeering.items.Coupler;
 import tjp.engineering.Engineering;
 import tjp.engineering.ModBlocks;
 import tjp.engineering.blocks.MachineFrame;
@@ -44,5 +45,7 @@ public class CommonProxy {
     public static void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(new ItemBlock(ModBlocks.machineFrame).setRegistryName(ModBlocks.machineFrame.getRegistryName()),
                                         new ItemBlock(ModBlocks.smelter).setRegistryName(ModBlocks.smelter.getRegistryName()));
+        
+        event.getRegistry().registerAll(new Coupler());
     }
 }
