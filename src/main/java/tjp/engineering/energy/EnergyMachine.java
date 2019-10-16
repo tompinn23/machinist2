@@ -49,5 +49,13 @@ public class EnergyMachine extends EnergyStorage implements INBTSerializable<NBT
 		tag.setInteger("MaxExtract", maxExtract);
 		return tag;
 	}
+	
+	public int getReceive() {
+		return this.maxReceive;
+	}
+	
+	public int getExtract() {
+		return this.maxExtract;
+	}
     
 }

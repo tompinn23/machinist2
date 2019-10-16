@@ -74,7 +74,7 @@ public class SmelterGui extends GuiContainer {
 		// If the mouse is over one of the burn time indicator add the burn time indicator hovering text
 		if (isInRect(guiLeft + ENERGY_XPOS , guiTop + ENERGY_YPOS, ENERGY_WIDTH, ENERGY_HEIGHT, mouseX, mouseY)) {
 				hoveringText.add("Energy:");
-				hoveringText.add(te.getEnergyStored() + "/" + te.getMaxEnergy() + "RF");
+				hoveringText.add(te.getEnergyStored() + "/" + te.getMaxEnergyStored() + "RF");
 			}
 		// If hoveringText is not empty draw the hovering text
 		if (!hoveringText.isEmpty()){

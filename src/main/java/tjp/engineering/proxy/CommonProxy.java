@@ -18,6 +18,7 @@ import tjp.engineering.ModBlocks;
 import tjp.engineering.blocks.MachineFrame;
 import tjp.engineering.blocks.smelter.Smelter;
 import tjp.engineering.blocks.smelter.SmelterTileEntity;
+import tjp.engineering.recipes.RecipeHandler;
 
 @Mod.EventBusSubscriber
 public class CommonProxy {
@@ -27,11 +28,14 @@ public class CommonProxy {
 
     public void init(FMLInitializationEvent e) {
     	NetworkRegistry.INSTANCE.registerGuiHandler(Engineering.instance, new GuiProxy());
+    	RecipeHandler.initSmelting();
     }
 
     public void postInit(FMLPostInitializationEvent e) {
 
     }
+
+
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {

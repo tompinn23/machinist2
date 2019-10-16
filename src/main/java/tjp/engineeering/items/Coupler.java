@@ -12,6 +12,7 @@ public class Coupler extends Item {
 	public Coupler() {
 		setRegistryName("coupler");
 		setUnlocalizedName(Engineering.MODID + ".coupler");
+		setCreativeTab(ModItems.tabEngineeringMod);
 	}
 	
 	@SideOnly(Side.CLIENT)

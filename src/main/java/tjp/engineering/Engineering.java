@@ -13,7 +13,7 @@ import tjp.engineering.proxy.CommonProxy;
 @Mod(modid = Engineering.MODID, name = Engineering.MODNAME, version = Engineering.MODVERSION, dependencies = "required-after:forge@[14.23.5.2768,)", useMetadata = true)
 public class Engineering {
     public static final String MODID = "engineering";
-    public static final String MODNAME = "Engineering";
+    public static final String MODNAME = "TP's Engineering";
     public static final String MODVERSION = "0.0.1";
 
     @SidedProxy(clientSide = "tjp.engineering.proxy.ClientProxy", serverSide = "tjp.engineering.proxy.ServerProxy")

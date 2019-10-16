@@ -13,7 +13,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -21,8 +23,9 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import tjp.engineeering.items.ModItems;
 import tjp.engineering.energy.EnergyMachine;
+import tjp.engineering.energy.TileEntityPowerable;
 
-public class SmelterTileEntity extends TileEntity implements ITickable {
+public class SmelterTileEntity extends TileEntityPowerable implements ITickable {
 
 	public static final int SIZE = 3;
 	
@@ -32,10 +35,7 @@ public class SmelterTileEntity extends TileEntity implements ITickable {
 	
 	private static final short COOK_TIME_FOR_COMPLETION = 200;
 	
-	private static final short FUEL_SLOT = 0;
-	private static final short INPUT_SLOT = 1;
-	private static final short OUTPUT_SLOT = 2;
-	
+
 	
 	//private boolean useEnergy = false;
 	
@@ -67,7 +67,9 @@ public class SmelterTileEntity extends TileEntity implements ITickable {
 	private static final int CAPACITY_BASE = 10000;
 	private static final int TRANSFER_BASE = 20;
 	
-	private EnergyMachine energyStorage = new EnergyMachine(CAPACITY_BASE, 0, TRANSFER_BASE);
+	public SmelterTileEntity() {
+		super(CAPACITY_BASE, TRANSFER_BASE, 0);
+	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
@@ -127,7 +129,6 @@ public class SmelterTileEntity extends TileEntity implements ITickable {
     				sendUpdates();
 	    		}
 	    		cookTime = 0;
-	    	
 	    	}
     	}
     }
@@ -156,12 +157,11 @@ public class SmelterTileEntity extends TileEntity implements ITickable {
 		}
 	}
 	
-	public int getEnergyStored() {
-		return energyStorage.getEnergyStored();
-	}
-	
-	public int getMaxEnergy() {
-		return energyStorage.getMaxEnergyStored();
+	public boolean isBurning() {
+		if((canSmelt() && getEnergyStored() > 0 && fuelStackHandler.getStackInSlot(0).getItem() == ModItems.coupler) || (canSmelt() && burnTimeRemaining > 0)) {
+			return true;
+		}
+		return false;
 	}
 	
 	private boolean burnFuel() {
@@ -244,20 +244,19 @@ public class SmelterTileEntity extends TileEntity implements ITickable {
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			return true;
 		}
-		if(capability == CapabilityEnergy.ENERGY)
-			return true;
 		return super.hasCapability(capability, facing);
 	}
 	
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			IBlockState bs = world.getBlockState(pos);
-			EnumFacing face = bs.getValue(Smelter.FACING);
 			if(facing == null) {
 				return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new CombinedInvWrapper(fuelStackHandler, inputStackHandler, outputStackHandler));
 			}
-			
+
+			// Will Error if block broken.
+			IBlockState bs = world.getBlockState(pos);
+			EnumFacing face = bs.getValue(Smelter.FACING);
 			if(facing == EnumFacing.DOWN)
 				return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(fuelStackHandler);
 			else if(facing == EnumFacing.UP) 
@@ -267,9 +266,6 @@ public class SmelterTileEntity extends TileEntity implements ITickable {
 			}
 			else
 				return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(outputStackHandler);
-		}
-		if(capability == CapabilityEnergy.ENERGY) {
-			return CapabilityEnergy.ENERGY.cast(energyStorage);
 		}
 		return super.getCapability(capability, facing);
 	}
@@ -320,4 +316,5 @@ public class SmelterTileEntity extends TileEntity implements ITickable {
 		super.onDataPacket(net, pkt);
 		handleUpdateTag(pkt.getNbtCompound());
 	}
+
 }

@@ -3,11 +3,13 @@ package tjp.engineering.blocks.smelter;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,10 +17,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import tjp.engineeering.items.ModItems;
 import tjp.engineering.Engineering;
 
 public class Smelter extends Block implements ITileEntityProvider {
@@ -26,13 +32,14 @@ public class Smelter extends Block implements ITileEntityProvider {
 	public static final int GUI_ID = 1;
 	
 	public static final PropertyDirection FACING = PropertyDirection.create("facing");
+	public static final PropertyBool ACTIVE = PropertyBool.create("active");
 
     public Smelter() {
         super(Material.ROCK);
         setUnlocalizedName(Engineering.MODID + ".smelter");
         setRegistryName("smelter");
-
-        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+        setCreativeTab(ModItems.tabEngineeringMod);
+        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
 
     }
 
@@ -54,10 +61,6 @@ public class Smelter extends Block implements ITileEntityProvider {
                 (float) (entity.posZ - clickedBlock.getZ()));
     }
 
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(FACING, EnumFacing.getFront(meta & 7));
-    }
 
     @Override
     public int getMetaFromState(IBlockState state) {
@@ -67,7 +70,7 @@ public class Smelter extends Block implements ITileEntityProvider {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING);
+        return new BlockStateContainer(this, FACING, ACTIVE);
     }
 
     
@@ -93,4 +96,24 @@ public class Smelter extends Block implements ITileEntityProvider {
     	return true;
     }
 
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+    	TileEntity te = worldIn.getTileEntity(pos);
+    	if(te instanceof SmelterTileEntity) {
+    		IItemHandler inventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+    		for(int i = 0; i < inventory.getSlots(); i++) {
+    			ItemStack stack = inventory.getStackInSlot(i);
+    			EntityItem entityIn;
+    			if(stack != null) {
+    				entityIn = new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack);
+    				entityIn.setDefaultPickupDelay();
+    				worldIn.spawnEntity(entityIn);
+    			}
+    		}
+    	}
+    	super.breakBlock(worldIn, pos, state);
+    }
+
+    
 }
+
