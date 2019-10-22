@@ -1,0 +1,16 @@
+# items
+item.machinist.coupler.name=Electro Coupler
+item.machinist.steelIngot.name=Steel Ingot
+item.machinist.goldDust.name=Gold Dust
+item.machinist.ironDust.name=Iron Dust
+item.machinist.steelDust.name=Steel Dust
+item.machinist.coalDust.name=Coal Dust
+item.machinist.copperIngot.name=Copper Ingot
+
+
+# blocks
+tile.machinist.smelter.name=Smelter
+tile.machinist.machineframe.name=Machine Frame
+tile.machinist.crusher.name=Crusher
+
+itemGroup.tabMachinistMod=Machiniste

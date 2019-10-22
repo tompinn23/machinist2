@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "machinist:blocks/crusher_front_on",
+    "down": "machinist:blocks/smelter_top",
+    "up": "machinist:blocks/smelter_top",
+    "east": "machinist:blocks/smelter_side",
+    "west": "machinist:blocks/smelter_side",
+    "north": "machinist:blocks/crusher_front_on",
+    "south": "machinist:blocks/smelter_side"
+  }
+}

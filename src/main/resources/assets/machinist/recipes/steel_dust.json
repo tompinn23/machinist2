@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "result": {
+    "item": "machinist:steel_dust",
+    "count": 2
+  },
+  "ingredients": [
+    {
+      "type":"forge:ore_dict",
+      "ore": "dustCoal"
+    },
+    {
+      "type":"forge:ore_dict",
+      "ore": "dustIron"
+    },
+    {
+      "type":"forge:ore_dict",
+      "ore": "dustIron"
+    }
+  ]
+}

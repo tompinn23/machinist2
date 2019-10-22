@@ -1,8 +1,0 @@
-# items
-item.engineering.coupler.name=Electro Coupler
-
-# blocks
-tile.engineering.smelter.name=Smelter
-tile.engineering.machineframe.name=Machine Frame
-
-itemGroup.tabTpEngineeringMod=TP's Engineering
