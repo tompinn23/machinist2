@@ -1,40 +1,42 @@
 package tjp.machinist.gui.elements;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.energy.IEnergyStorage;
 import tjp.machinist.Machinist;
+import tjp.machinist.gui.GuiContainerBase;
+import tjp.machinist.util.RenderHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnergyBar {
+public class EnergyBar extends IGuiElement {
 
     private static final ResourceLocation energyBar = new ResourceLocation(Machinist.MODID, "textures/gui/energy.png");
 
-    private int xPos;
-    private int yPos;
 
 
-    private GuiContainer gc;
+
+
     private IEnergyStorage energyStorage;
 
-    public EnergyBar(GuiContainer gc, IEnergyStorage energyStorage, int xPos, int yPos) {
-        this.gc = gc;
+    public EnergyBar(GuiContainerBase gc, IEnergyStorage energyStorage, int xPos, int yPos) {
+        super(gc, xPos, yPos);
         this.energyStorage = energyStorage;
-        this.xPos = xPos;
-        this.yPos = yPos;
+        this.texH = 58;
+        this.texW = 12;
     }
 
 
-    public void drawBackground(double energyFraction) {
-        Minecraft.getMinecraft().renderEngine.bindTexture(energyBar);
+    public void drawBackground() {
+        RenderHelper.bindTexture(energyBar);
 
-        gc.drawTexturedModalRect(xPos, yPos, 0, 0, 6, 58);
+        drawTexturedModalRect(xPos, yPos, 0, 0, 6, 58);
 
-        gc.drawTexturedModalRect(xPos, yPos + (int)((1.0 - energyFraction) * 58), 6, (int)((1.0 - energyFraction) * 58) + 0, 6,58 - ((int)((1.0 - energyFraction) * 58)));
+        double fraction = energyStorage.getEnergyStored() / (double)energyStorage.getMaxEnergyStored();
+        fraction = MathHelper.clamp(fraction, 0.0, 1.0);
+        RenderHelper.bindTexture(energyBar);
+        drawTexturedModalRect(xPos, yPos + (int)((1.0 - fraction) * 58), 6, (int)((1.0 - fraction) * 58), 6,58 - ((int)((1.0 - fraction) * 58)));
 
     }
 
@@ -54,8 +56,5 @@ public class EnergyBar {
         }
     }
 
-    public static boolean isInRect(int x, int y, int xSize, int ySize, int mouseX, int mouseY){
-        return ((mouseX >= x && mouseX <= x+xSize) && (mouseY >= y && mouseY <= y+ySize));
-    }
 
 }

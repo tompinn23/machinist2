@@ -9,11 +9,14 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import tjp.machinist.ModBlocks;
 import tjp.machinist.items.ModItems;
 import tjp.machinist.energy.TileEntityPowerable;
 
@@ -26,6 +29,8 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable 
 	private int burnTimeRemaining = 0;
 	private int burnTimeInitialValue = 0;
 	private short cookTime;
+
+	private EnumFacing facing;
 	
 	private static final short COOK_TIME_FOR_COMPLETION = 200;
 	
@@ -59,10 +64,16 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable 
 	};
 	
 	private static final int CAPACITY_BASE = 10000;
-	private static final int TRANSFER_BASE = 20;
+	private static final int TRANSFER_BASE = 100;
 	
 	public SmelterTileEntity() {
 		super(CAPACITY_BASE, TRANSFER_BASE, 0);
+		facing = EnumFacing.NORTH;
+	}
+
+	public SmelterTileEntity(EnumFacing facing) {
+		super(CAPACITY_BASE, TRANSFER_BASE, 0);
+		this.facing = facing;
 	}
 	
 	@Override
@@ -80,6 +91,7 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable 
 		if(compound.hasKey("energyStorage")) {
 			energyStorage.deserializeNBT((NBTTagCompound) compound.getTag("energyStorage")); 
 		}
+		facing = EnumFacing.values()[compound.getInteger("facing")];
 		cookTime = compound.getShort("CookTime");
 		burnTimeRemaining = compound.getInteger("burnTimeRemaining");
 		burnTimeInitialValue = compound.getInteger("burnTimeInitialValue");
@@ -88,6 +100,7 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
+		compound.setInteger("facing", facing.getIndex());
 		compound.setTag("fuelStack", fuelStackHandler.serializeNBT());
 		compound.setTag("inputStack", inputStackHandler.serializeNBT());
 		compound.setTag("outputStack", outputStackHandler.serializeNBT());
@@ -113,14 +126,14 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable 
 	    			smeltItem();
 	    			cookTime = 0;
 	    		}
-	    		sendUpdates();
+
 	    	} else {
 	    		if(burnTimeRemaining > 0) {
     				useEnergy();
-    				sendUpdates();
 	    		}
 	    		cookTime = 0;
 	    	}
+			sendUpdates();
     	}
     }
 
@@ -139,12 +152,8 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable 
 
 	
 	public double fractionOfEnergyRemaining() {
-		if(fuelStackHandler.getStackInSlot(0).getItem() == ModItems.coupler) {
-			double fraction = energyStorage.getEnergyStored() / (double)energyStorage.getMaxEnergyStored();
-			return MathHelper.clamp(fraction, 0.0, 1.0);
-		} else {
-			return 0;
-		}
+		double fraction = energyStorage.getEnergyStored() / (double)energyStorage.getMaxEnergyStored();
+		return MathHelper.clamp(fraction, 0.0, 1.0);
 	}
 
 	@Override
@@ -162,6 +171,14 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable 
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		super.onDataPacket(net, pkt);
 		handleUpdateTag(pkt.getNbtCompound());
+	}
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+		if(newState.getBlock() == ModBlocks.smelter) {
+			return false;
+		}
+		return true;
 	}
 
 
@@ -263,7 +280,13 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable 
 		int burnTime = TileEntityFurnace.getItemBurnTime(stack);
 		return burnTime;
 	}
-	
+
+	public EnumFacing getFacing() {
+		return facing;
+	}
 
 
+	public void setFacing(EnumFacing opposite) {
+		this.facing = facing;
+	}
 }

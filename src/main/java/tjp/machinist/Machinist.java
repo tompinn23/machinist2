@@ -34,7 +34,7 @@ public class Machinist {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent e) {
-        proxy.init(e);
+        proxy.Init(e);
     }
 
     @Mod.EventHandler

@@ -9,7 +9,8 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
 version = "0.0.1"
 group = "tjp.machinist" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -39,7 +40,7 @@ dependencies {
     //compile "some.group:artifact:version:classifier"
     //compile "some.group:artifact:version"
     runtime fileTree(dir: 'runtime', include: ['*.jar'])
-    compile files('libs/indistrialcraft-2-2.8.187-ex112-api.jar')
+    compile files('libs/industrialcraft-2-2.8.188-ex112-api.jar')
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
     //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
