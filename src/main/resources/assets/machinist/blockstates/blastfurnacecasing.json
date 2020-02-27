@@ -1,0 +1,10 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "machinist:blastfurnacecasing"
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}]
+    }
+}

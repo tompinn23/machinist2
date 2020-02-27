@@ -58,10 +58,11 @@ public class CrusherTileEntity extends TileEntityPowerable implements ITickable 
                     doAction();
                     cookTime = 0;
                 }
-                sendUpdates();
+
             } else {
                 cookTime = 0;
             }
+            sendUpdates();
         }
 
     }

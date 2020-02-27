@@ -1,6 +1,5 @@
 package tjp.machinist.gui;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.energy.CapabilityEnergy;
 import tjp.machinist.Machinist;
@@ -8,7 +7,7 @@ import tjp.machinist.blocks.crusher.CrusherContainer;
 import tjp.machinist.blocks.crusher.CrusherTileEntity;
 import tjp.machinist.gui.elements.EnergyBar;
 
-public class CrusherGui extends GuiContainer {
+public class CrusherGui extends GuiContainerBase {
     public static final int WIDTH = 176;
     public static final int HEIGHT = 166;
 
@@ -50,7 +49,7 @@ public class CrusherGui extends GuiContainer {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        mc.getTextureManager().bindTexture(background);
+        this.bindTexture(background);
         drawTexturedModalRect(guiLeft,guiTop, 0,0, xSize, ySize);
 
         double cookProgress = te.getCookProgress();
@@ -58,7 +57,7 @@ public class CrusherGui extends GuiContainer {
 
 
         double energyLeft = te.fractionOfEnergyRemaining();
-        energyBar.drawBackground(energyLeft);
+        energyBar.drawBackground();
         //drawTexturedModalRect(guiLeft + ENERGY_XPOS, guiTop + ENERGY_YPOS + (int)((1.0 - energyLeft) * ENERGY_HEIGHT), ENERGY_U, (int)((1.0 - energyLeft) * ENERGY_HEIGHT) + ENERGY_V, ENERGY_WIDTH,ENERGY_HEIGHT - ((int)((1.0 - energyLeft) * ENERGY_HEIGHT)));
     }
 
