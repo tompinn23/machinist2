@@ -5,14 +5,14 @@ pipeline {
         stage('Gradle Setup') {
 			steps {
 				script {
-					sh './gradlew setupCIWorkspace
+					sh './gradlew setupCIWorkspace'
 				}
 			}
         }
         stage('Gradle Build') {
 			steps {
 				script {
-					sh './gradlew build
+					sh './gradlew build'
 				}
 			}
 		}
