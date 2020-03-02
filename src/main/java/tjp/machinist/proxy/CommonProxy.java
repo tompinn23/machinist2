@@ -20,10 +20,10 @@ import tjp.machinist.api.multiblock.IMultiblockRegistry;
 import tjp.machinist.api.multiblock.MultiblockEventHandler;
 import tjp.machinist.api.multiblock.MultiblockRegistry;
 import tjp.machinist.blocks.MachineFrame;
-import tjp.machinist.blocks.blastFurnace.BlastFurnaceCasing;
-import tjp.machinist.blocks.blastFurnace.BlastFurnaceCasingTE;
-import tjp.machinist.blocks.blastFurnace.BlastFurnaceController;
-import tjp.machinist.blocks.blastFurnace.BlastFurnaceControllerTE;
+import tjp.machinist.blocks.BlastFurnace.BlastFurnaceCasing;
+import tjp.machinist.blocks.BlastFurnace.BlastFurnaceCasingTE;
+import tjp.machinist.blocks.BlastFurnace.BlastFurnaceController;
+import tjp.machinist.blocks.BlastFurnace.BlastFurnaceControllerTE;
 import tjp.machinist.blocks.crusher.Crusher;
 import tjp.machinist.blocks.crusher.CrusherTileEntity;
 import tjp.machinist.blocks.smelter.Smelter;
@@ -67,7 +67,8 @@ public class CommonProxy {
                                         new Smelter(),
                                         new Crusher(),
                                         new BlastFurnaceCasing(),
-                                        new BlastFurnaceController());
+                                        new BlastFurnaceController()
+                                        );
         GameRegistry.registerTileEntity(SmelterTileEntity.class, new ResourceLocation(Machinist.MODID + "_smelter"));
         GameRegistry.registerTileEntity(CrusherTileEntity.class, new ResourceLocation(Machinist.MODID + "_crusher"));
         GameRegistry.registerTileEntity(BlastFurnaceControllerTE.class, new ResourceLocation(Machinist.MODID + "_blastfurnacecontroller"));

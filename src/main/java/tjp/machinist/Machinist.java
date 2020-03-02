@@ -25,6 +25,7 @@ public class Machinist {
     public static boolean ic2Loaded = false;
     
     public static Logger logger;
+    public static boolean debug = true;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {

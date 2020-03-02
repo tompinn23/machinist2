@@ -8,7 +8,7 @@ import tjp.machinist.Machinist;
 
 import java.util.Map;
 
-public class CrusherRecipes implements IRecipeHandler {
+public class CrusherRecipes extends IRecipeHandler {
 
     private static final CrusherRecipes SMELTING_BASE = new CrusherRecipes();
     private static final ItemStack[] EMPTY_RESULT = {ItemStack.EMPTY};
@@ -52,8 +52,4 @@ public class CrusherRecipes implements IRecipeHandler {
         Machinist.logger.warn("Invalid recipe registered for crusher.");
     }
 
-    private boolean compareItemStacks(ItemStack stack1, ItemStack stack2)
-    {
-        return stack2.getItem() == stack1.getItem() && (stack2.getMetadata() == 32767 || stack2.getMetadata() == stack1.getMetadata());
-    }
 }

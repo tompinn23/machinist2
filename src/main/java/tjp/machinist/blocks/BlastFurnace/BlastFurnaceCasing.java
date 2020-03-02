@@ -1,4 +1,4 @@
-package tjp.machinist.blocks.blastFurnace;
+package tjp.machinist.blocks.BlastFurnace;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -21,6 +21,8 @@ import tjp.machinist.api.multiblock.IMultiblockPart;
 import tjp.machinist.api.multiblock.MultiblockControllerBase;
 import tjp.machinist.api.multiblock.validation.ValidationError;
 import tjp.machinist.items.ModItems;
+
+import javax.crypto.Mac;
 
 public class BlastFurnaceCasing extends Block {
 /*
@@ -86,31 +88,36 @@ public class BlastFurnaceCasing extends Block {
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (worldIn.isRemote) {
-            if (playerIn.isSneaking()) {
-                return false;
-            }
-            TileEntity te = worldIn.getTileEntity(pos);
-            IMultiblockPart part = null;
-            MultiblockControllerBase controller = null;
-            if (te instanceof IMultiblockPart) {
-                part = (IMultiblockPart) te;
-                controller = part.getMultiblockController();
-            }
-            ItemStack st = playerIn.getHeldItemMainhand();
-            if (st.isEmpty()) {
-                if (controller != null) {
-                    ValidationError status = controller.getLastError();
-                    if (null != status) {
-                        playerIn.sendStatusMessage(status.getChatMessage(), false);
-                        return true;
-                    }
-                }
-                return false;
-            }
+        if (playerIn.isSneaking()) {
             return false;
         }
-        return false;
+
+        TileEntity te = worldIn.getTileEntity(pos);
+        IMultiblockPart part = null;
+        MultiblockControllerBase controller = null;
+        if (te instanceof IMultiblockPart) {
+            part = (IMultiblockPart) te;
+            controller = part.getMultiblockController();
+        }
+
+        if(controller != null) controller.onBlockActivated(pos);
+        ItemStack st = playerIn.getHeldItemMainhand();
+        if (st.isEmpty()) {
+            if (controller != null) {
+                ValidationError status = controller.getLastError();
+                if (null != status) {
+                    playerIn.sendStatusMessage(status.getChatMessage(), false);
+                    return true;
+                }
+            }
+
+        }
+       if(controller == null || !controller.isAssembled()) { return false; }
+
+        if(!worldIn.isRemote) {
+            playerIn.openGui(Machinist.instance, BlastFurnaceMultiController.GUI_ID, worldIn, pos.getX(), pos.getY() , pos.getZ());
+        }
+        return true;
     }
 
 
