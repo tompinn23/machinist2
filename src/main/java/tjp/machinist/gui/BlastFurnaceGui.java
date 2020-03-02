@@ -1,20 +1,40 @@
 package tjp.machinist.gui;
 
-import tjp.machinist.blocks.blastFurnace.BlastFurnaceMultiContainer;
-import tjp.machinist.blocks.blastFurnace.BlastFurnaceMultiController;
+import net.minecraft.util.ResourceLocation;
+import tjp.machinist.Machinist;
+import tjp.machinist.blocks.BlastFurnace.BlastFurnaceMultiContainer;
+import tjp.machinist.blocks.BlastFurnace.BlastFurnaceMultiController;
+
+import java.util.HashSet;
 
 public class BlastFurnaceGui extends GuiContainerBase {
 
+    public static final int WIDTH = 176;
+    public static final int HEIGHT = 166;
+
     protected BlastFurnaceMultiController te;
+    private static final ResourceLocation guiTexture = new ResourceLocation(Machinist.MODID, "textures/gui/blastfurnace.png");
 
     public BlastFurnaceGui(BlastFurnaceMultiController te, BlastFurnaceMultiContainer container) {
         super(container);
+        xSize = WIDTH;
+        ySize = HEIGHT;
         this.te = te;
     }
 
+
+    @Override
+    public void initGui() {
+        super.initGui();
+
+    }
+
+
+
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-
+        this.bindTexture(guiTexture);
+        drawTexturedModalRect(guiLeft, guiTop, 0 ,0, xSize, ySize);
     }
 
     @Override

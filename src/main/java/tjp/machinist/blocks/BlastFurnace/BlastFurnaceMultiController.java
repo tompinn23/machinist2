@@ -1,17 +1,28 @@
-package tjp.machinist.blocks.blastFurnace;
+package tjp.machinist.blocks.BlastFurnace;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import tjp.machinist.api.multiblock.IMultiblockPart;
 import tjp.machinist.api.multiblock.MultiblockControllerBase;
+import tjp.machinist.api.multiblock.MultiblockTileEntityBase;
 import tjp.machinist.api.multiblock.rectangular.RectangularMultiblockControllerBase;
 import tjp.machinist.api.multiblock.validation.IMultiblockValidator;
+import tjp.machinist.recipes.BlastFurnaceRecipe;
+import tjp.machinist.recipes.BlastFurnaceRecipes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,16 +31,31 @@ import java.util.Set;
 
 public class BlastFurnaceMultiController extends RectangularMultiblockControllerBase implements ICapabilityProvider {
 
+    public static final int GUI_ID = 3;
+    public static final int SIZE = 4;
+
+    private ItemStackHandler inputStackHandler = new ItemStackHandler(2);
+    private ItemStackHandler fuelStackHandler = new ItemStackHandler(1);
+    private ItemStackHandler outputStackHandler = new ItemStackHandler(1);
+
+
+    private IMultiblockPart saveDelegatePart = null;
+
+
     private static final int MACHINE_SZ = 3;
     private Set<BlastFurnaceControllerTE> connectedControllers = null;
+    private BlockPos lastClickedPos;
 
     protected BlastFurnaceMultiController(World world) {
         super(world);
+
     }
 
     @Override
     public void onAttachedPartWithMultiblockData(IMultiblockPart part, NBTTagCompound data) {
-
+        if(part != saveDelegatePart)
+            saveDelegatePart = part;
+        readFromNBT(data);
     }
 
     @Override
@@ -44,12 +70,13 @@ public class BlastFurnaceMultiController extends RectangularMultiblockController
 
     @Override
     protected void onBlockRemoved(IMultiblockPart oldPart) {
-
+        if(oldPart instanceof BlastFurnaceControllerTE) {
+            connectedControllers.remove(oldPart);
+        }
     }
 
     @Override
     protected void onMachineAssembled() {
-
     }
 
     @Override
@@ -107,13 +134,19 @@ public class BlastFurnaceMultiController extends RectangularMultiblockController
 
     }
 
+    public void onBlockActivated(BlockPos pos) {
+        this.lastClickedPos = pos;
+    }
+
     @Override
     protected boolean isMachineWhole(IMultiblockValidator validatorCallback) {
         if(!super.isMachineWhole(validatorCallback))
             return false;
-        if(connectedControllers.size() != 1) {
-            validatorCallback.setLastError("message.machinist.blastfurnace.multiplecontrollers");
-            return false;
+        if(connectedControllers != null) {
+            if (connectedControllers.size() != 1) {
+                validatorCallback.setLastError("message.machinist.blastfurnace.multiplecontrollers");
+                return false;
+            }
         }
         return true;
     }
@@ -145,12 +178,19 @@ public class BlastFurnaceMultiController extends RectangularMultiblockController
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
-        return new NBTTagCompound();
+
+        return data;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound data) {
+        if(saveDelegatePart.isMultiblockSaveDelegate()) {
+            ((MultiblockTileEntityBase)saveDelegatePart).readFromNBT(data);
+        }
+    }
 
+    public boolean canInteractWith(EntityPlayer playerIn) {
+            return playerIn.getDistanceSq(lastClickedPos.add(0.5D, 0.5D, 0.5D)) <= 64D;
     }
 
 
@@ -162,6 +202,19 @@ public class BlastFurnaceMultiController extends RectangularMultiblockController
     @Nullable
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+        if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            if(facing == null) {
+                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new CombinedInvWrapper(inputStackHandler,fuelStackHandler, outputStackHandler));
+            }
+        }
         return null;
+    }
+
+    public static boolean isValidInput(ItemStack stack) {
+        return BlastFurnaceRecipes.instance().hasRecipe(stack);
+    }
+
+    public static boolean isValidFuel(ItemStack stack) {
+        return stack.getItem() == Items.COAL || stack.getItem() == Item.getItemFromBlock(Blocks.COAL_BLOCK);
     }
 }

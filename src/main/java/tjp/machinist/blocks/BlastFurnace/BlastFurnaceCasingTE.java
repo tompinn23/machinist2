@@ -1,4 +1,4 @@
-package tjp.machinist.blocks.blastFurnace;
+package tjp.machinist.blocks.BlastFurnace;
 
 
 import tjp.machinist.api.multiblock.MultiblockControllerBase;

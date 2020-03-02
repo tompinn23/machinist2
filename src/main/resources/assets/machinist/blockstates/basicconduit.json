@@ -1,0 +1,68 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "machinist:basicconduit"
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{"model": "machinist:basicconduit"}],
+    "connection_n": {
+      "true": {
+        "submodel": "machinist:basicconduit_connection_n"
+      },
+      "false": {
+
+      }
+    },
+    "connection_e": {
+      "true": {
+        "submodel": {
+          "connection_model_e" : {"model":  "machinist:basicconduit_connection_n", "y":  90 }
+        }
+      },
+      "false": {
+
+      }
+    },
+    "connection_s": {
+      "true": {
+        "submodel": {
+          "connection_model_s" : {"model":  "machinist:basicconduit_connection_n", "y":  180 }
+        }
+      },
+      "false": {
+
+      }
+    },
+    "connection_w": {
+      "true": {
+        "submodel": {
+          "connection_model_w" : {"model":  "machinist:basicconduit_connection_n", "y":  270 }
+        }
+      },
+      "false": {
+
+      }
+    },
+    "connection_u": {
+      "true": {
+        "submodel": {
+          "connection_model_u" : {"model":  "machinist:basicconduit_connection_n", "x":  -90 }
+        }
+      },
+      "false": {
+
+      }
+    },
+    "connection_d": {
+      "true": {
+        "submodel": {
+          "connection_model_d" : {"model":  "machinist:basicconduit_connection_n", "x":  90 }
+        }
+      },
+      "false": {
+
+      }
+    }
+  }
+}

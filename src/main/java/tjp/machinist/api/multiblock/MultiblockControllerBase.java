@@ -42,7 +42,9 @@ public abstract class MultiblockControllerBase implements IMultiblockValidator {
 
 	// Multiblock stuff - do not mess with
 	public final World WORLD;
-	
+
+	public abstract void onBlockActivated(BlockPos pos);
+
 	// Disassembled -> Assembled; Assembled -> Disassembled OR Paused; Paused -> Assembled
 	protected enum AssemblyState { Disassembled, Assembled, Paused }
 	protected AssemblyState assemblyState;
