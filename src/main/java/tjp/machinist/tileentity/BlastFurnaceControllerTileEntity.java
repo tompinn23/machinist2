@@ -1,4 +1,4 @@
-package tjp.machinist.blocks.BlastFurnace;
+package tjp.machinist.tileentity;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -11,7 +11,7 @@ import tjp.machinist.recipes.BlastFurnaceRecipes;
 
 import javax.annotation.Nullable;
 
-public class BlastFurnaceControllerTE extends RectangularMultiblockTileEntityBase {
+public class BlastFurnaceControllerTileEntity extends RectangularMultiblockTileEntityBase {
     private BlastFurnaceRecipes recipeHandler;
 
     private static final int MACHINE_SZ = 3;
@@ -20,7 +20,7 @@ public class BlastFurnaceControllerTE extends RectangularMultiblockTileEntityBas
 
     private EnumFacing facing;
 
-    public BlastFurnaceControllerTE() {
+    public BlastFurnaceControllerTileEntity() {
         super();
         this.facing = EnumFacing.NORTH;
     }
@@ -50,7 +50,7 @@ public class BlastFurnaceControllerTE extends RectangularMultiblockTileEntityBas
         return false;
     }
 
-    public BlastFurnaceControllerTE(EnumFacing facing) {
+    public BlastFurnaceControllerTileEntity(EnumFacing facing) {
         super();
         this.facing = facing;
     }
@@ -84,7 +84,7 @@ public class BlastFurnaceControllerTE extends RectangularMultiblockTileEntityBas
 
     @Override
     public MultiblockControllerBase createNewMultiblock() {
-        return new BlastFurnaceMultiController(this.world);
+        return new BlastFurnaceMultiControllerTileEntity(this.world);
     }
 
     @Override
@@ -115,6 +115,6 @@ public class BlastFurnaceControllerTE extends RectangularMultiblockTileEntityBas
 
     @Override
     public Class<? extends MultiblockControllerBase> getMultiblockControllerType() {
-        return BlastFurnaceMultiController.class;
+        return BlastFurnaceMultiControllerTileEntity.class;
     }
 }

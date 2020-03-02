@@ -2,20 +2,18 @@ package tjp.machinist.gui;
 
 import net.minecraft.util.ResourceLocation;
 import tjp.machinist.Machinist;
-import tjp.machinist.blocks.BlastFurnace.BlastFurnaceMultiContainer;
-import tjp.machinist.blocks.BlastFurnace.BlastFurnaceMultiController;
-
-import java.util.HashSet;
+import tjp.machinist.container.BlastFurnaceMultiContainer;
+import tjp.machinist.tileentity.BlastFurnaceMultiControllerTileEntity;
 
 public class BlastFurnaceGui extends GuiContainerBase {
 
     public static final int WIDTH = 176;
     public static final int HEIGHT = 166;
 
-    protected BlastFurnaceMultiController te;
+    protected BlastFurnaceMultiControllerTileEntity te;
     private static final ResourceLocation guiTexture = new ResourceLocation(Machinist.MODID, "textures/gui/blastfurnace.png");
 
-    public BlastFurnaceGui(BlastFurnaceMultiController te, BlastFurnaceMultiContainer container) {
+    public BlastFurnaceGui(BlastFurnaceMultiControllerTileEntity te, BlastFurnaceMultiContainer container) {
         super(container);
         xSize = WIDTH;
         ySize = HEIGHT;

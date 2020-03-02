@@ -3,9 +3,9 @@ package tjp.machinist.gui;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.energy.CapabilityEnergy;
 import tjp.machinist.Machinist;
-import tjp.machinist.blocks.smelter.SmelterContainer;
-import tjp.machinist.blocks.smelter.SmelterTileEntity;
+import tjp.machinist.container.SmelterContainer;
 import tjp.machinist.gui.elements.EnergyBar;
+import tjp.machinist.tileentity.SmelterTileEntity;
 
 import java.util.ArrayList;
 import java.util.List;

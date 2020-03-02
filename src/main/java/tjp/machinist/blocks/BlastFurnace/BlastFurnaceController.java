@@ -26,6 +26,8 @@ import tjp.machinist.api.multiblock.IMultiblockPart;
 import tjp.machinist.api.multiblock.MultiblockControllerBase;
 import tjp.machinist.api.multiblock.validation.ValidationError;
 import tjp.machinist.items.ModItems;
+import tjp.machinist.tileentity.BlastFurnaceControllerTileEntity;
+import tjp.machinist.tileentity.BlastFurnaceMultiControllerTileEntity;
 
 import javax.annotation.Nullable;
 
@@ -52,8 +54,8 @@ public class BlastFurnaceController extends Block {
     {
         EnumFacing facing = EnumFacing.NORTH;
         TileEntity tileentity = worldIn instanceof ChunkCache ? ((ChunkCache)worldIn).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK) : worldIn.getTileEntity(pos);
-        if(tileentity instanceof BlastFurnaceControllerTE) {
-            facing = ((BlastFurnaceControllerTE) tileentity).getFacing();
+        if(tileentity instanceof BlastFurnaceControllerTileEntity) {
+            facing = ((BlastFurnaceControllerTileEntity) tileentity).getFacing();
         }
         return state.withProperty(FACING, facing);
     }
@@ -75,8 +77,8 @@ public class BlastFurnaceController extends Block {
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         world.setBlockState(pos, state.withProperty(FACING, getFacingFromEntity(pos, placer)), 2);
         TileEntity te = world.getTileEntity(pos);
-        if(te instanceof BlastFurnaceControllerTE) {
-            ((BlastFurnaceControllerTE)te).setFacing(placer.getHorizontalFacing().getOpposite());
+        if(te instanceof BlastFurnaceControllerTileEntity) {
+            ((BlastFurnaceControllerTileEntity)te).setFacing(placer.getHorizontalFacing().getOpposite());
         }
     }
 
@@ -94,7 +96,7 @@ public class BlastFurnaceController extends Block {
     @Nullable
     @Override
     public TileEntity createTileEntity(World worldIn, IBlockState state) {
-        return new BlastFurnaceControllerTE(state.getValue(FACING));
+        return new BlastFurnaceControllerTileEntity(state.getValue(FACING));
     }
 
     @Override
@@ -119,7 +121,7 @@ public class BlastFurnaceController extends Block {
                         playerIn.sendStatusMessage(status.getChatMessage(), false);
                         return true;
                     }
-                    playerIn.openGui(Machinist.instance, BlastFurnaceMultiController.GUI_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
+                    playerIn.openGui(Machinist.instance, BlastFurnaceMultiControllerTileEntity.GUI_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
                     return true;
                 }
                 return false;

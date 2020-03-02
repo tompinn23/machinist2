@@ -1,4 +1,4 @@
-package tjp.machinist.blocks.smelter;
+package tjp.machinist.tileentity;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
@@ -17,8 +17,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import tjp.machinist.ModBlocks;
-import tjp.machinist.items.ModItems;
+import tjp.machinist.blocks.smelter.Smelter;
 import tjp.machinist.energy.TileEntityPowerable;
+import tjp.machinist.items.ModItems;
 
 import javax.annotation.Nullable;
 
@@ -175,10 +176,7 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable 
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
-		if(newState.getBlock() == ModBlocks.smelter) {
-			return false;
-		}
-		return true;
+		return newState.getBlock() != ModBlocks.smelter;
 	}
 
 
@@ -204,13 +202,8 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable 
 			{
 				if(outputStack.getItem() == result.getItem()) {
 					int combinedSize = outputStack.getCount() + result.getCount();
-					if(combinedSize <= outputStack.getMaxStackSize()) {
-						//Success
-						canSmelt = true;
-					}
-					else {
-						canSmelt = false;
-					}
+					//Success
+					canSmelt = combinedSize <= outputStack.getMaxStackSize();
 				} 
 			} else {
 				canSmelt = true;

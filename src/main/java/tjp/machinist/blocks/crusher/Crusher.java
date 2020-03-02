@@ -23,9 +23,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import tjp.machinist.items.ModItems;
 import tjp.machinist.Machinist;
-import tjp.machinist.blocks.smelter.SmelterTileEntity;
+import tjp.machinist.items.ModItems;
+import tjp.machinist.tileentity.CrusherTileEntity;
+import tjp.machinist.tileentity.SmelterTileEntity;
 
 public class Crusher extends Block implements ITileEntityProvider {
     public static final int GUI_ID = 2;

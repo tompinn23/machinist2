@@ -19,17 +19,17 @@ import tjp.machinist.ModBlocks;
 import tjp.machinist.api.multiblock.IMultiblockRegistry;
 import tjp.machinist.api.multiblock.MultiblockEventHandler;
 import tjp.machinist.api.multiblock.MultiblockRegistry;
-import tjp.machinist.blocks.MachineFrame;
 import tjp.machinist.blocks.BlastFurnace.BlastFurnaceCasing;
-import tjp.machinist.blocks.BlastFurnace.BlastFurnaceCasingTE;
 import tjp.machinist.blocks.BlastFurnace.BlastFurnaceController;
-import tjp.machinist.blocks.BlastFurnace.BlastFurnaceControllerTE;
+import tjp.machinist.blocks.MachineFrame;
 import tjp.machinist.blocks.crusher.Crusher;
-import tjp.machinist.blocks.crusher.CrusherTileEntity;
 import tjp.machinist.blocks.smelter.Smelter;
-import tjp.machinist.blocks.smelter.SmelterTileEntity;
 import tjp.machinist.items.*;
 import tjp.machinist.recipes.RecipeHandler;
+import tjp.machinist.tileentity.BlastFurnaceCasingTileEntity;
+import tjp.machinist.tileentity.BlastFurnaceControllerTileEntity;
+import tjp.machinist.tileentity.CrusherTileEntity;
+import tjp.machinist.tileentity.SmelterTileEntity;
 
 @Mod.EventBusSubscriber
 public class CommonProxy {
@@ -71,8 +71,8 @@ public class CommonProxy {
                                         );
         GameRegistry.registerTileEntity(SmelterTileEntity.class, new ResourceLocation(Machinist.MODID + "_smelter"));
         GameRegistry.registerTileEntity(CrusherTileEntity.class, new ResourceLocation(Machinist.MODID + "_crusher"));
-        GameRegistry.registerTileEntity(BlastFurnaceControllerTE.class, new ResourceLocation(Machinist.MODID + "_blastfurnacecontroller"));
-        GameRegistry.registerTileEntity(BlastFurnaceCasingTE.class, new ResourceLocation(Machinist.MODID + "_blastfurnacecasing"));
+        GameRegistry.registerTileEntity(BlastFurnaceControllerTileEntity.class, new ResourceLocation(Machinist.MODID + "_blastfurnacecontroller"));
+        GameRegistry.registerTileEntity(BlastFurnaceCasingTileEntity.class, new ResourceLocation(Machinist.MODID + "_blastfurnacecasing"));
 
     }
 

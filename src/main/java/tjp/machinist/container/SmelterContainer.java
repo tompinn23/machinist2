@@ -1,4 +1,4 @@
-package tjp.machinist.blocks.smelter;
+package tjp.machinist.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import tjp.machinist.tileentity.SmelterTileEntity;
 import tjp.machinist.util.OutputSlotHandler;
 
 public class SmelterContainer extends Container {

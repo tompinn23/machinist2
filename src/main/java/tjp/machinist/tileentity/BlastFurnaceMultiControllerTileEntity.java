@@ -1,13 +1,11 @@
-package tjp.machinist.blocks.BlastFurnace;
+package tjp.machinist.tileentity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -21,7 +19,6 @@ import tjp.machinist.api.multiblock.MultiblockControllerBase;
 import tjp.machinist.api.multiblock.MultiblockTileEntityBase;
 import tjp.machinist.api.multiblock.rectangular.RectangularMultiblockControllerBase;
 import tjp.machinist.api.multiblock.validation.IMultiblockValidator;
-import tjp.machinist.recipes.BlastFurnaceRecipe;
 import tjp.machinist.recipes.BlastFurnaceRecipes;
 
 import javax.annotation.Nonnull;
@@ -29,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BlastFurnaceMultiController extends RectangularMultiblockControllerBase implements ICapabilityProvider {
+public class BlastFurnaceMultiControllerTileEntity extends RectangularMultiblockControllerBase implements ICapabilityProvider {
 
     public static final int GUI_ID = 3;
     public static final int SIZE = 4;
@@ -43,10 +40,10 @@ public class BlastFurnaceMultiController extends RectangularMultiblockController
 
 
     private static final int MACHINE_SZ = 3;
-    private Set<BlastFurnaceControllerTE> connectedControllers = null;
+    private Set<BlastFurnaceControllerTileEntity> connectedControllers = null;
     private BlockPos lastClickedPos;
 
-    protected BlastFurnaceMultiController(World world) {
+    public BlastFurnaceMultiControllerTileEntity(World world) {
         super(world);
 
     }
@@ -60,17 +57,17 @@ public class BlastFurnaceMultiController extends RectangularMultiblockController
 
     @Override
     protected void onBlockAdded(IMultiblockPart newPart) {
-        if(newPart instanceof BlastFurnaceControllerTE) {
+        if(newPart instanceof BlastFurnaceControllerTileEntity) {
             if (connectedControllers == null) {
                 connectedControllers = new HashSet<>();
             }
-            connectedControllers.add((BlastFurnaceControllerTE) newPart);
+            connectedControllers.add((BlastFurnaceControllerTileEntity) newPart);
         }
     }
 
     @Override
     protected void onBlockRemoved(IMultiblockPart oldPart) {
-        if(oldPart instanceof BlastFurnaceControllerTE) {
+        if(oldPart instanceof BlastFurnaceControllerTileEntity) {
             connectedControllers.remove(oldPart);
         }
     }
@@ -134,6 +131,22 @@ public class BlastFurnaceMultiController extends RectangularMultiblockController
 
     }
 
+    private boolean canSmelt() {
+        return smeltItem(false);
+    }
+
+    private boolean doSmelt() {
+        return smeltItem(true);
+    }
+
+    private boolean smeltItem(boolean doSmelt) {
+        return false;
+    }
+
+
+
+
+
     public void onBlockActivated(BlockPos pos) {
         this.lastClickedPos = pos;
     }
@@ -196,7 +209,9 @@ public class BlastFurnaceMultiController extends RectangularMultiblockController
 
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+        if(facing == null)
+            return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+        return false;
     }
 
     @Nullable

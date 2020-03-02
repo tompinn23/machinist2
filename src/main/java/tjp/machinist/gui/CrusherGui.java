@@ -3,9 +3,9 @@ package tjp.machinist.gui;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.energy.CapabilityEnergy;
 import tjp.machinist.Machinist;
-import tjp.machinist.blocks.crusher.CrusherContainer;
-import tjp.machinist.blocks.crusher.CrusherTileEntity;
+import tjp.machinist.container.CrusherContainer;
 import tjp.machinist.gui.elements.EnergyBar;
+import tjp.machinist.tileentity.CrusherTileEntity;
 
 public class CrusherGui extends GuiContainerBase {
     public static final int WIDTH = 176;

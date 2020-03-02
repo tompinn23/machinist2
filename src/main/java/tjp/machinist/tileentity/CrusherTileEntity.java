@@ -1,7 +1,6 @@
-package tjp.machinist.blocks.crusher;
+package tjp.machinist.tileentity;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -13,6 +12,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import tjp.machinist.blocks.crusher.Crusher;
 import tjp.machinist.energy.TileEntityPowerable;
 import tjp.machinist.recipes.CrusherRecipes;
 

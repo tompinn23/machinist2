@@ -1,4 +1,4 @@
-package tjp.machinist.blocks.BlastFurnace;
+package tjp.machinist.tileentity;
 
 
 import tjp.machinist.api.multiblock.MultiblockControllerBase;
@@ -6,8 +6,8 @@ import tjp.machinist.api.multiblock.rectangular.RectangularMultiblockTileEntityB
 import tjp.machinist.api.multiblock.validation.IMultiblockValidator;
 
 
-public class BlastFurnaceCasingTE extends RectangularMultiblockTileEntityBase {
-    public BlastFurnaceCasingTE() {
+public class BlastFurnaceCasingTileEntity extends RectangularMultiblockTileEntityBase {
+    public BlastFurnaceCasingTileEntity() {
         super();
     }
 
@@ -23,12 +23,12 @@ public class BlastFurnaceCasingTE extends RectangularMultiblockTileEntityBase {
 
     @Override
     public MultiblockControllerBase createNewMultiblock() {
-        return new BlastFurnaceMultiController(this.world);
+        return new BlastFurnaceMultiControllerTileEntity(this.world);
     }
 
     @Override
     public Class<? extends MultiblockControllerBase> getMultiblockControllerType() {
-        return BlastFurnaceMultiController.class;
+        return BlastFurnaceMultiControllerTileEntity.class;
     }
 
     @Override

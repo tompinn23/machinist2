@@ -1,7 +1,6 @@
 package tjp.machinist.blocks.smelter;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
@@ -28,6 +27,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import tjp.machinist.Machinist;
 import tjp.machinist.items.ModItems;
+import tjp.machinist.tileentity.SmelterTileEntity;
 
 import javax.annotation.Nullable;
 
