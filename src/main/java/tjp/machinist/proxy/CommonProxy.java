@@ -83,7 +83,8 @@ public class CommonProxy {
                                         new ItemBlock(ModBlocks.smelter).setRegistryName(ModBlocks.smelter.getRegistryName()),
                                         new ItemBlock(ModBlocks.crusher).setRegistryName(ModBlocks.crusher.getRegistryName()),
                                         new ItemBlock(ModBlocks.blastCasing).setRegistryName(ModBlocks.blastCasing.getRegistryName()),
-                                        new ItemBlock(ModBlocks.blastController).setRegistryName(ModBlocks.blastController.getRegistryName()));
+                                        new ItemBlock(ModBlocks.blastController).setRegistryName(ModBlocks.blastController.getRegistryName()),
+                                        new ItemBlock(ModBlocks.basicConduit).setRegistryName(ModBlocks.basicConduit.getRegistryName()));
 
 
         event.getRegistry().register(new Coupler());

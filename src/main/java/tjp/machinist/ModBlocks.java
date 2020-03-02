@@ -26,6 +26,9 @@ public class ModBlocks {
     @GameRegistry.ObjectHolder("machinist:blastfurnacecasing")
     public static BlastFurnaceCasing blastCasing;
 
+    @GameRegistry.ObjectHolder("machinist:basicconduit")
+    public static BasicConduit basicConduit;
+
     @SideOnly(Side.CLIENT)
     public static void initModels() {
         machineFrame.initModel();
