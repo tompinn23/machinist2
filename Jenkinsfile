@@ -16,8 +16,7 @@ pipeline {
 				}
 			}
 		}
-		stage('Artifacts') {
-			archiveArtifacts artifacts: 'build/libs/*.jar'
-		}
+		stage('Artifacts') 
+		archiveArtifacts artifacts: 'build/libs/*.jar'
     }
 }
