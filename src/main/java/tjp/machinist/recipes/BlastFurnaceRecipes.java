@@ -1,61 +1,44 @@
 package tjp.machinist.recipes;
 
-import com.google.common.collect.Maps;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.Mod;
 import tjp.machinist.items.ModItems;
 
-import java.util.Map;
+import java.util.ArrayList;
 
-public class BlastFurnaceRecipes extends IRecipeHandler {
+public class BlastFurnaceRecipes extends RecipeHandler {
 
     private static final BlastFurnaceRecipes SMELTING_BASE = new BlastFurnaceRecipes();
-    private static final ItemStack[] EMPTY_RESULT = {ItemStack.EMPTY};
-    /** The list of smelting results. */
-    private final Map<ItemStack, BlastFurnaceRecipe> crushingList = Maps.newHashMap();
-
+    private ArrayList<MachineRecipe> machineRecipes = new ArrayList<>();
     public static BlastFurnaceRecipes instance() { return SMELTING_BASE; }
 
     public BlastFurnaceRecipes() {
-        addRecipe(true, new ItemStack(ModItems.steelIngot, 1), new ItemStack(Items.IRON_INGOT, 1));
+        AddRecipe(new MachineRecipe(new ItemStack(ModItems.steelIngot, 1), new ItemStack[] {new ItemStack(Items.IRON_INGOT, 1)}, 600));
+        AddRecipe(new MachineRecipe(new ItemStack(ModItems.steelIngot, 1), new ItemStack[] {new ItemStack(Items.IRON_INGOT, 1), new ItemStack(ModItems.coalDust, 1)}, 400));
     }
 
 
-    @Override
-    public boolean hasRecipe(ItemStack stack) {
-        return getResult(stack) != EMPTY_RESULT;
-    }
 
     @Override
-    public ItemStack[] getResult(ItemStack stack) {
-        for(Map.Entry<ItemStack, BlastFurnaceRecipe> entry : this.crushingList.entrySet()) {
-            if(this.compareItemStacks(entry.getKey(), stack)) {
-                return new ItemStack[] {entry.getValue().getResult()};
-            }
+    public MachineRecipe GetRecipe(ItemStack ingredients) {
+        for(MachineRecipe rec : machineRecipes) {
+            if(compareItemStacks(ingredients, rec.getIngredients()[0]))
+                return rec;
         }
-        return EMPTY_RESULT;
-    }
-
-    public BlastFurnaceRecipe getRecipe(ItemStack stack) {
-        return crushingList.get(stack);
+        return null;
     }
 
     @Override
-    public void addRecipe(ItemStack result, ItemStack ingredient) {
-        crushingList.put(ingredient, new BlastFurnaceRecipe(result, result));
+    public MachineRecipe GetRecipe(ItemStack[] ingredients) {
+        for(MachineRecipe rec : machineRecipes) {
+            if(compareItemStackArrays(ingredients, rec.getIngredients()))
+                return rec;
+        }
+        return null;
     }
 
     @Override
-    public void addRecipe(ItemStack result, ItemStack... Ingredients) {
-        crushingList.put(Ingredients[0], new BlastFurnaceRecipe(result, Ingredients));
-    }
-
-    public void addRecipe(boolean carbon, ItemStack result, ItemStack... Ingredients) {
-        crushingList.put(Ingredients[0], new BlastFurnaceRecipe(result, Ingredients).needsCarbon(carbon));
-    }
-
-    public void addRecipe(boolean carbon, ItemStack result, ItemStack ingredient){
-        crushingList.put(ingredient, new BlastFurnaceRecipe(result, ingredient).needsCarbon(carbon));
+    public void AddRecipe(MachineRecipe recipe) {
+        machineRecipes.add(recipe);
     }
 }

@@ -42,7 +42,7 @@ public class CommonProxy {
 
     public void Init(FMLInitializationEvent e) {
     	NetworkRegistry.INSTANCE.registerGuiHandler(Machinist.instance, new GuiProxy());
-    	RecipeHandler.initSmelting();
+    	RecipeHandler.initCustomSmelting();
         // OreDict
 		OreDictionary.registerOre("dustCoal", ModItems.coalDust);
         OreDictionary.registerOre("dustIron", ModItems.ironDust);
