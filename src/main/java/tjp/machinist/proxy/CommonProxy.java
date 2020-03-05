@@ -25,7 +25,6 @@ import tjp.machinist.blocks.MachineFrame;
 import tjp.machinist.blocks.crusher.Crusher;
 import tjp.machinist.blocks.smelter.Smelter;
 import tjp.machinist.items.*;
-import tjp.machinist.recipes.RecipeHandler;
 import tjp.machinist.tileentity.BlastFurnaceCasingTileEntity;
 import tjp.machinist.tileentity.BlastFurnaceControllerTileEntity;
 import tjp.machinist.tileentity.CrusherTileEntity;

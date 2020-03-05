@@ -9,7 +9,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import tjp.machinist.blocks.ContainerBase;
-import tjp.machinist.tileentity.BlastFurnaceMultiControllerTileEntity;
+import tjp.machinist.tileentity.BlastFurnaceMultiBlockTileEntity;
 import tjp.machinist.util.OutputSlotHandler;
 
 import javax.annotation.Nonnull;
@@ -27,7 +27,7 @@ public class BlastFurnaceMultiContainer extends ContainerBase {
         @Override
         public boolean isItemValid(@Nonnull ItemStack stack) {
             //TODO: logic.
-            return BlastFurnaceMultiControllerTileEntity.isValidInput(stack);
+            return BlastFurnaceMultiBlockTileEntity.isValidInput(stack);
         }
     }
     private class BlastFurnaceFuelSlotHandler extends SlotItemHandler {
@@ -39,14 +39,14 @@ public class BlastFurnaceMultiContainer extends ContainerBase {
         @Override
         public boolean isItemValid(@Nonnull ItemStack stack) {
             //TODO: logic.
-            return BlastFurnaceMultiControllerTileEntity.isValidFuel(stack);
+            return BlastFurnaceMultiBlockTileEntity.isValidFuel(stack);
         }
     }
 
 
-    private BlastFurnaceMultiControllerTileEntity te;
+    private BlastFurnaceMultiBlockTileEntity te;
 
-    public BlastFurnaceMultiContainer(IInventory playerInventory, BlastFurnaceMultiControllerTileEntity te) {
+    public BlastFurnaceMultiContainer(IInventory playerInventory, BlastFurnaceMultiBlockTileEntity te) {
         this.te = te;
 
         addOwnSlots();
@@ -72,11 +72,11 @@ public class BlastFurnaceMultiContainer extends ContainerBase {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if(index < BlastFurnaceMultiControllerTileEntity.SIZE) {
-                if(!this.mergeItemStack(itemstack1, BlastFurnaceMultiControllerTileEntity.SIZE, this.inventorySlots.size(), true)) {
+            if(index < BlastFurnaceMultiBlockTileEntity.SIZE) {
+                if(!this.mergeItemStack(itemstack1, BlastFurnaceMultiBlockTileEntity.SIZE, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 0, BlastFurnaceMultiControllerTileEntity.SIZE, false)) {
+            } else if (!this.mergeItemStack(itemstack1, 0, BlastFurnaceMultiBlockTileEntity.SIZE, false)) {
                 return ItemStack.EMPTY;
             }
 

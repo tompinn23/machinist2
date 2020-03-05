@@ -27,7 +27,7 @@ import tjp.machinist.api.multiblock.MultiblockControllerBase;
 import tjp.machinist.api.multiblock.validation.ValidationError;
 import tjp.machinist.items.ModItems;
 import tjp.machinist.tileentity.BlastFurnaceControllerTileEntity;
-import tjp.machinist.tileentity.BlastFurnaceMultiControllerTileEntity;
+import tjp.machinist.tileentity.BlastFurnaceMultiBlockTileEntity;
 
 import javax.annotation.Nullable;
 
@@ -121,7 +121,7 @@ public class BlastFurnaceController extends Block {
                         playerIn.sendStatusMessage(status.getChatMessage(), false);
                         return true;
                     }
-                    playerIn.openGui(Machinist.instance, BlastFurnaceMultiControllerTileEntity.GUI_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
+                    playerIn.openGui(Machinist.instance, BlastFurnaceMultiBlockTileEntity.GUI_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
                     return true;
                 }
                 return false;

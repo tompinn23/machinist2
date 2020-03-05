@@ -22,7 +22,7 @@ import tjp.machinist.api.multiblock.MultiblockControllerBase;
 import tjp.machinist.api.multiblock.validation.ValidationError;
 import tjp.machinist.items.ModItems;
 import tjp.machinist.tileentity.BlastFurnaceCasingTileEntity;
-import tjp.machinist.tileentity.BlastFurnaceMultiControllerTileEntity;
+import tjp.machinist.tileentity.BlastFurnaceMultiBlockTileEntity;
 
 public class BlastFurnaceCasing extends Block {
 /*
@@ -115,7 +115,7 @@ public class BlastFurnaceCasing extends Block {
        if(controller == null || !controller.isAssembled()) { return false; }
 
         if(!worldIn.isRemote) {
-            playerIn.openGui(Machinist.instance, BlastFurnaceMultiControllerTileEntity.GUI_ID, worldIn, pos.getX(), pos.getY() , pos.getZ());
+            playerIn.openGui(Machinist.instance, BlastFurnaceMultiBlockTileEntity.GUI_ID, worldIn, pos.getX(), pos.getY() , pos.getZ());
         }
         return true;
     }

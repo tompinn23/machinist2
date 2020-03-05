@@ -14,7 +14,6 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import tjp.machinist.blocks.crusher.Crusher;
 import tjp.machinist.energy.TileEntityPowerable;
-import tjp.machinist.recipes.CrusherRecipes;
 
 import javax.annotation.Nullable;
 

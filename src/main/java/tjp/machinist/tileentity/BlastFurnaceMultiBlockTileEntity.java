@@ -18,15 +18,13 @@ import tjp.machinist.api.multiblock.IMultiblockPart;
 import tjp.machinist.api.multiblock.MultiblockControllerBase;
 import tjp.machinist.api.multiblock.rectangular.RectangularMultiblockControllerBase;
 import tjp.machinist.api.multiblock.validation.IMultiblockValidator;
-import tjp.machinist.recipes.BlastFurnaceRecipes;
-import tjp.machinist.recipes.MachineRecipe;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BlastFurnaceMultiControllerTileEntity extends RectangularMultiblockControllerBase implements ICapabilityProvider {
+public class BlastFurnaceMultiBlockTileEntity extends RectangularMultiblockControllerBase implements ICapabilityProvider {
 
     public static final int GUI_ID = 3;
     public static final int SIZE = 4;
@@ -48,7 +46,7 @@ public class BlastFurnaceMultiControllerTileEntity extends RectangularMultiblock
     private Set<BlastFurnaceControllerTileEntity> connectedControllers = null;
     private BlockPos lastClickedPos;
 
-    public BlastFurnaceMultiControllerTileEntity(World world) {
+    public BlastFurnaceMultiBlockTileEntity(World world) {
         super(world);
 
     }

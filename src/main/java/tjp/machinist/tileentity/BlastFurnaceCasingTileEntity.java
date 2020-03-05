@@ -23,12 +23,12 @@ public class BlastFurnaceCasingTileEntity extends RectangularMultiblockTileEntit
 
     @Override
     public MultiblockControllerBase createNewMultiblock() {
-        return new BlastFurnaceMultiControllerTileEntity(this.world);
+        return new BlastFurnaceMultiBlockTileEntity(this.world);
     }
 
     @Override
     public Class<? extends MultiblockControllerBase> getMultiblockControllerType() {
-        return BlastFurnaceMultiControllerTileEntity.class;
+        return BlastFurnaceMultiBlockTileEntity.class;
     }
 
     @Override
