@@ -23,6 +23,8 @@ public class ComparableItemStackValidated extends ComparableItemStack {
     }
 
     public int getOreID(ItemStack stack) {
+        if(stack.isEmpty())
+            return -1;
         List<Integer> ids = OreDictionaryHelper.getAllOreIDs(stack);
         if(!ids.isEmpty()) {
             for(Integer id : ids) {

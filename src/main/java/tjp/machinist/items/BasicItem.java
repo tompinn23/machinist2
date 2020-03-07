@@ -26,10 +26,17 @@ public class BasicItem extends Item {
         ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
     }
 
+
     public static void InitBasicItems(RegistryEvent.Register<Item> evt) {
         IForgeRegistry<Item> registry = evt.getRegistry();
+        registry.register(new BasicItem().setRegistryName("iron_dust").setUnlocalizedName(Machinist.MODID + ".ironDust").setCreativeTab(ModItems.tabMachinistMod));
+        registry.register(new BasicItem().setRegistryName("gold_dust").setUnlocalizedName(Machinist.MODID + ".goldDust").setCreativeTab(ModItems.tabMachinistMod));
+
         registry.register(new BasicItem().setRegistryName("steel_dust").setUnlocalizedName(Machinist.MODID + ".steelDust").setCreativeTab(ModItems.tabMachinistMod));
+        registry.register(new BasicItem().setRegistryName("steel_ingot").setUnlocalizedName(Machinist.MODID + ".steelIngot").setCreativeTab(ModItems.tabMachinistMod));
+
         registry.register(new BasicItem().setRegistryName("coal_dust").setUnlocalizedName(Machinist.MODID + ".coalDust").setCreativeTab(ModItems.tabMachinistMod));
+
         registry.register(new BasicItem().setRegistryName("copper_dust").setUnlocalizedName(Machinist.MODID + ".copperDust").setCreativeTab(ModItems.tabMachinistMod));
         registry.register(new BasicItem().setRegistryName("copper_ingot").setUnlocalizedName(Machinist.MODID + ".copperIngot").setCreativeTab(ModItems.tabMachinistMod));
     }

@@ -1,11 +1,11 @@
 package tjp.machinist.items;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class ModItems {
 
@@ -21,13 +21,13 @@ public class ModItems {
 	public static Coupler coupler;
 
 	@GameRegistry.ObjectHolder("machinist:steel_ingot")
-	public static SteelIngot steelIngot;
+	public static BasicItem steelIngot;
 
 	@GameRegistry.ObjectHolder("machinist:gold_dust")
-	public static GoldDust goldDust;
+	public static BasicItem goldDust;
 
 	@GameRegistry.ObjectHolder("machinist:iron_dust")
-	public static IronDust ironDust;
+	public static BasicItem ironDust;
 
 	@GameRegistry.ObjectHolder("machinist:coal_dust")
 	public static BasicItem coalDust;
@@ -40,6 +40,19 @@ public class ModItems {
 
 	@GameRegistry.ObjectHolder("machinist:copper_ingot")
 	public static BasicItem copperIngot;
+
+	public static void init() {
+		OreDictionary.registerOre("dustCopper", copperDust);
+		OreDictionary.registerOre("dustSteel", steelDust);
+		OreDictionary.registerOre("dustCoal", coalDust);
+		OreDictionary.registerOre("dustIron", ironDust);
+		OreDictionary.registerOre("dustGold", goldDust);
+
+		OreDictionary.registerOre("ingotSteel", steelIngot);
+		OreDictionary.registerOre("ingotCopper", copperIngot);
+
+	}
+
 
 	@SideOnly(Side.CLIENT)
 	public static void initModels() {

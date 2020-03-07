@@ -24,7 +24,9 @@ import tjp.machinist.blocks.BlastFurnace.BlastFurnaceController;
 import tjp.machinist.blocks.MachineFrame;
 import tjp.machinist.blocks.crusher.Crusher;
 import tjp.machinist.blocks.smelter.Smelter;
-import tjp.machinist.items.*;
+import tjp.machinist.items.BasicItem;
+import tjp.machinist.items.Coupler;
+import tjp.machinist.items.ModItems;
 import tjp.machinist.tileentity.BlastFurnaceCasingTileEntity;
 import tjp.machinist.tileentity.BlastFurnaceControllerTileEntity;
 import tjp.machinist.tileentity.CrusherTileEntity;
@@ -41,7 +43,6 @@ public class CommonProxy {
 
     public void Init(FMLInitializationEvent e) {
     	NetworkRegistry.INSTANCE.registerGuiHandler(Machinist.instance, new GuiProxy());
-    	RecipeHandler.initCustomSmelting();
         // OreDict
 		OreDictionary.registerOre("dustCoal", ModItems.coalDust);
         OreDictionary.registerOre("dustIron", ModItems.ironDust);
@@ -86,9 +87,6 @@ public class CommonProxy {
 
 
         event.getRegistry().register(new Coupler());
-        event.getRegistry().register(new SteelIngot());
-        event.getRegistry().register(new GoldDust());
-        event.getRegistry().register(new IronDust());
         BasicItem.InitBasicItems(event);
 
 

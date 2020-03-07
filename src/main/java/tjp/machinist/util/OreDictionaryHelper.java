@@ -7,6 +7,9 @@ import net.minecraftforge.oredict.OreDictionary;
 import java.util.List;
 
 public class OreDictionaryHelper {
+
+
+
     public static int getOreID(String name) {
         if(!oreNameExist(name))
             return -1;
@@ -27,11 +30,19 @@ public class OreDictionaryHelper {
     }
 
     public static String getOreName(int oreID) {
-        return OreDictionaryHelper.getOreName(oreID);
+        return OreDictionary.getOreName(oreID);
     }
 
     public static List<Integer> getAllOreIDs(ItemStack stack) {
 
         return Ints.asList(OreDictionary.getOreIDs(stack));
+    }
+
+    public static ItemStack getOre(String oreName) {
+        if(!oreNameExist(oreName))
+            return ItemStack.EMPTY;
+        ItemStack ore =  OreDictionary.getOres(oreName, false).get(0).copy();
+        ore.setCount(1);
+        return ore;
     }
 }

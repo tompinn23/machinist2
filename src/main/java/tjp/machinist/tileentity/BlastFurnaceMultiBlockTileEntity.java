@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -18,6 +19,7 @@ import tjp.machinist.api.multiblock.IMultiblockPart;
 import tjp.machinist.api.multiblock.MultiblockControllerBase;
 import tjp.machinist.api.multiblock.rectangular.RectangularMultiblockControllerBase;
 import tjp.machinist.api.multiblock.validation.IMultiblockValidator;
+import tjp.machinist.recipes.BlastFurnaceManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,7 +34,6 @@ public class BlastFurnaceMultiBlockTileEntity extends RectangularMultiblockContr
     private int cookTime = 0;
     private int burnTime = 0;
 
-    private MachineRecipe curRecipe = null;
 
     private ItemStackHandler inputStackHandler = new ItemStackHandler(2);
     private ItemStackHandler fuelStackHandler = new ItemStackHandler(1);
@@ -55,7 +56,7 @@ public class BlastFurnaceMultiBlockTileEntity extends RectangularMultiblockContr
     public void onAttachedPartWithMultiblockData(IMultiblockPart part, NBTTagCompound data) {
         if(part != saveDelegatePart)
             saveDelegatePart = part;
-        readFromNBT(data.getCompoundTag("multiblockData"));
+        readFromNBT(data);
     }
 
     @Override
@@ -132,17 +133,23 @@ public class BlastFurnaceMultiBlockTileEntity extends RectangularMultiblockContr
             }
 
 
-            if (cookTime >= curRecipe.getProcessingTime()) {
+            if (cookTime >= getRecipe().getCookTime()) {
                 doSmelt();
                 cookTime = 0;
             }
+            sendUpdates();
             return true;
         } else if(burnTime > 0) {
                 burnFuel();
                 cookTime = 0;
+                sendUpdates();
                 return true;
         }
         return false;
+    }
+
+    private BlastFurnaceManager.BlastFurnaceRecipe getRecipe() {
+        return BlastFurnaceManager.getRecipe(inputStackHandler.getStackInSlot(0), inputStackHandler.getStackInSlot(1));
     }
 
     private boolean burnFuel() {
@@ -172,18 +179,17 @@ public class BlastFurnaceMultiBlockTileEntity extends RectangularMultiblockContr
     }
 
     private boolean smeltItem(boolean doSmelt) {
-        MachineRecipe recipe = null;
+        BlastFurnaceManager.BlastFurnaceRecipe recipe = null;
         boolean canSmelt = false;
         if(!inputStackHandler.getStackInSlot(0).isEmpty() || !inputStackHandler.getStackInSlot(1).isEmpty()) {
-            recipe = BlastFurnaceRecipes.instance().GetRecipe(new ItemStack[] {inputStackHandler.getStackInSlot(0), inputStackHandler.getStackInSlot(1)});
+            recipe = BlastFurnaceManager.getRecipe(inputStackHandler.getStackInSlot(0), inputStackHandler.getStackInSlot(1));
         }
         if(recipe != null) {
-            if(recipe.getIngredientAmt(inputStackHandler.getStackInSlot(0).getItem()) <= inputStackHandler.getStackInSlot(0).getCount() ||
-               recipe.getIngredientAmt(inputStackHandler.getStackInSlot(1).getItem()) <= inputStackHandler.getStackInSlot(1).getCount()) {
+            if(recipe.checkIngredients(inputStackHandler.getStackInSlot(0), inputStackHandler.getStackInSlot(1))) {
                 ItemStack outputStack = outputStackHandler.getStackInSlot(0);
                 if(!outputStack.isEmpty()) {
-                    if(outputStack.getItem() == recipe.getResult().getItem()) {
-                        int combinedSize = outputStack.getCount() + recipe.getResult().getCount();
+                    if(outputStack.getItem() == recipe.getOutput().getItem()) {
+                        int combinedSize = outputStack.getCount() + recipe.getOutput().getCount();
                         canSmelt = combinedSize <= outputStack.getMaxStackSize();
                     }
                 } else {
@@ -193,19 +199,35 @@ public class BlastFurnaceMultiBlockTileEntity extends RectangularMultiblockContr
         }
 
         if(canSmelt) {
-            curRecipe = recipe;
             if(!doSmelt) return true;
             ItemStack in1 = inputStackHandler.getStackInSlot(0);
             ItemStack in2 = inputStackHandler.getStackInSlot(1);
-            inputStackHandler.extractItem(0, recipe.getIngredientAmt(in1.getItem()), false);
-            inputStackHandler.extractItem(1, recipe.getIngredientAmt(in2.getItem()), false);
-            outputStackHandler.insertItem(0, recipe.getResult().copy(), false);
+            if(recipe.reversed(in1)) {
+                inputStackHandler.extractItem(0, recipe.getSecondInput().getCount(), false);
+                inputStackHandler.extractItem(1, recipe.getFirstInput().getCount(), false);
+                outputStackHandler.insertItem(0, recipe.getOutput().copy(), false);
+            }else {
+                inputStackHandler.extractItem(0, recipe.getFirstInput().getCount(), false);
+                inputStackHandler.extractItem(1, recipe.getSecondInput().getCount(), false);
+            }
+            outputStackHandler.insertItem(0, recipe.getOutput().copy(), false);
             return true;
         }
         return false;
     }
 
 
+    public double getCookProgress() {
+        BlastFurnaceManager.BlastFurnaceRecipe recipe = getRecipe();
+        if(recipe == null) {
+            return 0.0D;
+        }
+        return MathHelper.clamp(cookTime / (double)getRecipe().getCookTime(), 0.0D, 1.0D);
+    }
+
+    public double getFuelLeft() {
+        return MathHelper.clamp(burnTime / (double)TileEntityFurnace.getItemBurnTime(fuelStackHandler.getStackInSlot(0)), 0.0D, 1.0D);
+    }
 
 
 
@@ -257,6 +279,7 @@ public class BlastFurnaceMultiBlockTileEntity extends RectangularMultiblockContr
         data.setTag("fuelStack", fuelStackHandler.serializeNBT());
         data.setTag("outputStack", outputStackHandler.serializeNBT());
         data.setInteger("cookTime", cookTime);
+        data.setInteger("burnTime", burnTime);
         return data;
     }
 
@@ -264,12 +287,14 @@ public class BlastFurnaceMultiBlockTileEntity extends RectangularMultiblockContr
     public void readFromNBT(NBTTagCompound data) {
         if(data.hasKey("cookTime"))
             cookTime = data.getInteger("cookTime");
+        if(data.hasKey("burnTime"))
+            burnTime = data.getInteger("burnTime");
         if(data.hasKey("inputStack"))
             inputStackHandler.deserializeNBT((NBTTagCompound)data.getTag("inputStack"));
         if(data.hasKey("fuelStack"))
             fuelStackHandler.deserializeNBT((NBTTagCompound)data.getTag("fuelStack"));
         if(data.hasKey("outputStack"))
-            fuelStackHandler.deserializeNBT((NBTTagCompound)data.getTag("outputStack"));
+            outputStackHandler.deserializeNBT((NBTTagCompound)data.getTag("outputStack"));
     }
 
     @Override
@@ -315,7 +340,8 @@ public class BlastFurnaceMultiBlockTileEntity extends RectangularMultiblockContr
     }
 
     public static boolean isValidInput(ItemStack stack) {
-        return BlastFurnaceRecipes.instance().GetRecipe(stack) != null;
+        return true;
+//        return BlastFurnaceRecipes.instance().GetRecipe(stack) != null;
     }
 
     public static boolean isValidFuel(ItemStack stack) {

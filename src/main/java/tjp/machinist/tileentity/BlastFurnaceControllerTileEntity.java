@@ -7,12 +7,11 @@ import net.minecraft.util.EnumFacing;
 import tjp.machinist.api.multiblock.MultiblockControllerBase;
 import tjp.machinist.api.multiblock.rectangular.RectangularMultiblockTileEntityBase;
 import tjp.machinist.api.multiblock.validation.IMultiblockValidator;
-import tjp.machinist.recipes.BlastFurnaceRecipes;
 
 import javax.annotation.Nullable;
 
 public class BlastFurnaceControllerTileEntity extends RectangularMultiblockTileEntityBase {
-    private BlastFurnaceRecipes recipeHandler;
+
 
     private static final int MACHINE_SZ = 3;
 

@@ -28,7 +28,6 @@ import javax.annotation.Nullable;
 public class TileEntityPowerable extends TileEntity implements IEnergyStorage, IEnergySink, IEnergyTile {
 
 	protected EnergyMachine energyStorage;
-	protected IRecipeHandler recipeHandler;
 
 
 	public TileEntityPowerable(int capacity) {

@@ -1,19 +1,18 @@
 package tjp.machinist.recipes;
 
-import cofh.thermalexpansion.util.managers.machine.PulverizerManager;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import tjp.machinist.blocks.crusher.Crusher;
 import tjp.machinist.inventory.ComparableItemStack;
 import tjp.machinist.inventory.ComparableItemStackValidated;
 import tjp.machinist.inventory.OreValidator;
+import tjp.machinist.items.ModItems;
+import tjp.machinist.util.ItemHelper;
 import tjp.machinist.util.OreDictionaryHelper;
 
-import java.security.PublicKey;
+import java.util.Locale;
 import java.util.Map;
 
 public class CrusherManager {
@@ -21,6 +20,8 @@ public class CrusherManager {
     private static Map<ComparableItemStack, CrusherRecipe> recipeMap = new Object2ObjectOpenHashMap<>();
 
     private static OreValidator oreValidator = new OreValidator();
+
+    public static final int DEFAULT_ENERGY = 2000;
 
     static {
         oreValidator.addPrefix(ComparableItemStack.ORE);
@@ -53,9 +54,49 @@ public class CrusherManager {
     }
 
     public static void initalise() {
-        addRecipe(200, new ItemStack(Item.getItemFromBlock(Blocks.GOLD_ORE), 1), new ItemStack())
+        addRecipe(200, new ItemStack(Item.getItemFromBlock(Blocks.GOLD_ORE), 1), new ItemStack(ModItems.goldDust, 2));
+        addRecipe(200, new ItemStack(Item.getItemFromBlock(Blocks.IRON_ORE), 1), new ItemStack(ModItems.ironDust,2));
+        addRecipe(400, new ItemStack(ModItems.steelIngot), new ItemStack(ModItems.steelDust, 1));
+        String oreType;
+        for(String oreName : OreDictionary.getOreNames()) {
+            if(oreName.startsWith("ore")) {
+                oreType = oreName.substring(3);
+                addDefaultRecipe(oreType);
+            }
+        }
     }
 
+    private static void addDefaultRecipe(String oreType) {
+        if(oreType == null || oreType.isEmpty()) {
+            return;
+        }
+
+        String suffix = oreType.substring(0,1).toUpperCase(Locale.US) + oreType.substring(1);
+
+        String oreName = "ore" + suffix;
+        String gemName = "gem" + suffix;
+        String dustName = "dust" + suffix;
+        String ingotName = "ingot" + suffix;
+
+        ItemStack ore = OreDictionaryHelper.getOre(oreName);
+        ItemStack gem = OreDictionaryHelper.getOre(gemName);
+        ItemStack dust = OreDictionaryHelper.getOre(dustName);
+        ItemStack ingot = OreDictionaryHelper.getOre(ingotName);
+
+
+        if(!gem.isEmpty()) {
+            addRecipe(DEFAULT_ENERGY, ore, ItemHelper.cloneStack(gem, 2));
+            if(!dust.isEmpty())
+                addRecipe(DEFAULT_ENERGY / 2, gem, ItemHelper.cloneStack(dust, 1));
+        } else {
+            if(!dust.isEmpty())
+                addRecipe(DEFAULT_ENERGY, ore, ItemHelper.cloneStack(dust, 2));
+                addRecipe(DEFAULT_ENERGY / 2, ingot, ItemHelper.cloneStack(dust, 1));
+        }
+
+
+
+    }
 
 
     public static CrusherRecipe addRecipe(int energy, ItemStack input, ItemStack output) {
@@ -63,6 +104,8 @@ public class CrusherManager {
             return null;
         }
         CrusherRecipe recipe = new CrusherRecipe(input, output, energy);
+        recipeMap.put(new ComparableItemStackValidated(input, oreValidator), recipe);
+        return recipe;
     }
 
     public static class CrusherRecipe {
