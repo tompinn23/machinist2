@@ -4,8 +4,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tjp.machinist.blocks.MachineFrame;
-import tjp.machinist.blocks.blastFurnace.BlastFurnaceCasing;
-import tjp.machinist.blocks.blastFurnace.BlastFurnaceController;
+import tjp.machinist.blocks.BlastFurnace.BlastFurnaceCasing;
+import tjp.machinist.blocks.BlastFurnace.BlastFurnaceController;
 import tjp.machinist.blocks.crusher.Crusher;
 import tjp.machinist.blocks.smelter.Smelter;
 
@@ -26,6 +26,7 @@ public class ModBlocks {
     @GameRegistry.ObjectHolder("machinist:blastfurnacecasing")
     public static BlastFurnaceCasing blastCasing;
 
+
     @SideOnly(Side.CLIENT)
     public static void initModels() {
         machineFrame.initModel();
@@ -33,5 +34,6 @@ public class ModBlocks {
         crusher.initModel();
         blastCasing.initModel();
         blastController.initModel();
+
     }
 }

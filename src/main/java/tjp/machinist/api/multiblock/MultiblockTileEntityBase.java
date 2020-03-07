@@ -15,11 +15,14 @@ package tjp.machinist.api.multiblock;
 
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import tjp.machinist.Machinist;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -157,6 +160,53 @@ public abstract class MultiblockTileEntityBase extends TileEntity implements IMu
 		super.validate();
         REGISTRY.onPartAdded(this.world, this);
 	}
+
+	@Nullable
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		NBTTagCompound packetData = new NBTTagCompound();
+		encodeDescriptionPacket(packetData);
+		return new SPacketUpdateTileEntity(this.pos, 0, packetData);
+	}
+
+//	public SPacketUpdateTileEntity getDescriptionPacket() {
+//		NBTTagCompound packetData = new NBTTagCompound();
+//		encodeDescriptionPacket(packetData);
+//		return new SPacketUpdateTileEntity(this.pos, 0, packetData);
+//	}
+
+	@Override
+	public void onDataPacket(NetworkManager network, SPacketUpdateTileEntity packet) {
+		decodeDescriptionPacket(packet.getNbtCompound());
+	}
+
+	protected void encodeDescriptionPacket(NBTTagCompound packetData) {
+		if(this.isMultiblockSaveDelegate() && isConnected()) {
+			NBTTagCompound tag = new NBTTagCompound();
+			getMultiblockController().formatDescriptionPacket(tag);
+			packetData.setTag("multiblockData", tag);
+		}
+	}
+
+	/**
+	 * Override this to easily read in data from a TileEntity's description packet.
+	 * Encoded in encodeDescriptionPacket.
+	 * @param packetData The NBT data from the tile entity's description packet.
+	 * @see
+	 */
+	protected void decodeDescriptionPacket(NBTTagCompound packetData) {
+		if(packetData.hasKey("multiblockData")) {
+			NBTTagCompound tag = packetData.getCompoundTag("multiblockData");
+			if(isConnected()) {
+				getMultiblockController().decodeDescriptionPacket(tag);
+			}
+			else {
+				// This part hasn't been added to a machine yet, so cache the data.
+				this.cachedMultiblockData = tag;
+			}
+		}
+	}
+
 
 	@Override
 	public boolean hasMultiblockSaveData() {

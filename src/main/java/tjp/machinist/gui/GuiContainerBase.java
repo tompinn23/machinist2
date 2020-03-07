@@ -24,6 +24,13 @@ public abstract class GuiContainerBase extends GuiContainer {
     }
 
 
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        drawDefaultBackground();
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        renderHoveredToolTip(mouseX, mouseY);
+    }
+
     public void drawSizedTexturedModalRect(int x, int y, int u, int v, int width, int height, float textureWidth,
                                            float textureHeight) {
         Gui.drawModalRectWithCustomSizedTexture(x, y, u, v, width, height, textureWidth, textureHeight);

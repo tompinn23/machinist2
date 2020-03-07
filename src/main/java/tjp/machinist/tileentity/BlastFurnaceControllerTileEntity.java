@@ -1,14 +1,17 @@
-package tjp.machinist.blocks.blastFurnace;
+package tjp.machinist.tileentity;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import tjp.machinist.api.multiblock.MultiblockControllerBase;
 import tjp.machinist.api.multiblock.rectangular.RectangularMultiblockTileEntityBase;
 import tjp.machinist.api.multiblock.validation.IMultiblockValidator;
-import tjp.machinist.recipes.BlastFurnaceRecipes;
 
-public class BlastFurnaceControllerTE extends RectangularMultiblockTileEntityBase {
-    private BlastFurnaceRecipes recipeHandler;
+import javax.annotation.Nullable;
+
+public class BlastFurnaceControllerTileEntity extends RectangularMultiblockTileEntityBase {
+
 
     private static final int MACHINE_SZ = 3;
 
@@ -16,7 +19,7 @@ public class BlastFurnaceControllerTE extends RectangularMultiblockTileEntityBas
 
     private EnumFacing facing;
 
-    public BlastFurnaceControllerTE() {
+    public BlastFurnaceControllerTileEntity() {
         super();
         this.facing = EnumFacing.NORTH;
     }
@@ -46,7 +49,7 @@ public class BlastFurnaceControllerTE extends RectangularMultiblockTileEntityBas
         return false;
     }
 
-    public BlastFurnaceControllerTE(EnumFacing facing) {
+    public BlastFurnaceControllerTileEntity(EnumFacing facing) {
         super();
         this.facing = facing;
     }
@@ -63,7 +66,7 @@ public class BlastFurnaceControllerTE extends RectangularMultiblockTileEntityBas
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-        //super.writeToNBT(nbt);
+        super.writeToNBT(nbt);
         nbt.setInteger("facing", facing.getIndex());
         return nbt;
     }
@@ -80,55 +83,37 @@ public class BlastFurnaceControllerTE extends RectangularMultiblockTileEntityBas
 
     @Override
     public MultiblockControllerBase createNewMultiblock() {
-        return new BlastFurnaceMultiController(this.world);
+        return new BlastFurnaceMultiBlockTileEntity(this.world);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
-        //super.readFromNBT(nbt);
+        super.readFromNBT(nbt);
         facing = EnumFacing.values()[nbt.getInteger("facing")];
     }
 
-//    @Override
-//    public void checkPattern() {
-//        EnumFacing machineDirection = getFacing().getOpposite();
-//        BlockPos topRight = pos.up().offset(machineDirection.rotateY());
-//        BlockPos bottomLeft = pos.down().offset(machineDirection.rotateYCCW()).offset(machineDirection,2);
-//        BlockPos min = WorldHelpers.getMinCoord(topRight, bottomLeft);
-//        BlockPos max = WorldHelpers.getMaxCoord(topRight, bottomLeft);
-//
-//        BlockPos airPos = pos.offset(machineDirection);
-//
-//        if(world.getBlockState(airPos).getBlock() != Blocks.AIR) {
-//            return;
-//        }
-//
-//        for(BlockPos curPos : BlockPos.getAllInBox(min, max)) {
-//            TileEntity te = null;
-//            if(curPos == pos)
-//                continue;
-//            if(curPos == airPos)
-//                continue;
-//            if((te = world.getTileEntity(curPos)) == null) {
-//                return;
-//            }
-//            if(te instanceof MultiblockBaseTileEntity) {
-//                if(((MultiblockBaseTileEntity)te).getMultiblockControllerType() == this.getClass()) {
-//                    continue;
-//                }
-//            }
-//            else {
-//                return;
-//            }
-//        }
-//        formed = true;
-//    }
+    @Override
+    @Nullable
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(this.pos, 3, this.getUpdateTag());
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return this.writeToNBT(new NBTTagCompound());
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        super.onDataPacket(net, pkt);
+        handleUpdateTag(pkt.getNbtCompound());
+    }
 
 
 
 
     @Override
     public Class<? extends MultiblockControllerBase> getMultiblockControllerType() {
-        return BlastFurnaceMultiController.class;
+        return BlastFurnaceMultiBlockTileEntity.class;
     }
 }

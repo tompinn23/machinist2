@@ -42,7 +42,9 @@ public abstract class MultiblockControllerBase implements IMultiblockValidator {
 
 	// Multiblock stuff - do not mess with
 	public final World WORLD;
-	
+
+	public abstract void onBlockActivated(BlockPos pos);
+
 	// Disassembled -> Assembled; Assembled -> Disassembled OR Paused; Paused -> Assembled
 	protected enum AssemblyState { Disassembled, Assembled, Paused }
 	protected AssemblyState assemblyState;
@@ -675,13 +677,13 @@ public abstract class MultiblockControllerBase implements IMultiblockValidator {
 	 * Called when the save delegate's tile entity is being asked for its description packet
 	 * @param data A fresh compound tag to write your multiblock data into
 	 */
-	//public abstract void formatDescriptionPacket(NBTTagCompound data);
+	public abstract void formatDescriptionPacket(NBTTagCompound data);
 
 	/**
 	 * Called when the save delegate's tile entity receiving a description packet
 	 * @param data A compound tag containing multiblock data to import
 	 */
-	//public abstract void decodeDescriptionPacket(NBTTagCompound data);
+	public abstract void decodeDescriptionPacket(NBTTagCompound data);
 
 	/**
 	 * @return True if this controller has no associated blocks, false otherwise

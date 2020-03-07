@@ -8,6 +8,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
 import tjp.machinist.proxy.CommonProxy;
+import tjp.machinist.recipes.BlastFurnaceManager;
+import tjp.machinist.recipes.CrusherManager;
 
 
 @Mod(modid = Machinist.MODID, name = Machinist.MODNAME, version = Machinist.MODVERSION, dependencies = "required-after:forge@[14.23.5.2768,)", useMetadata = true)
@@ -25,6 +27,7 @@ public class Machinist {
     public static boolean ic2Loaded = false;
     
     public static Logger logger;
+    public static boolean debug = true;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -39,8 +42,16 @@ public class Machinist {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent e) {
+        initManagers();
+
+
     	ic2Loaded = Loader.isModLoaded("ic2");
         proxy.postInit(e);
+    }
+
+    private void initManagers() {
+        CrusherManager.initalise();
+        BlastFurnaceManager.initialise();
     }
 
 

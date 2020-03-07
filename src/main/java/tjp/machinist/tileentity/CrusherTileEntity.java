@@ -1,7 +1,6 @@
-package tjp.machinist.blocks.crusher;
+package tjp.machinist.tileentity;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -13,8 +12,9 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import tjp.machinist.blocks.crusher.Crusher;
 import tjp.machinist.energy.TileEntityPowerable;
-import tjp.machinist.recipes.CrusherRecipes;
+import tjp.machinist.recipes.CrusherManager;
 
 import javax.annotation.Nullable;
 
@@ -42,7 +42,6 @@ public class CrusherTileEntity extends TileEntityPowerable implements ITickable 
 
     public CrusherTileEntity() {
         super(10000, TRANSFER_BASE * 2, 0);
-        recipeHandler = CrusherRecipes.instance();
     }
 
     @Override
@@ -68,10 +67,10 @@ public class CrusherTileEntity extends TileEntityPowerable implements ITickable 
     }
 
     private void doAction() {
-        ItemStack result = ItemStack.EMPTY;
+        CrusherManager.CrusherRecipe result = null;
         if (!inputStackHandler.getStackInSlot(0).isEmpty()) {
-            result = recipeHandler.getResult(inputStackHandler.getStackInSlot(0))[0];
-            ItemStack left = result.copy();
+            result = CrusherManager.getRecipe(inputStackHandler.getStackInSlot(0));
+            ItemStack left = result.getOutput().copy();
 
             for (int i = 0; i < outputStackHandler.getSlots(); i++) {
                 ItemStack left2 = outputStackHandler.insertItem(i, left, true);
@@ -97,7 +96,7 @@ public class CrusherTileEntity extends TileEntityPowerable implements ITickable 
                 continue;
             else {
                 if(energyStorage.getEnergyStored() > TRANSFER_BASE) {
-                    return recipeHandler.hasRecipe(inputStackHandler.getStackInSlot(0));
+                    return CrusherManager.recipeExists(inputStackHandler.getStackInSlot(0));
                 }
             }
         }
@@ -177,7 +176,7 @@ public class CrusherTileEntity extends TileEntityPowerable implements ITickable 
     }
 
     public static boolean isItemValidInput(ItemStack stack) {
-        return CrusherRecipes.instance().hasRecipe(stack);
+        return CrusherManager.recipeExists(stack);
     }
 
     public double getCookProgress() {
