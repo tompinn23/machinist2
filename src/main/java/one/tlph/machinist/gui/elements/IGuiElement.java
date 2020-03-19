@@ -1,10 +1,10 @@
 package one.tlph.machinist.gui.elements;
 
-import one.tlph.machinist.gui.GuiContainerBase;
+import one.tlph.machinist.gui.ScreenBase;
 
 public abstract class IGuiElement {
 
-    protected GuiContainerBase gc;
+    protected ScreenBase gc;
     protected int xPos;
     protected int yPos;
 
@@ -14,7 +14,7 @@ public abstract class IGuiElement {
     protected int sizeX;
     protected int sizeY;
 
-    public IGuiElement(GuiContainerBase gc, int posX, int posY) {
+    public IGuiElement(ScreenBase gc, int posX, int posY) {
         this.gc = gc;
         this.xPos = posX;
         this.yPos = posY;
@@ -29,7 +29,7 @@ public abstract class IGuiElement {
 
     public void drawTexturedModalRect(int x, int y, int u, int v, int width, int height) {
 
-        gc.drawSizedTexturedModalRect(x, y, u, v, width, height, texW, texH);
+        ScreenBase.blit(x, y, u, v, width, height, texW, texH);
     }
 
 }

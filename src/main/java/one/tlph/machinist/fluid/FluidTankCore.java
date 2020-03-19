@@ -1,10 +1,10 @@
 package one.tlph.machinist.fluid;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.fluid.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 import javax.annotation.Nullable;
 
@@ -27,10 +27,10 @@ public class FluidTankCore implements IFluidTank {
         this(new FluidStack(fluid, amt), capacity);
     }
 
-    public FluidTankCore readFromNBT(NBTTagCompound nbt) {
+    public FluidTankCore readFromNBT(CompoundNBT nbt) {
         FluidStack fluid = null;
         locked = false;
-        if(!nbt.hasKey("Empty")) {
+        if(!nbt.contains("Empty")) {
             fluid = FluidStack.loadFluidStackFromNBT(nbt);
             locked = nbt.getBoolean("Lock") && fluid != null;
         }
@@ -38,13 +38,13 @@ public class FluidTankCore implements IFluidTank {
         return this;
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public CompoundNBT writeToNBT(CompoundNBT nbt) {
         if(fluid != null) {
             fluid.writeToNBT(nbt);
-            nbt.setBoolean("Lock", locked);
+            nbt.putBoolean("Lock", locked);
         }
         else {
-            nbt.setString("Empty", "");
+            nbt.putString("Empty", "");
         }
         return nbt;
     }
@@ -102,12 +102,13 @@ public class FluidTankCore implements IFluidTank {
         if (!locked) {
             return;
         }
-        this.fluid.amount += amount;
+        this.fluid.setAmount(this.fluid.getAmount() + amount);
+       
 
-        if (this.fluid.amount > capacity) {
-            this.fluid.amount = capacity;
-        } else if (this.fluid.amount < 0) {
-            this.fluid.amount = 0;
+        if (this.fluid.getAmount() > capacity) {
+            this.fluid.setAmount(capacity);
+        } else if (this.fluid.getAmount() < 0) {
+            this.fluid.setAmount(0);
         }
     }
 
@@ -121,15 +122,7 @@ public class FluidTankCore implements IFluidTank {
         if (fluid == null) {
             return capacity;
         }
-        return fluid.amount >= capacity ? 0 : capacity - fluid.amount;
-    }
-
-    public FluidStack drain(FluidStack resource, boolean doDrain) {
-
-        if (resource == null || !resource.isFluidEqual(fluid)) {
-            return null;
-        }
-        return drain(resource.amount, doDrain);
+        return fluid.getAmount() >= capacity ? 0 : capacity - fluid.getAmount();
     }
 
 
@@ -143,7 +136,7 @@ public class FluidTankCore implements IFluidTank {
     public int getFluidAmount() {
         if(fluid == null)
             return 0;
-        return fluid.amount;
+        return fluid.getAmount();
     }
 
     @Override
@@ -151,64 +144,78 @@ public class FluidTankCore implements IFluidTank {
         return capacity;
     }
 
-    @Override
-    public FluidTankInfo getInfo() {
-        return new FluidTankInfo(this);
-    }
+//    @Override
+//    public FluidTankInfo getInfo() {
+//        return new FluidTankInfo(this);
+//    }
 
-    @Override
-    public int fill(FluidStack resource, boolean doFill) {
+
+	@Override
+	public boolean isFluidValid(FluidStack stack) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int fill(FluidStack resource, FluidAction action) {
         if(resource == null) {
             return 0;
         }
 
-        if(!doFill) {
+        if(action == action.SIMULATE) {
             if(fluid == null) {
-                return Math.min(capacity, resource.amount);
+                return Math.min(capacity, resource.getAmount());
             }
             if(!fluid.isFluidEqual(resource)) {
                 return 0;
             }
-            return Math.min(capacity -fluid.amount, resource.amount);
+            return Math.min(capacity -fluid.getAmount(), resource.getAmount());
         }
         if(fluid == null) {
-            fluid = new FluidStack(resource, Math.min(capacity, resource.amount));
-            return fluid.amount;
+            fluid = new FluidStack(resource, Math.min(capacity, resource.getAmount()));
+            return fluid.getAmount();
         }
         if(!fluid.isFluidEqual(resource))
             return 0;
-        int filled = capacity - fluid.amount;
-        if(resource.amount < filled) {
-            fluid.amount += resource.amount;
-            filled = resource.amount;
+        int filled = capacity - fluid.getAmount();
+        if(resource.getAmount() < filled) {
+            fluid.setAmount(fluid.getAmount() + resource.getAmount());
+            filled = resource.getAmount();
         } else {
-            fluid.amount = capacity;
+            fluid.setAmount(capacity);
         }
         return filled;
-    }
+	}
 
-    @Nullable
-    @Override
-    public FluidStack drain(int maxDrain, boolean doDrain) {
-        if (fluid == null || locked && fluid.amount <= 0) {
+	@Override
+	public FluidStack drain(int maxDrain, FluidAction action) {
+        if (fluid == null || locked && fluid.getAmount() <= 0) {
             return null;
         }
         int drained = maxDrain;
-        if (fluid.amount < drained) {
-            drained = fluid.amount;
+        if (fluid.getAmount() < drained) {
+            drained = fluid.getAmount();
         }
         FluidStack stack = new FluidStack(fluid, drained);
-        if (doDrain) {
-            fluid.amount -= drained;
-            if (fluid.amount <= 0) {
+        if (action == action.EXECUTE) {
+            fluid.setAmount(fluid.getAmount() - drained);
+            if (fluid.getAmount() <= 0) {
                 if (locked) {
-                    fluid.amount = 0;
+                    fluid.setAmount(0);
                 } else {
                     fluid = null;
                 }
             }
         }
         return stack;
-    }
+	}
+
+	@Override
+	public FluidStack drain(FluidStack resource, FluidAction action) {
+        if (resource == null || !resource.isFluidEqual(fluid)) {
+            return null;
+        }
+        return drain(resource.getAmount(), action);
+	}
 }
 

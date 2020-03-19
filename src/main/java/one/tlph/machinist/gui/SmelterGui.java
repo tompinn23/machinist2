@@ -1,16 +1,20 @@
 package one.tlph.machinist.gui;
 
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.energy.CapabilityEnergy;
 import one.tlph.machinist.Machinist;
 import one.tlph.machinist.container.SmelterContainer;
 import one.tlph.machinist.gui.elements.EnergyBar;
 import one.tlph.machinist.tileentity.SmelterTileEntity;
+import one.tlph.machinist.util.RenderHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SmelterGui extends GuiContainerBase {
+public class SmelterGui extends ScreenBase<SmelterContainer> {
 	public static final int WIDTH = 176;
 	public static final int HEIGHT = 166;
 	
@@ -39,23 +43,23 @@ public class SmelterGui extends GuiContainerBase {
 	private EnergyBar bar;
 	private static final ResourceLocation background = new ResourceLocation(Machinist.MODID, "textures/gui/smelter.png");
 	
-	public SmelterGui(SmelterTileEntity tileEntity, SmelterContainer container) {
-		super(container);
+	public SmelterGui(final SmelterContainer container, final PlayerInventory inventory, final ITextComponent title) {
+		super(container, inventory, new TranslationTextComponent("machinist.smelter.gui.title"));
 		
 		xSize = WIDTH;
 		ySize = HEIGHT;
-		this.te = tileEntity;
-		this.bar = new EnergyBar(this, te.getCapability(CapabilityEnergy.ENERGY, null), ENERGY_XPOS, ENERGY_YPOS);
+		this.te = container.te;
+		this.bar = new EnergyBar(this, te.getCapability(CapabilityEnergy.ENERGY, null).orElse(null), ENERGY_XPOS, ENERGY_YPOS);
 	}
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		mc.getTextureManager().bindTexture(background);
-		drawTexturedModalRect(guiLeft,guiTop, 0,0, xSize, ySize);
+		RenderHelper.bindTexture(background);
+		blit(guiLeft,guiTop, 0,0, xSize, ySize);
 		
 		double cookProgress = te.fractionOfCookTimeComplete();
 		//Machinist.logger.info("cookProgress = {}", cookProgress);
-		drawTexturedModalRect(guiLeft + COOK_XPOS, guiTop + COOK_YPOS, COOK_U, COOK_V, (int)(cookProgress * COOK_WIDTH), COOK_HEIGHT);
+		blit(guiLeft + COOK_XPOS, guiTop + COOK_YPOS, COOK_U, COOK_V, (int)(cookProgress * COOK_WIDTH), COOK_HEIGHT);
 		
 		//double fuelRemaining = te.fractionOfFuelRemaining();
 		//drawTexturedModalRect(guiLeft + FLAME_XPOS, guiTop + FLAME_YPOS + (int)((1.0 - fuelRemaining) * FLAME_HEIGHT), FLAME_U, (int)((1.0 - fuelRemaining) * FLAME_HEIGHT) + FLAME_V, FLAME_WIDTH, FLAME_HEIGHT - (int)((1.0 - fuelRemaining) * FLAME_HEIGHT));
@@ -80,7 +84,7 @@ public class SmelterGui extends GuiContainerBase {
 		bar.drawForeground(mouseX, mouseY);
 		// If hoveringText is not empty draw the hovering text
 		if (!hoveringText.isEmpty()){
-			drawHoveringText(hoveringText, mouseX - guiLeft, mouseY - guiTop, fontRenderer);
+			this.renderTooltip(hoveringText, mouseX - guiLeft, mouseY - guiTop);
 		}
 	}
 	

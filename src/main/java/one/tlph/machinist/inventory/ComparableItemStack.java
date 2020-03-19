@@ -1,9 +1,12 @@
 package one.tlph.machinist.inventory;
 
-import net.minecraft.init.Items;
+import java.util.List;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import one.tlph.machinist.util.OreDictionaryHelper;
+import net.minecraft.item.Items;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
 
 public class ComparableItemStack {
 
@@ -18,13 +21,13 @@ public class ComparableItemStack {
     public static final String PLATE = "plate";
 
     static {
-        DEFAULT_VALIDATOR.addPrefix(BLOCK);
-        DEFAULT_VALIDATOR.addPrefix(ORE);
-        DEFAULT_VALIDATOR.addPrefix(DUST);
-        DEFAULT_VALIDATOR.addPrefix(INGOT);
-        DEFAULT_VALIDATOR.addPrefix(NUGGET);
-        DEFAULT_VALIDATOR.addPrefix(GEM);
-        DEFAULT_VALIDATOR.addPrefix(PLATE);
+        DEFAULT_VALIDATOR.addGroup(new ResourceLocation("forge", BLOCK));
+        DEFAULT_VALIDATOR.addGroup(new ResourceLocation("forge", ORE));
+        DEFAULT_VALIDATOR.addGroup(new ResourceLocation("forge", DUST));
+        DEFAULT_VALIDATOR.addGroup(new ResourceLocation("forge", INGOT));
+        DEFAULT_VALIDATOR.addGroup(new ResourceLocation("forge", NUGGET));
+        DEFAULT_VALIDATOR.addGroup(new ResourceLocation("forge", GEM));
+        DEFAULT_VALIDATOR.addGroup(new ResourceLocation("forge", PLATE));
     }
 
 
@@ -32,17 +35,16 @@ public class ComparableItemStack {
     public int metadata = -1;
     public int stackSize = -1;
 
-    public int oreID = -1;
+    public ResourceLocation oreID = null;
     public String oreName = "Unknown";
 
 
     public ComparableItemStack(ItemStack stack) {
         this.item = stack.getItem();
-        this.metadata = stack.getItemDamage();
+        this.metadata = stack.getDamage();
         if(!stack.isEmpty()) {
             this.stackSize = stack.getCount();
-            this.oreID = OreDictionaryHelper.getOreID(OreDictionaryHelper.getOreName(stack));
-            this.oreName = OreDictionaryHelper.getOreName(stack);
+            this.oreID = ((List<ResourceLocation>)ItemTags.getCollection().getOwningTags(item)).get(0);
         }
     }
 
@@ -60,7 +62,7 @@ public class ComparableItemStack {
     }
 
     public boolean isItemEqual(ComparableItemStack other) {
-        return other != null && (oreID != -1 && oreID == other.oreID || isEqual(other));
+        return other != null && (oreID != null && oreID == other.oreID || isEqual(other));
     }
 
     public boolean isStackEqual(ComparableItemStack other) {
@@ -69,7 +71,7 @@ public class ComparableItemStack {
 
 
     public ItemStack toItemStack() {
-        return item != Items.AIR ? new ItemStack(item, stackSize, metadata) : ItemStack.EMPTY;
+        return item != Items.AIR ? new ItemStack(item, stackSize) : ItemStack.EMPTY;
     }
 
     @Override
@@ -79,7 +81,7 @@ public class ComparableItemStack {
 
     @Override
     public int hashCode() {
-        return oreID != -1 ? oreName.hashCode() : (metadata & 65535) | getId() << 16;
+        return oreID != null ? (oreID.toString() + "/" + item.getName().getUnformattedComponentText()).hashCode() : (metadata & 65535) | getId() << 16;
     }
 
     public int getId() {

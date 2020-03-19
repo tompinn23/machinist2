@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import one.tlph.machinist.ModBlocks;
+import one.tlph.machinist.blocks.ModBlocks;
 import one.tlph.machinist.proxy.ModContainerTypes;
 import one.tlph.machinist.tileentity.CrusherTileEntity;
 
@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public class CrusherContainer extends ContainerBase {
-    private CrusherTileEntity te;
+    public CrusherTileEntity tileEntity;
     private final IWorldPosCallable canInteractWithCallable;
 
     public CrusherContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
@@ -24,8 +24,8 @@ public class CrusherContainer extends ContainerBase {
     }
 
     public CrusherContainer(final int windowId, final PlayerInventory playerInventory, final CrusherTileEntity tileEntity) {
-        super(ModContainerTypes.CRUSHER.get(), windowId);
-        this.te = tileEntity;
+        super(ModContainerTypes.CRUSHER, windowId);
+        this.tileEntity = tileEntity;
         this.canInteractWithCallable = IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos());
         this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.cookTime, v -> tileEntity.cookTime = (short) v));
 
@@ -44,7 +44,7 @@ public class CrusherContainer extends ContainerBase {
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(canInteractWithCallable, playerIn, ModBlocks.crusher);
+        return isWithinUsableDistance(canInteractWithCallable, playerIn, ModBlocks.CRUSHER);
     }
 
     private class CrushableSlotHandler extends SlotItemHandler {

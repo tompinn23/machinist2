@@ -4,7 +4,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fluids.IFluidTank;
 import one.tlph.machinist.Machinist;
-import one.tlph.machinist.gui.GuiContainerBase;
+import one.tlph.machinist.gui.ScreenBase;
 import one.tlph.machinist.util.RenderHelper;
 
 public class FluidTank extends IGuiElement {
@@ -13,7 +13,7 @@ public class FluidTank extends IGuiElement {
 
     protected IFluidTank tank;
 
-    public FluidTank(GuiContainerBase gc, int posX, int posY, IFluidTank tank) {
+    public FluidTank(ScreenBase gc, int posX, int posY, IFluidTank tank) {
         super(gc, posX, posY);
         this.tank = tank;
         this.texH = 51;

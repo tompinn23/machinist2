@@ -1,0 +1,12 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "machinist:block/blast_furnace_casing"
+  },
+  "variants": {
+    "" : {
+      "model": "machinist:block/blast_furnace_casing"
+      }
+  }
+
+}

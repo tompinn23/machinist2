@@ -4,7 +4,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.energy.IEnergyStorage;
 import one.tlph.machinist.Machinist;
-import one.tlph.machinist.gui.GuiContainerBase;
+import one.tlph.machinist.gui.ScreenBase;
 import one.tlph.machinist.util.RenderHelper;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class EnergyBar extends IGuiElement {
 
     private IEnergyStorage energyStorage;
 
-    public EnergyBar(GuiContainerBase gc, IEnergyStorage energyStorage, int xPos, int yPos) {
+    public EnergyBar(ScreenBase gc, IEnergyStorage energyStorage, int xPos, int yPos) {
         super(gc, xPos, yPos);
         this.energyStorage = energyStorage;
         this.texH = 58;
@@ -52,7 +52,7 @@ public class EnergyBar extends IGuiElement {
         }
         // If hoveringText is not empty draw the hovering text
         if (!hoveringText.isEmpty()){
-            gc.drawHoveringText(hoveringText, mouseX - xPos, mouseY - yPos);
+            gc.renderTooltip(hoveringText, mouseX - xPos, mouseY - yPos);
         }
     }
 

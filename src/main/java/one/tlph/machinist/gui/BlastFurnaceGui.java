@@ -1,11 +1,14 @@
 package one.tlph.machinist.gui;
 
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import one.tlph.machinist.Machinist;
 import one.tlph.machinist.container.BlastFurnaceMultiContainer;
 import one.tlph.machinist.tileentity.BlastFurnaceMultiBlockTileEntity;
+import one.tlph.machinist.util.RenderHelper;
 
-public class BlastFurnaceGui extends GuiContainerBase {
+public class BlastFurnaceGui extends ScreenBase<BlastFurnaceMultiContainer> {
 
     public static final int WIDTH = 176;
     public static final int HEIGHT = 166;
@@ -26,30 +29,23 @@ public class BlastFurnaceGui extends GuiContainerBase {
     protected BlastFurnaceMultiBlockTileEntity te;
     private static final ResourceLocation guiTexture = new ResourceLocation(Machinist.MODID, "textures/gui/blastfurnace.png");
 
-    public BlastFurnaceGui(BlastFurnaceMultiBlockTileEntity te, BlastFurnaceMultiContainer container) {
-        super(container);
+    public BlastFurnaceGui(final BlastFurnaceMultiContainer container, final PlayerInventory inventory, final ITextComponent title) {
+        super(container, inventory, title);
         xSize = WIDTH;
         ySize = HEIGHT;
-        this.te = te;
     }
 
-
-    @Override
-    public void initGui() {
-        super.initGui();
-
-    }
 
 
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        this.bindTexture(guiTexture);
-        drawTexturedModalRect(guiLeft, guiTop, 0 ,0, xSize, ySize);
+        RenderHelper.bindTexture(guiTexture);
+        blit(guiLeft, guiTop, 0 ,0, xSize, ySize);
         double progress = te.getCookProgress();
-        drawTexturedModalRect(guiLeft + COOK_XPOS, guiTop + COOK_YPOS, COOK_U, COOK_V, (int)(progress * COOK_WIDTH), COOK_HEIGHT);
+        blit(guiLeft + COOK_XPOS, guiTop + COOK_YPOS, COOK_U, COOK_V, (int)(progress * COOK_WIDTH), COOK_HEIGHT);
         double fuelLeft = te.getFuelLeft();
-        drawTexturedModalRect(guiLeft + FLAME_XPOS, guiTop + FLAME_YPOS + (int)((1.0 - fuelLeft) * FLAME_HEIGHT), FLAME_U, (int)((1.0 - fuelLeft) * FLAME_HEIGHT) + FLAME_V, FLAME_WIDTH, FLAME_HEIGHT - (int)((1.0 - fuelLeft) * FLAME_HEIGHT));
+        blit(guiLeft + FLAME_XPOS, guiTop + FLAME_YPOS + (int)((1.0 - fuelLeft) * FLAME_HEIGHT), FLAME_U, (int)((1.0 - fuelLeft) * FLAME_HEIGHT) + FLAME_V, FLAME_WIDTH, FLAME_HEIGHT - (int)((1.0 - fuelLeft) * FLAME_HEIGHT));
 
     }
 

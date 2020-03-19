@@ -1,5 +1,7 @@
 package one.tlph.machinist.api.multiblock.rectangular;
 
+import net.minecraft.state.EnumProperty;
+
 /*
  * A multiblock library for making irregularly-shaped multiblock machines
  *
@@ -10,9 +12,7 @@ package one.tlph.machinist.api.multiblock.rectangular;
  * https://github.com/ZeroNoRyouki/ZeroCore
  */
 
-import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.util.Direction;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 
 public enum PartPosition implements IStringSerializable {
@@ -22,12 +22,12 @@ public enum PartPosition implements IStringSerializable {
 	FrameEastWest(null, Type.Frame),
 	FrameSouthNorth(null, Type.Frame),
 	FrameUpDown(null, Type.Frame),
-	TopFace(EnumFacing.UP, Type.Face),
-	BottomFace(EnumFacing.DOWN, Type.Face),
-	NorthFace(EnumFacing.NORTH, Type.Face),
-	SouthFace(EnumFacing.SOUTH, Type.Face),
-	EastFace(EnumFacing.EAST, Type.Face),
-	WestFace(EnumFacing.WEST, Type.Face);
+	TopFace(Direction.UP, Type.Face),
+	BottomFace(Direction.DOWN, Type.Face),
+	NorthFace(Direction.NORTH, Type.Face),
+	SouthFace(Direction.SOUTH, Type.Face),
+	EastFace(Direction.EAST, Type.Face),
+	WestFace(Direction.WEST, Type.Face);
 
 	public enum Type {
 		Unknown,
@@ -52,9 +52,9 @@ public enum PartPosition implements IStringSerializable {
 		return this._type;
 	}
 
-	public static PropertyEnum createProperty(String name) {
+	public static EnumProperty createProperty(String name) {
 
-		return PropertyEnum.create(name, PartPosition.class);
+		return EnumProperty.create(name, PartPosition.class);
 	}
 
 	@Override
@@ -63,12 +63,12 @@ public enum PartPosition implements IStringSerializable {
 		return this.toString();
 	}
 
-	PartPosition(EnumFacing facing, Type type) {
+	PartPosition(Direction facing, Type type) {
 
 		this._facing = facing;
 		this._type = type;
 	}
 
-	private EnumFacing _facing;
+	private Direction _facing;
 	private Type _type;
 }

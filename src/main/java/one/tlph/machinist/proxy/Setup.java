@@ -7,15 +7,6 @@ import one.tlph.machinist.items.ModItems;
 
 public class Setup {
 
-    public ItemGroup itemGroup = new ItemGroup("machinist") {
-        @Override
-        public ItemStack createIcon() {
-            return new ItemStack(ModItems.coupler);
-        }
-    };
-
     public void init() {
     }
-
-
 }

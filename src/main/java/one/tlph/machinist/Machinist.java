@@ -9,8 +9,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import one.tlph.machinist.api.multiblock.IMultiblockRegistry;
 import one.tlph.machinist.api.multiblock.MultiblockEventHandler;
 import one.tlph.machinist.api.multiblock.MultiblockRegistry;
-import one.tlph.machinist.proxy.CommonProxy;
 import one.tlph.machinist.proxy.Setup;
+import one.tlph.machinist.proxy.ModTileEntityTypes;
 import one.tlph.machinist.recipes.BlastFurnaceManager;
 import one.tlph.machinist.recipes.CrusherManager;
 

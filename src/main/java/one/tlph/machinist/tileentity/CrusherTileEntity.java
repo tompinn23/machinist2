@@ -1,29 +1,37 @@
 package one.tlph.machinist.tileentity;
 
 import net.minecraft.client.renderer.texture.ITickable;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import one.tlph.machinist.blocks.ModBlocks;
+import one.tlph.machinist.container.CrusherContainer;
 import one.tlph.machinist.energy.TileEntityPowerable;
-import one.tlph.machinist.proxy.TileEntityTypes;
+import one.tlph.machinist.proxy.ModTileEntityTypes;
 import one.tlph.machinist.recipes.CrusherManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class CrusherTileEntity extends TileEntityPowerable implements ITickable {
+public class CrusherTileEntity extends TileEntityPowerable implements ITickable, INamedContainerProvider {
 
     public static final int SIZE = 3;
 
@@ -45,7 +53,7 @@ public class CrusherTileEntity extends TileEntityPowerable implements ITickable 
     };
 
     public CrusherTileEntity() {
-        super(TileEntityTypes.CRUSHER.get(), 10000, TRANSFER_BASE * 2, 0);
+        super(ModTileEntityTypes.CRUSHER, 10000, TRANSFER_BASE * 2, 0);
     }
 
     @Override
@@ -169,4 +177,14 @@ public class CrusherTileEntity extends TileEntityPowerable implements ITickable 
         double fraction = cookTime / (double)COOK_TIME_FOR_COMPLETION;
         return MathHelper.clamp(fraction, 0.0, 1.0);
     }
+
+	@Override
+	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+		return new CrusherContainer(windowId, inventory, this);
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(ModBlocks.CRUSHER.getTranslationKey());
+	}
 }

@@ -1,8 +1,12 @@
 package one.tlph.machinist.tileentity;
 
 import net.minecraft.client.renderer.texture.ITickable;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -14,6 +18,8 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -22,9 +28,11 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import net.minecraftforge.items.wrapper.RangedWrapper;
+import one.tlph.machinist.blocks.ModBlocks;
+import one.tlph.machinist.container.SmelterContainer;
 import one.tlph.machinist.energy.TileEntityPowerable;
 import one.tlph.machinist.items.ModItems;
-import one.tlph.machinist.proxy.TileEntityTypes;
+import one.tlph.machinist.proxy.ModTileEntityTypes;
 import org.apache.http.impl.entity.LaxContentLengthStrategy;
 import org.omg.CORBA.ObjectHolder;
 
@@ -33,13 +41,13 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Optional;
 
-public class SmelterTileEntity extends TileEntityPowerable implements ITickable {
+public class SmelterTileEntity extends TileEntityPowerable implements ITickable, INamedContainerProvider {
 
 	public static final int SIZE = 3;
 	
 	private int burnTimeRemaining = 0;
 	private int burnTimeInitialValue = 0;
-	private short cookTime;
+	public short cookTime;
 	
 	private static final short COOK_TIME_FOR_COMPLETION = 200;
 
@@ -51,7 +59,7 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable 
 	public static final int FUEL_SLOT = 1;
 	public static final int OUTPUT_SLOT = 2;
 
-	private ItemStackHandler inventory = new ItemStackHandler(3) {
+	public ItemStackHandler inventory = new ItemStackHandler(3) {
 
 		@Override
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
@@ -84,7 +92,7 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable 
 	private static final int TRANSFER_BASE = 100;
 	
 	public SmelterTileEntity() {
-		super(TileEntityTypes.SMELTER.get(), CAPACITY_BASE, TRANSFER_BASE, 0);
+		super(ModTileEntityTypes.SMELTER, CAPACITY_BASE, TRANSFER_BASE, 0);
 	}
 
 	@Override
@@ -276,6 +284,16 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable 
 		
 		Map<Item, Integer> burnTime = FurnaceTileEntity.getBurnTimes();
 		return 	burnTime.getOrDefault(stack.getItem(), 0);
+	}
+
+	@Override
+	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+		return new SmelterContainer(windowId, inventory, this);
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent(ModBlocks.SMELTER.getTranslationKey());
 	}
 
 }

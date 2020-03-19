@@ -1,25 +1,21 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "machinist:crusher"
+    "model": "machinist:block/crusher"
   },
   "variants": {
-    "normal": [{}],
-    "inventory": [{}],
 	"facing": {
 		"north": {},
 		"south": {"y": 180},
 		"west": {"y": 270},
-		"east": {"y": 90},
-		"up": {"x": -90},
-		"down": {"x": 90}
+		"east": {"y": 90}
 	},
 	"active": {
 		"true": {
-			"model": "machinist:crusher_on"
+			"model": "machinist:block/crusher_on"
 		},
 		"false": {
-			"model": "machinist:crusher"
+			"model": "machinist:block/crusher"
 		}
 	}
   }

@@ -2,6 +2,8 @@ package one.tlph.machinist.recipes;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.util.ResourceLocation;
 import one.tlph.machinist.inventory.ComparableItemStack;
 import one.tlph.machinist.inventory.ComparableItemStackValidated;
 import one.tlph.machinist.inventory.OreValidator;
@@ -20,9 +22,9 @@ public class BlastFurnaceManager {
 
 
     static {
-        oreValidator.addPrefix(ComparableItemStack.BLOCK);
-        oreValidator.addPrefix(ComparableItemStack.INGOT);
-        oreValidator.addPrefix(ComparableItemStack.DUST);
+        oreValidator.addGroup(new ResourceLocation("forge", ComparableItemStack.BLOCK));
+        oreValidator.addGroup(new ResourceLocation("forge", ComparableItemStack.INGOT));
+        oreValidator.addGroup(new ResourceLocation("forge", ComparableItemStack.DUST));
     }
 
 
@@ -38,8 +40,8 @@ public class BlastFurnaceManager {
             recipe = recipeMap.get(asList(secondQuery, query));
         }
         if(recipe == null) {
-            query.metadata = OreDictionary.WILDCARD_VALUE;
-            secondQuery.metadata = OreDictionary.WILDCARD_VALUE;
+            //query.metadata = OreDictionary.WILDCARD_VALUE;
+            //secondQuery.metadata = OreDictionary.WILDCARD_VALUE;
             recipe = recipeMap.get(asList(query, secondQuery));
             if(recipe == null) {
                 recipe = recipeMap.get(asList(secondQuery, query));

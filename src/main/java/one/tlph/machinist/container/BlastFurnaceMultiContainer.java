@@ -1,15 +1,24 @@
 package one.tlph.machinist.container;
 
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import one.tlph.machinist.api.multiblock.IMultiblockPart;
+import one.tlph.machinist.proxy.ModContainerTypes;
 import one.tlph.machinist.tileentity.BlastFurnaceMultiBlockTileEntity;
+import one.tlph.machinist.tileentity.CrusherTileEntity;
 import one.tlph.machinist.util.OutputSlotHandler;
+
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
@@ -41,29 +50,39 @@ public class BlastFurnaceMultiContainer extends ContainerBase {
             return BlastFurnaceMultiBlockTileEntity.isValidFuel(stack);
         }
     }
-
-
+    
+    
     private BlastFurnaceMultiBlockTileEntity te;
+	private IWorldPosCallable canInteractWithCallable;
 
-    public BlastFurnaceMultiContainer(IInventory playerInventory, BlastFurnaceMultiBlockTileEntity te) {
-        this.te = te;
-
-        addOwnSlots();
-        addPlayerSlots(playerInventory);
+    
+    public BlastFurnaceMultiContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
+        this(windowId, playerInventory, getTileEntity(playerInventory, data));
     }
 
-    @Override
-    protected void addOwnSlots() {
-        IItemHandler itemHandler = this.te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-        addSlotToContainer(new BlastFurnaceInputSlotHandler(itemHandler, 0, 32, 17));
-        addSlotToContainer(new BlastFurnaceInputSlotHandler(itemHandler, 1, 53, 17));
-        addSlotToContainer(new BlastFurnaceFuelSlotHandler(itemHandler, 2, 43, 56));
-        addSlotToContainer(new OutputSlotHandler(itemHandler, 3, 116, 35));
+    public BlastFurnaceMultiContainer(final int windowId, final PlayerInventory playerInventory, final BlastFurnaceMultiBlockTileEntity tileEntity) {
+        super(ModContainerTypes.BLAST_FURNACE, windowId);
+        this.te = tileEntity;
+        this.canInteractWithCallable = IWorldPosCallable.of(tileEntity.WORLD, tileEntity.getReferenceCoord());
+        this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.cookTime, v -> tileEntity.cookTime = (short) v));
+
+        this.addPlayerSlots(playerInventory);
+    }
+
+    private static BlastFurnaceMultiBlockTileEntity getTileEntity(PlayerInventory playerInventory, PacketBuffer data) {
+        Objects.requireNonNull(playerInventory, "playerInventory cannot be null");
+        Objects.requireNonNull(data, "data cannot be null");
+        final TileEntity tileEntity = playerInventory.player.world.getTileEntity(data.readBlockPos());
+        if(tileEntity instanceof IMultiblockPart)
+            return (BlastFurnaceMultiBlockTileEntity)((IMultiblockPart)tileEntity).getMultiblockController();
+        throw new IllegalStateException("Tile entity is not correct! " + tileEntity);
     }
 
 
+
+
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
+    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
 
@@ -91,7 +110,7 @@ public class BlastFurnaceMultiContainer extends ContainerBase {
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer playerIn) {
+    public boolean canInteractWith(PlayerEntity playerIn) {
         return te.canInteractWith(playerIn);
     }
 }

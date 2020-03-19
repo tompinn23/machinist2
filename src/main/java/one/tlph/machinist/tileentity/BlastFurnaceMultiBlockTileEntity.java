@@ -3,6 +3,9 @@ package one.tlph.machinist.tileentity;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -10,6 +13,7 @@ import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -22,6 +26,7 @@ import one.tlph.machinist.api.multiblock.IMultiblockPart;
 import one.tlph.machinist.api.multiblock.MultiblockControllerBase;
 import one.tlph.machinist.api.multiblock.rectangular.RectangularMultiblockControllerBase;
 import one.tlph.machinist.api.multiblock.validation.IMultiblockValidator;
+import one.tlph.machinist.container.BlastFurnaceMultiContainer;
 import one.tlph.machinist.recipes.BlastFurnaceManager;
 
 import javax.annotation.Nonnull;
@@ -30,13 +35,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class BlastFurnaceMultiBlockTileEntity extends RectangularMultiblockControllerBase implements ICapabilityProvider {
+public class BlastFurnaceMultiBlockTileEntity extends RectangularMultiblockControllerBase implements ICapabilityProvider, INamedContainerProvider {
 
     public static final int GUI_ID = 3;
     public static final int SIZE = 4;
 
-    private int cookTime = 0;
-    private int burnTime = 0;
+    public int cookTime = 0;
+    public int burnTime = 0;
 
     public static final int INPUT_SLOT_1 = 0;
     public static final int INPUT_SLOT_2 = 1;
@@ -377,4 +382,15 @@ public class BlastFurnaceMultiBlockTileEntity extends RectangularMultiblockContr
         Map<Item, Integer> burnTime = FurnaceTileEntity.getBurnTimes();
         return 	burnTime.getOrDefault(stack.getItem(), 0);
     }
+
+	@Override
+	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity entity) {
+		return new BlastFurnaceMultiContainer(windowId, inventory, this);
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

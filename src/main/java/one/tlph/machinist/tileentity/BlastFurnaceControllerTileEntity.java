@@ -6,7 +6,7 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import one.tlph.machinist.api.multiblock.MultiblockControllerBase;
 import one.tlph.machinist.api.multiblock.rectangular.RectangularMultiblockTileEntityBase;
 import one.tlph.machinist.api.multiblock.validation.IMultiblockValidator;
-import one.tlph.machinist.proxy.TileEntityTypes;
+import one.tlph.machinist.proxy.ModTileEntityTypes;
 
 import javax.annotation.Nullable;
 
@@ -19,7 +19,7 @@ public class BlastFurnaceControllerTileEntity extends RectangularMultiblockTileE
 
 
     public BlastFurnaceControllerTileEntity() {
-        super(TileEntityTypes.BLAST_FURNACE_CONTROLLER.get());
+        super(ModTileEntityTypes.BLAST_FURNACE_CONTROLLER);
     }
 
     @Override

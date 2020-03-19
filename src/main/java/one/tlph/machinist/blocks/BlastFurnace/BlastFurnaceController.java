@@ -1,10 +1,14 @@
 package one.tlph.machinist.blocks.BlastFurnace;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -12,7 +16,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-import one.tlph.machinist.Machinist;
 import one.tlph.machinist.api.multiblock.IMultiblockPart;
 import one.tlph.machinist.api.multiblock.MultiblockControllerBase;
 import one.tlph.machinist.api.multiblock.validation.ValidationError;
@@ -24,14 +27,19 @@ import javax.annotation.Nullable;
 public class BlastFurnaceController extends HorizontalBlock {
 
 
-    public BlastFurnaceController(final Properties properties) {
-        super(properties);
+    public BlastFurnaceController() {
+    	super(Block.Properties.create(Material.ROCK));
     }
 
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+    }
+
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(HORIZONTAL_FACING);
     }
 
     @Override
@@ -68,7 +76,7 @@ public class BlastFurnaceController extends HorizontalBlock {
                         return true;
                     }
                     //TODO: Fix guis.
-                    NetworkHooks.openGui(Machinist.instance, BlastFurnaceMultiBlockTileEntity.GUI_ID, worldIn, pos.getX(), pos.getY(), pos.getZ());
+                    NetworkHooks.openGui((ServerPlayerEntity)player, (BlastFurnaceMultiBlockTileEntity)controller, pos);
                     return true;
                 }
                 return false;

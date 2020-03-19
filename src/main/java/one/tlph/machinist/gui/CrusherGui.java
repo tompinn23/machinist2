@@ -1,13 +1,17 @@
 package one.tlph.machinist.gui;
 
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.energy.CapabilityEnergy;
 import one.tlph.machinist.Machinist;
 import one.tlph.machinist.container.CrusherContainer;
 import one.tlph.machinist.gui.elements.EnergyBar;
 import one.tlph.machinist.tileentity.CrusherTileEntity;
+import one.tlph.machinist.util.RenderHelper;
 
-public class CrusherGui extends GuiContainerBase {
+public class CrusherGui extends ScreenBase<CrusherContainer> {
     public static final int WIDTH = 176;
     public static final int HEIGHT = 166;
 
@@ -33,27 +37,29 @@ public class CrusherGui extends GuiContainerBase {
 
     private EnergyBar energyBar;
 
-    public CrusherGui(CrusherTileEntity tileEntity, CrusherContainer container) {
-        super(container);
+    public CrusherGui(CrusherContainer container, PlayerInventory inventory, final ITextComponent title) {
+        super(container,inventory, new TranslationTextComponent("machinist.crusher.gui.title"));
 
         xSize = WIDTH;
         ySize = HEIGHT;
-        this.te = tileEntity;
     }
 
+    
     @Override
-    public void initGui() {
-        super.initGui();
-        this.energyBar = new EnergyBar(this, te.getCapability(CapabilityEnergy.ENERGY, null), guiLeft + ENERGY_XPOS, guiTop + ENERGY_YPOS);
-    }
+	protected void init() {
+		super.init();
+        this.energyBar = new EnergyBar(this, container.tileEntity.getCapability(CapabilityEnergy.ENERGY).orElse(null), guiLeft + ENERGY_XPOS, guiTop + ENERGY_YPOS);
+
+	}
+
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        this.bindTexture(background);
-        drawTexturedModalRect(guiLeft,guiTop, 0,0, xSize, ySize);
+        RenderHelper.bindTexture(background);
+        blit(guiLeft,guiTop, 0,0, xSize, ySize);
 
         double cookProgress = te.getCookProgress();
-        drawTexturedModalRect(guiLeft + COOK_XPOS, guiTop + COOK_YPOS, COOK_U, COOK_V, (int)(cookProgress * COOK_WIDTH), COOK_HEIGHT);
+        blit(guiLeft + COOK_XPOS, guiTop + COOK_YPOS, COOK_U, COOK_V, (int)(cookProgress * COOK_WIDTH), COOK_HEIGHT);
 
 
         double energyLeft = te.fractionOfEnergyRemaining();

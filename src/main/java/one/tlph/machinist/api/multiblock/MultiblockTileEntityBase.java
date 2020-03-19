@@ -117,7 +117,7 @@ public abstract class MultiblockTileEntityBase extends TileEntity implements IMu
 
 		if(isMultiblockSaveDelegate() && isConnected()) {
 			CompoundNBT multiblockData = new CompoundNBT();
-			this.controller.writeToNBT(multiblockData);
+			this.controller.write(multiblockData);
 			data.put("multiblockData", multiblockData);
 		}
 		return data;

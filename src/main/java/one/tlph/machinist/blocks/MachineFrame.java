@@ -11,19 +11,9 @@ import one.tlph.machinist.items.ModItems;
 
 public class MachineFrame extends Block {
     public MachineFrame() {
-	super(Properties.create(Material.ROCK));
-        setUnlocalizedName(Machinist.MODID + ".machineframe");
-        setRegistryName("machineframe");
-        setCreativeTab(ModItems.tabMachinistMod);
+    	super(Block.Properties.create(Material.ROCK));
     }
 
-    @SideOnly(Side.CLIENT)
-    public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-    }
-
-    @Override
-    public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
-        return false;
-    }
+    
+   
 }

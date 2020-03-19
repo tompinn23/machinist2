@@ -4,22 +4,18 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.network.NetworkHooks;
-import one.tlph.machinist.Machinist;
 import one.tlph.machinist.api.multiblock.IMultiblockPart;
 import one.tlph.machinist.api.multiblock.MultiblockControllerBase;
 import one.tlph.machinist.api.multiblock.validation.ValidationError;
-import one.tlph.machinist.items.ModItems;
 import one.tlph.machinist.tileentity.BlastFurnaceCasingTileEntity;
 import one.tlph.machinist.tileentity.BlastFurnaceMultiBlockTileEntity;
 
@@ -65,8 +61,8 @@ public class BlastFurnaceCasing extends Block {
     public static final PropertyDirection FACING = PropertyDirection.create("facing");
     public static final PropertyEnum<CasingBorder> BORDER = PropertyEnum.create("border", CasingBorder.class);
 */
-    public BlastFurnaceCasing(final Properties properties) {
-        super(properties);
+    public BlastFurnaceCasing() {
+    	super(Block.Properties.create(Material.ROCK));
     }
 
     @Override
@@ -111,7 +107,7 @@ public class BlastFurnaceCasing extends Block {
 
         if(!worldIn.isRemote) {
             //TODO: Fix gui handling
-            NetworkHooks.openGui(Machinist, BlastFurnaceMultiBlockTileEntity.GUI_ID, worldIn, pos.getX(), pos.getY() , pos.getZ());
+            NetworkHooks.openGui((ServerPlayerEntity)player, (BlastFurnaceMultiBlockTileEntity)controller, pos);
         }
         return true;
     }

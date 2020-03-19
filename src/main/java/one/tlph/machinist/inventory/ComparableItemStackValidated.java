@@ -1,7 +1,8 @@
 package one.tlph.machinist.inventory;
 
 import net.minecraft.item.ItemStack;
-import one.tlph.machinist.util.OreDictionaryHelper;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 
@@ -12,32 +13,25 @@ public class ComparableItemStackValidated extends ComparableItemStack {
         super(stack);
         this.validator = validator;
         this.oreID = getOreID(stack);
-        this.oreName = OreDictionaryHelper.getOreName(oreID);
     }
 
     public ComparableItemStackValidated(ItemStack stack) {
         super(stack);
         this.validator = DEFAULT_VALIDATOR;
         this.oreID = getOreID(stack);
-        this.oreName = OreDictionaryHelper.getOreName(oreID);
+        //this.oreName = OreDictionaryHelper.getOreName(oreID);
     }
 
-    public int getOreID(ItemStack stack) {
+    public ResourceLocation getOreID(ItemStack stack) {
         if(stack.isEmpty())
-            return -1;
-        List<Integer> ids = OreDictionaryHelper.getAllOreIDs(stack);
+            return null;
+        List<ResourceLocation> ids = ((List<ResourceLocation>)ItemTags.getCollection().getOwningTags(stack.getItem()));
         if(!ids.isEmpty()) {
-            for(Integer id : ids) {
-                if(id != -1 && validator.validate(OreDictionaryHelper.getOreName(id)))
+            for(ResourceLocation id : ids) {
+                if(id != null && validator.validate(stack.getItem()));
                     return id;
             }
         }
-        return -1;
-    }
-
-    public int getOreID(String oreName) {
-        if(!validator.validate(oreName))
-            return -1;
-        return OreDictionaryHelper.getOreID(oreName);
+        return null;
     }
 }

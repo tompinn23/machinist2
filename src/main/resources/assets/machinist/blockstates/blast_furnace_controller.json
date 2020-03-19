@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "machinist:block/blast_furnace_controller"
+  },
+  "variants": {
+    "": {
+      "model": "machinist:block/blast_furnace_controller"
+    },
+    "facing": {
+      "north": {},
+      "south": {"y": 180},
+      "west": {"y": 270},
+      "east": {"y": 90}
+    }
+  }
+}

@@ -4,43 +4,32 @@ package one.tlph.machinist.inventory;
 import java.util.Set;
 
 import gnu.trove.set.hash.THashSet;
+import net.minecraft.item.Item;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
+
 
 
 public class OreValidator {
 
-    public Set<String> orePrefix = new THashSet<>();
-    public Set<String> oreExact = new THashSet<>();
-    public Set<String> oreBlacklist = new THashSet<>();
+	public Set<ResourceLocation> grps = new THashSet<>();
 
-    public boolean validate(String oreName) {
-
-        if (oreExact.contains(oreName)) {
-            return true;
-        }
-        if (oreBlacklist.contains(oreName)) {
-            return false;
-        }
-        for (String prefix : orePrefix) {
-            if (oreName.startsWith(prefix) && oreName.length() > prefix.length() && Character.isUpperCase(oreName.codePointAt(prefix.length()))) {
-                return true;
-            }
-        }
-        return false;
+    public boolean validate(Item item) {
+    	for(ResourceLocation grp : grps) {
+    		if(ItemTags.getCollection().get(grp).contains(item))
+    				return true;
+    	}
+    	return false;
     }
 
-    public boolean addPrefix(String oreName) {
-
-        return orePrefix.add(oreName);
-    }
-
-    public boolean addExact(String oreName) {
-
-        return oreExact.add(oreName);
-    }
-
-    public boolean addBlacklist(String oreName) {
-
-        return oreBlacklist.add(oreName);
+    public boolean addGroup(ResourceLocation id) {
+    	if(!grps.contains(id)) {
+    		grps.add(id);
+    		return true;
+    	}
+    	else
+    		return false;
+    		
     }
 
 }

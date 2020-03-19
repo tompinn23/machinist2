@@ -1,0 +1,9 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "machinist:block/machine_frame"
+  },
+  "variants" : {
+    "": {"model": "machinist:block/machine_frame" }
+  }
+}
