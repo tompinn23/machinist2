@@ -1,10 +1,12 @@
 package one.tlph.machinist.blocks.crusher;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -13,6 +15,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -20,6 +23,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.IItemHandler;
+import one.tlph.machinist.Machinist;
 import one.tlph.machinist.tileentity.CrusherTileEntity;
 
 public class Crusher extends HorizontalBlock {
@@ -41,9 +45,8 @@ public class Crusher extends HorizontalBlock {
 	}
 
 
-
-	@Override
-    public boolean hasTileEntity() {
+    @Override
+    public boolean hasTileEntity(BlockState state) {
         return true;
     }
 
@@ -53,20 +56,17 @@ public class Crusher extends HorizontalBlock {
         return new CrusherTileEntity();
     }
 
+    @Nonnull
     @Override
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-			BlockRayTraceResult hit) {
+    @Deprecated
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
             if(!worldIn.isRemote) {
                 TileEntity te = worldIn.getTileEntity(pos);
-                if(te instanceof INamedContainerProvider) {
-                    NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)te, pos);
+                if(te instanceof CrusherTileEntity) {
+                    NetworkHooks.openGui((ServerPlayerEntity)player, (CrusherTileEntity)te, pos);
                 }
-                else {
-                    throw new IllegalStateException("Our named container provider is missing!");
-                }
-                return true;
             }
-            return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+        return ActionResultType.SUCCESS;
 	}
 
 
@@ -75,10 +75,12 @@ public class Crusher extends HorizontalBlock {
         if(state.getBlock() != newState.getBlock()) {
             TileEntity te = worldIn.getTileEntity(pos);
             if (te instanceof CrusherTileEntity) {
-                IItemHandler inventory = ((CrusherTileEntity) te).inventory;
+                IItemHandler inventory = ((CrusherTileEntity) te).getOutput();
                 for (int i = 0; i < inventory.getSlots(); i++) {
                         InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(i));
                 }
+                IItemHandler input = ((CrusherTileEntity) te).getInput();
+                    InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), input.getStackInSlot(0));
             }
         }
         super.onReplaced(state, worldIn, pos, newState, isMoving);

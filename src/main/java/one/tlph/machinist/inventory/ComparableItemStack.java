@@ -44,7 +44,7 @@ public class ComparableItemStack {
         this.metadata = stack.getDamage();
         if(!stack.isEmpty()) {
             this.stackSize = stack.getCount();
-            this.oreID = ((List<ResourceLocation>)ItemTags.getCollection().getOwningTags(item)).get(0);
+
         }
     }
 
@@ -62,6 +62,9 @@ public class ComparableItemStack {
     }
 
     public boolean isItemEqual(ComparableItemStack other) {
+        List<ResourceLocation> tags = (List<ResourceLocation>)ItemTags.getCollection().getOwningTags(item);
+        if(tags.size() != 0)
+            this.oreID = tags.get(0);
         return other != null && (oreID != null && oreID == other.oreID || isEqual(other));
     }
 
@@ -81,6 +84,9 @@ public class ComparableItemStack {
 
     @Override
     public int hashCode() {
+        List<ResourceLocation> tags = (List<ResourceLocation>)ItemTags.getCollection().getOwningTags(item);
+        if(tags.size() != 0)
+            this.oreID = tags.get(0);
         return oreID != null ? (oreID.toString() + "/" + item.getName().getUnformattedComponentText()).hashCode() : (metadata & 65535) | getId() << 16;
     }
 

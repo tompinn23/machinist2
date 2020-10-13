@@ -3,7 +3,8 @@ package one.tlph.machinist.util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.FaceDirection;
-import net.minecraft.state.IProperty;
+
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.property.Properties;
@@ -21,12 +22,12 @@ public final class BlockFacings {
     public static final BlockFacings WEST;
     public static final BlockFacings EAST;
 
-    public static final IProperty<Boolean> FACING_DOWN = Properties.StaticProperty.create("downFacing");
-    public static final IProperty<Boolean> FACING_UP = Properties.StaticProperty.create("upFacing");
-    public static final IProperty<Boolean> FACING_WEST = Properties.StaticProperty.create("westFacing");
-    public static final IProperty<Boolean> FACING_EAST = Properties.StaticProperty.create("eastFacing");
-    public static final IProperty<Boolean> FACING_NORTH = Properties.StaticProperty.create("northFacing");
-    public static final IProperty<Boolean> FACING_SOUTH = Properties.StaticProperty.create("southFacing");
+    public static final BooleanProperty FACING_DOWN = Properties.StaticProperty.create("downFacing");
+    public static final BooleanProperty FACING_UP = Properties.StaticProperty.create("upFacing");
+    public static final BooleanProperty FACING_WEST = Properties.StaticProperty.create("westFacing");
+    public static final BooleanProperty FACING_EAST = Properties.StaticProperty.create("eastFacing");
+    public static final BooleanProperty FACING_NORTH = Properties.StaticProperty.create("northFacing");
+    public static final BooleanProperty FACING_SOUTH = Properties.StaticProperty.create("southFacing");
 
     /**
      * Check if a specific face is "set"

@@ -39,10 +39,6 @@ public final class RenderHelper {
         return Minecraft.getInstance().textureManager;
     }
 
-    public static AtlasTexture textureMap() {
-
-        return Minecraft.getInstance().getTextureMap();
-    }
 
     public static Tessellator tessellator() {
 
@@ -121,26 +117,14 @@ public final class RenderHelper {
         bindTexture(MC_FONT_DEFAULT);
     }
 
-    public static TextureAtlasSprite getTexture(String location) {
-
-        return textureMap().getAtlasSprite(location);
-    }
-
     public static TextureAtlasSprite getTexture(ResourceLocation location) {
-
-        return getTexture(location.toString());
+        return Minecraft.getInstance().getAtlasSpriteGetter(location).apply(location);
     }
 
     public static void setSGAFontTextureSheet() {
 
         bindTexture(MC_FONT_ALTERNATE);
     }
-
-    public static void enableGUIStandardItemLighting() {
-
-        net.minecraft.client.renderer.RenderHelper.enableGUIStandardItemLighting();
-    }
-
     public static void enableStandardItemLighting() {
 
         net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();

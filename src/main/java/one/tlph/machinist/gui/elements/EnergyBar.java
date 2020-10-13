@@ -1,7 +1,11 @@
 package one.tlph.machinist.gui.elements;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TextComponentUtils;
 import net.minecraftforge.energy.IEnergyStorage;
 import one.tlph.machinist.Machinist;
 import one.tlph.machinist.gui.ScreenBase;
@@ -28,31 +32,32 @@ public class EnergyBar extends IGuiElement {
     }
 
 
-    public void drawBackground() {
+    public void drawBackground(MatrixStack stack) {
         RenderHelper.bindTexture(energyBar);
 
-        drawTexturedModalRect(xPos, yPos, 0, 0, 6, 58);
+        drawTexturedModalRect(stack, xPos, yPos, 0, 0, 6, 58);
 
         double fraction = energyStorage.getEnergyStored() / (double)energyStorage.getMaxEnergyStored();
         fraction = MathHelper.clamp(fraction, 0.0, 1.0);
         RenderHelper.bindTexture(energyBar);
-        drawTexturedModalRect(xPos, yPos + (int)((1.0 - fraction) * 58), 6, (int)((1.0 - fraction) * 58), 6,58 - ((int)((1.0 - fraction) * 58)));
+        drawTexturedModalRect(stack, xPos, yPos + (int)((1.0 - fraction) * 58), 6, (int)((1.0 - fraction) * 58), 6,58 - ((int)((1.0 - fraction) * 58)));
 
     }
 
 
-    public void drawForeground(int mouseX, int mouseY) {
-        List<String> hoveringText = new ArrayList<String>();
+    public void drawForeground(MatrixStack stack, int mouseX, int mouseY) {
+        List<StringTextComponent> hoveringText = new ArrayList<StringTextComponent>();
 
 
         // If the mouse is over one of the burn time indicator add the burn time indicator hovering text
         if (isInRect(xPos , yPos, 6, 58, mouseX, mouseY)) {
-            hoveringText.add("Energy:");
-            hoveringText.add(energyStorage.getEnergyStored() + "/" + energyStorage.getMaxEnergyStored() + "RF");
+            hoveringText.add(new StringTextComponent("Energy:"));
+            hoveringText.add(new StringTextComponent(energyStorage.getEnergyStored() + "/" + energyStorage.getMaxEnergyStored() + "RF"));
         }
+
         // If hoveringText is not empty draw the hovering text
         if (!hoveringText.isEmpty()){
-            gc.renderTooltip(hoveringText, mouseX - xPos, mouseY - yPos);
+            gc.renderFloatingTooltip(stack, hoveringText, mouseX, mouseY);
         }
     }
 

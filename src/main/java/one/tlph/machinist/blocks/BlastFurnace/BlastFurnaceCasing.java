@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -65,10 +66,6 @@ public class BlastFurnaceCasing extends Block {
     	super(Block.Properties.create(Material.ROCK));
     }
 
-    @Override
-    public boolean hasTileEntity() {
-        return true;
-    }
 
     @Nullable
     @Override
@@ -78,9 +75,9 @@ public class BlastFurnaceCasing extends Block {
 
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (player.isSneaking()) {
-            return false;
+            return ActionResultType.FAIL;
         }
 
         TileEntity te = worldIn.getTileEntity(pos);
@@ -98,17 +95,17 @@ public class BlastFurnaceCasing extends Block {
                 ValidationError status = controller.getLastError();
                 if (null != status) {
                     player.sendStatusMessage(status.getChatMessage(), false);
-                    return true;
+                    return ActionResultType.PASS;
                 }
             }
 
         }
-        if(controller == null || !controller.isAssembled()) { return false; }
+        if(controller == null || !controller.isAssembled()) { return ActionResultType.FAIL; }
 
         if(!worldIn.isRemote) {
             //TODO: Fix gui handling
             NetworkHooks.openGui((ServerPlayerEntity)player, (BlastFurnaceMultiBlockTileEntity)controller, pos);
         }
-        return true;
+        return ActionResultType.PASS;
     }
 }

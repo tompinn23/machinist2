@@ -1,5 +1,7 @@
 package one.tlph.machinist.tileentity;
 
+import jdk.nashorn.internal.ir.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -46,15 +48,22 @@ public class CrusherTileEntity extends TileEntityPowerable implements ITickable,
     public static final int OUTPUT_SLOT = 1;
     public static final int OUTPUT_SLOT2 = 2;
 
+    private final ItemStackHandler input = new ItemStackHandler(1);
+    private final ItemStackHandler outputInv = new ItemStackHandler(2);
 
-    public ItemStackHandler inventory = new ItemStackHandler(3) {
-        @Override
-        protected void onContentsChanged(int slot) { CrusherTileEntity.this.markDirty();}
-    };
 
     public CrusherTileEntity() {
         super(ModTileEntityTypes.CRUSHER, 10000, TRANSFER_BASE * 2, 0);
     }
+
+    public IItemHandler getInput() {
+        return input;
+    }
+
+    public IItemHandler getOutput() {
+        return outputInv;
+    }
+
 
     @Override
     public void tick() {
@@ -75,21 +84,25 @@ public class CrusherTileEntity extends TileEntityPowerable implements ITickable,
             }
             sendUpdates();
         }
-
     }
+
+    private ItemStack getInputItem() {
+        return input.getStackInSlot(0);
+    }
+
 
     private void doAction() {
         CrusherManager.CrusherRecipe result = null;
-        if (!inventory.getStackInSlot(INPUT_SLOT).isEmpty()) {
-            result = CrusherManager.getRecipe(inventory.getStackInSlot(INPUT_SLOT));
+        if (!getInputItem().isEmpty()) {
+            result = CrusherManager.getRecipe(getInputItem());
             ItemStack left = result.getOutput().copy();
 
-            for (int i = OUTPUT_SLOT; i < inventory.getSlots(); i++) {
-                ItemStack left2 = inventory.insertItem(i, left, true);
+            for (int i = 0; i < outputInv.getSlots(); i++) {
+                ItemStack left2 = outputInv.insertItem(i, left, true);
                 if (left2.isEmpty()) {
-                    inventory.insertItem(i, left, false);
-                    inventory.extractItem(INPUT_SLOT, 1, false);
-                } else if (left2 != ItemStack.EMPTY && (i + 1) == inventory.getSlots()) {
+                    outputInv.insertItem(i, left, false);
+                    input.extractItem(0, 1, false);
+                } else if (left2 != ItemStack.EMPTY && (i + 1) == outputInv.getSlots()) {
                     return;
                 } else {
                     left = left2;
@@ -102,12 +115,12 @@ public class CrusherTileEntity extends TileEntityPowerable implements ITickable,
     }
 
     private boolean canDoAction() {
-        for(int i = 1; i < inventory.getSlots(); i++) {
-            if(inventory.getStackInSlot(i).getCount() >= inventory.getStackInSlot(i).getMaxStackSize())
+        for(int i = 0; i < outputInv.getSlots(); i++) {
+            if(outputInv.getStackInSlot(i).getCount() >= outputInv.getStackInSlot(i).getMaxStackSize())
                 continue;
             else {
                 if(energyStorage.getEnergyStored() > TRANSFER_BASE) {
-                    return CrusherManager.recipeExists(inventory.getStackInSlot(INPUT_SLOT));
+                    return CrusherManager.recipeExists(outputInv.getStackInSlot(INPUT_SLOT));
                 }
             }
         }
@@ -126,15 +139,17 @@ public class CrusherTileEntity extends TileEntityPowerable implements ITickable,
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
-        compound.put("inventory", inventory.serializeNBT());
+        compound.put("input", input.serializeNBT());
+        compound.put("outputInv", outputInv.serializeNBT());
         compound.putInt("cookTime", cookTime);
         return compound;
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
-        inventory.deserializeNBT(compound.getCompound("inventory"));
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
+        input.deserializeNBT(compound.getCompound("input"));
+        outputInv.deserializeNBT(compound.getCompound("outputInv"));
         cookTime = compound.getInt("cookTime");
     }
 
@@ -149,14 +164,8 @@ public class CrusherTileEntity extends TileEntityPowerable implements ITickable,
         return this.write(new CompoundNBT());
     }
 
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(pkt.getNbtCompound());
-    }
 
-
-    public LazyOptional<CombinedInvWrapper> itemCap = LazyOptional.of(() -> new CombinedInvWrapper(inventory));
+    public LazyOptional<CombinedInvWrapper> itemCap = LazyOptional.of(() -> new CombinedInvWrapper(input, outputInv));
 
 
     @Nonnull
@@ -187,4 +196,6 @@ public class CrusherTileEntity extends TileEntityPowerable implements ITickable,
 	public ITextComponent getDisplayName() {
 		return new TranslationTextComponent(ModBlocks.CRUSHER.getTranslationKey());
 	}
+
+
 }

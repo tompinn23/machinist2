@@ -14,6 +14,7 @@ package one.tlph.machinist.api.multiblock;
  */
 
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -23,6 +24,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import one.tlph.machinist.Machinist;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -101,9 +103,8 @@ public abstract class MultiblockTileEntityBase extends TileEntity implements IMu
 
 
 	@Override
-	public void read(CompoundNBT data) {
-		super.read(data);
-
+	public void read(@Nonnull BlockState state, @Nonnull CompoundNBT data) {
+		super.read(state, data);
 		// We can't directly initialize a multiblock controller yet, so we cache the data here until
 		// we receive a validate() call, which creates the controller and hands off the cached data.
 		if(data.contains("multiblockData")) {

@@ -1,5 +1,6 @@
 package one.tlph.machinist.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -39,18 +40,18 @@ public class BlastFurnaceGui extends ScreenBase<BlastFurnaceMultiContainer> {
 
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderHelper.bindTexture(guiTexture);
-        blit(guiLeft, guiTop, 0 ,0, xSize, ySize);
+        blit(stack, guiLeft, guiTop, 0 ,0, xSize, ySize);
         double progress = te.getCookProgress();
-        blit(guiLeft + COOK_XPOS, guiTop + COOK_YPOS, COOK_U, COOK_V, (int)(progress * COOK_WIDTH), COOK_HEIGHT);
+        blit(stack,guiLeft + COOK_XPOS, guiTop + COOK_YPOS, COOK_U, COOK_V, (int)(progress * COOK_WIDTH), COOK_HEIGHT);
         double fuelLeft = te.getFuelLeft();
-        blit(guiLeft + FLAME_XPOS, guiTop + FLAME_YPOS + (int)((1.0 - fuelLeft) * FLAME_HEIGHT), FLAME_U, (int)((1.0 - fuelLeft) * FLAME_HEIGHT) + FLAME_V, FLAME_WIDTH, FLAME_HEIGHT - (int)((1.0 - fuelLeft) * FLAME_HEIGHT));
+        blit(stack,guiLeft + FLAME_XPOS, guiTop + FLAME_YPOS + (int)((1.0 - fuelLeft) * FLAME_HEIGHT), FLAME_U, (int)((1.0 - fuelLeft) * FLAME_HEIGHT) + FLAME_V, FLAME_WIDTH, FLAME_HEIGHT - (int)((1.0 - fuelLeft) * FLAME_HEIGHT));
 
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+    protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
 
     }
 }

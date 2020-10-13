@@ -1,8 +1,10 @@
 package one.tlph.machinist.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.energy.CapabilityEnergy;
 import one.tlph.machinist.Machinist;
@@ -53,13 +55,13 @@ public class SmelterGui extends ScreenBase<SmelterContainer> {
 	}
 	
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+	protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
 		RenderHelper.bindTexture(background);
-		blit(guiLeft,guiTop, 0,0, xSize, ySize);
+		blit(stack, guiLeft,guiTop, 0,0, xSize, ySize);
 		
 		double cookProgress = te.fractionOfCookTimeComplete();
 		//Machinist.logger.info("cookProgress = {}", cookProgress);
-		blit(guiLeft + COOK_XPOS, guiTop + COOK_YPOS, COOK_U, COOK_V, (int)(cookProgress * COOK_WIDTH), COOK_HEIGHT);
+		blit(stack,guiLeft + COOK_XPOS, guiTop + COOK_YPOS, COOK_U, COOK_V, (int)(cookProgress * COOK_WIDTH), COOK_HEIGHT);
 		
 		//double fuelRemaining = te.fractionOfFuelRemaining();
 		//drawTexturedModalRect(guiLeft + FLAME_XPOS, guiTop + FLAME_YPOS + (int)((1.0 - fuelRemaining) * FLAME_HEIGHT), FLAME_U, (int)((1.0 - fuelRemaining) * FLAME_HEIGHT) + FLAME_V, FLAME_WIDTH, FLAME_HEIGHT - (int)((1.0 - fuelRemaining) * FLAME_HEIGHT));
@@ -67,24 +69,24 @@ public class SmelterGui extends ScreenBase<SmelterContainer> {
 		//double energyLeft = te.fractionOfEnergyRemaining();
 		//Machinist.logger.info("energyLeft = {}", energyLeft);
 		//drawTexturedModalRect(guiLeft + ENERGY_XPOS, guiTop + ENERGY_YPOS + (int)((1.0 - energyLeft) * ENERGY_HEIGHT), ENERGY_U, (int)((1.0 - energyLeft) * ENERGY_HEIGHT) + ENERGY_V, ENERGY_WIDTH,ENERGY_HEIGHT - ((int)((1.0 - energyLeft) * ENERGY_HEIGHT)));
-		bar.drawBackground();
+		bar.drawBackground(stack);
 	}
 	
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		List<String> hoveringText = new ArrayList<String>();
+	protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
+		List<StringTextComponent> hoveringText = new ArrayList<StringTextComponent>();
 
 		// If the mouse is over the progress bar add the progress bar hovering text
 		if (isInRect(guiLeft + COOK_XPOS, guiTop + COOK_YPOS, COOK_WIDTH, COOK_HEIGHT, mouseX, mouseY)){
-			hoveringText.add("Progress:");
+			hoveringText.add(new StringTextComponent("Progress:"));
 			int cookPercentage =(int)(te.fractionOfCookTimeComplete() * 100);
-			hoveringText.add(cookPercentage + "%");
+			hoveringText.add(new StringTextComponent(cookPercentage + "%"));
 		}
 
-		bar.drawForeground(mouseX, mouseY);
+		bar.drawForeground(stack, mouseX, mouseY);
 		// If hoveringText is not empty draw the hovering text
 		if (!hoveringText.isEmpty()){
-			this.renderTooltip(hoveringText, mouseX - guiLeft, mouseY - guiTop);
+			this.renderFloatingTooltip(stack, hoveringText, mouseX - guiLeft, mouseY - guiTop);
 		}
 	}
 	

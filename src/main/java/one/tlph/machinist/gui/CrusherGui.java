@@ -1,5 +1,6 @@
 package one.tlph.machinist.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -39,7 +40,7 @@ public class CrusherGui extends ScreenBase<CrusherContainer> {
 
     public CrusherGui(CrusherContainer container, PlayerInventory inventory, final ITextComponent title) {
         super(container,inventory, new TranslationTextComponent("machinist.crusher.gui.title"));
-
+        this.te = container.tileEntity;
         xSize = WIDTH;
         ySize = HEIGHT;
     }
@@ -54,21 +55,21 @@ public class CrusherGui extends ScreenBase<CrusherContainer> {
 
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderHelper.bindTexture(background);
-        blit(guiLeft,guiTop, 0,0, xSize, ySize);
+        blit(stack, guiLeft,guiTop, 0,0, xSize, ySize);
 
         double cookProgress = te.getCookProgress();
-        blit(guiLeft + COOK_XPOS, guiTop + COOK_YPOS, COOK_U, COOK_V, (int)(cookProgress * COOK_WIDTH), COOK_HEIGHT);
+        blit(stack, guiLeft + COOK_XPOS, guiTop + COOK_YPOS, COOK_U, COOK_V, (int)(cookProgress * COOK_WIDTH), COOK_HEIGHT);
 
 
         double energyLeft = te.fractionOfEnergyRemaining();
-        energyBar.drawBackground();
+        energyBar.drawBackground(stack);
         //drawTexturedModalRect(guiLeft + ENERGY_XPOS, guiTop + ENERGY_YPOS + (int)((1.0 - energyLeft) * ENERGY_HEIGHT), ENERGY_U, (int)((1.0 - energyLeft) * ENERGY_HEIGHT) + ENERGY_V, ENERGY_WIDTH,ENERGY_HEIGHT - ((int)((1.0 - energyLeft) * ENERGY_HEIGHT)));
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        energyBar.drawForeground(mouseX, mouseY);
+    protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
+        energyBar.drawForeground(stack, mouseX, mouseY);
     }
 }

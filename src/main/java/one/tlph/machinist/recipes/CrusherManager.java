@@ -39,13 +39,14 @@ public class CrusherManager {
 
         if(recipe == null) {
             //query.metadata = OreDictionary.WILDCARD_VALUE;
+            query.oreID = query.getOreID(input);
             recipe = recipeMap.get(query);
         }
 
         return recipe;
     }
 
-    public static  boolean recipeExists(ItemStack input) {
+    public static boolean recipeExists(ItemStack input) {
         return getRecipe(input) != null;
     }
 
@@ -57,7 +58,7 @@ public class CrusherManager {
         addRecipe(200, new ItemStack(Item.getItemFromBlock(Blocks.GOLD_ORE), 1), new ItemStack(ModItems.goldDust, 2));
         addRecipe(200, new ItemStack(Item.getItemFromBlock(Blocks.IRON_ORE), 1), new ItemStack(ModItems.ironDust,2));
         addRecipe(400, new ItemStack(ModItems.steelIngot), new ItemStack(ModItems.steelDust, 1));
-        String oreType;
+        //String oreTy pe;
         //TODO: Fix ore dict
 //        for(String oreName : OreDictionary.getOreNames()) {
 //            if(oreName.startsWith("ore")) {

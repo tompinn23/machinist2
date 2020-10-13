@@ -1,6 +1,7 @@
 package one.tlph.machinist.gui;
 
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -10,12 +11,15 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.ITextProperties;
 import net.minecraftforge.fluids.FluidStack;
 import one.tlph.machinist.util.RenderHelper;
 
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+
+import java.util.List;
 
 public abstract class ScreenBase<T extends Container> extends ContainerScreen<T> {
 
@@ -28,10 +32,10 @@ public abstract class ScreenBase<T extends Container> extends ContainerScreen<T>
     
 
     @Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
-    	this.renderBackground();
-		super.render(mouseX, mouseY, partialTicks);
-		this.renderHoveredToolTip(mouseX, mouseY);
+	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    	this.renderBackground(matrixStack);
+		super.render(matrixStack, mouseX, mouseY, partialTicks);
+		this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
 	}
 
 
@@ -52,7 +56,7 @@ public abstract class ScreenBase<T extends Container> extends ContainerScreen<T>
         RenderHelper.setBlockTextureSheet();
         int color = fluid.getFluid().getAttributes().getColor();
         RenderHelper.setGLColorFromInt(color);
-        drawTiledTexture(x, y, RenderHelper.getTexture(fluid.getFluid().getAttributes().getStill(fluid)), width, height);
+        drawTiledTexture(x, y, RenderHelper.getTexture(fluid.getFluid().getAttributes().getStillTexture()), width, height);
         GL11.glPopMatrix();
     }
 
@@ -76,10 +80,10 @@ public abstract class ScreenBase<T extends Container> extends ContainerScreen<T>
         if (texture == null) {
             return;
         }
-        double minU = texture.getMinU();
-        double maxU = texture.getMaxU();
-        double minV = texture.getMinV();
-        double maxV = texture.getMaxV();
+        float minU = texture.getMinU();
+        float maxU = texture.getMaxU();
+        float minV = texture.getMinV();
+        float maxV = texture.getMaxV();
 
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -90,12 +94,16 @@ public abstract class ScreenBase<T extends Container> extends ContainerScreen<T>
         Tessellator.getInstance().draw();
     }
 
+    public void renderFloatingTooltip(MatrixStack stack, List<? extends ITextProperties> text, int mouseX, int mouseY) {
+        this.renderWrappedToolTip(stack, text, mouseX, mouseY, this.font);
+    }
 
-    @Override
-    protected abstract void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY);
 
-    @Override
-    protected abstract void drawGuiContainerForegroundLayer(int mouseX, int mouseY);
+    //@Override
+    //protected abstract void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY);
+
+    //@Override
+    //protected abstract void drawGuiContainerForegroundLayer(int mouseX, int mouseY);
 
 
 

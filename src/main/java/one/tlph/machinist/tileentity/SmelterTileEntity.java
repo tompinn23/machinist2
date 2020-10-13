@@ -1,5 +1,6 @@
 package one.tlph.machinist.tileentity;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -96,8 +97,8 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable,
 	}
 
 	@Override
-	public void read(CompoundNBT compound) {
-		super.read(compound);
+	public void read(BlockState state, CompoundNBT compound) {
+		super.read(state, compound);
 		if(compound.contains("inventory")) {
 			inventory.deserializeNBT(compound.getCompound("inventory"));
 		}
@@ -176,11 +177,6 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable,
 		return this.write(new CompoundNBT());
 	}
 
-	@Override
-	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-		super.onDataPacket(net, pkt);
-		handleUpdateTag(pkt.getNbtCompound());
-	}
 
 
 	private ItemStack getRecipe(final ItemStack stack) {

@@ -67,6 +67,7 @@ public class SmelterContainer extends ContainerBase {
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(canInteractWithCallable, playerIn, ModBlocks.CRUSHER);
+        return playerIn.world.getBlockState(te.getPos()).getBlock() == ModBlocks.SMELTER.getBlock()
+                && playerIn.getDistanceSq(te.getPos().getX() + 0.5, te.getPos().getY() + 0.5, te.getPos().getZ() + 0.5) <= 64.0;
     }
 }

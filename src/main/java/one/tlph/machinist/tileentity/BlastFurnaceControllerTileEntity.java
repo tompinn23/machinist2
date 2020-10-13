@@ -1,5 +1,6 @@
 package one.tlph.machinist.tileentity;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -8,6 +9,7 @@ import one.tlph.machinist.api.multiblock.rectangular.RectangularMultiblockTileEn
 import one.tlph.machinist.api.multiblock.validation.IMultiblockValidator;
 import one.tlph.machinist.proxy.ModTileEntityTypes;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BlastFurnaceControllerTileEntity extends RectangularMultiblockTileEntityBase {
@@ -84,8 +86,8 @@ public class BlastFurnaceControllerTileEntity extends RectangularMultiblockTileE
     }
 
     @Override
-    public void read(CompoundNBT nbt) {
-        super.read(nbt);
+    public void read(@Nonnull BlockState state, @Nonnull CompoundNBT nbt) {
+        super.read(state, nbt);
         //facing = EnumFacing.values()[nbt.getInteger("facing")];
     }
 
@@ -100,11 +102,6 @@ public class BlastFurnaceControllerTileEntity extends RectangularMultiblockTileE
         return this.write(new CompoundNBT());
     }
 
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(pkt.getNbtCompound());
-    }
 
 
 

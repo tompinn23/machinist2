@@ -29,6 +29,12 @@ public enum PartPosition implements IStringSerializable {
 	EastFace(Direction.EAST, Type.Face),
 	WestFace(Direction.WEST, Type.Face);
 
+
+	@Override
+	public String getString() {
+		return this.toString();
+	}
+
 	public enum Type {
 		Unknown,
 		Interior,
@@ -57,7 +63,6 @@ public enum PartPosition implements IStringSerializable {
 		return EnumProperty.create(name, PartPosition.class);
 	}
 
-	@Override
 	public String getName() {
 
 		return this.toString();

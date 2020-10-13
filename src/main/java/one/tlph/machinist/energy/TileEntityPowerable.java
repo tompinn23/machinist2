@@ -2,6 +2,7 @@ package one.tlph.machinist.energy;
 
 
 import com.google.common.base.Optional;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.CompoundNBT;
@@ -49,11 +50,11 @@ public class TileEntityPowerable extends TileEntity implements IEnergyStorage /*
     }
 
     @Override
-	public void read(CompoundNBT compound) {
+	public void read(BlockState state, CompoundNBT compound) {
 		if(compound.contains("energyStorage")) {
 			energyStorage.deserializeNBT(compound.getCompound("energyStorage"));
 		}
-		super.read(compound);
+		super.read(state, compound);
 	}
 
 	@Override
@@ -112,7 +113,7 @@ public class TileEntityPowerable extends TileEntity implements IEnergyStorage /*
 	}
 
 	protected void sendUpdates() {
-		world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos), 3);
+		world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos), 3, 0);
 		markDirty();
 	}
 
@@ -128,11 +129,6 @@ public class TileEntityPowerable extends TileEntity implements IEnergyStorage /*
 		return this.write(new CompoundNBT());
 	}
 
-	@Override
-	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-		super.onDataPacket(net, pkt);
-		handleUpdateTag(pkt.getNbtCompound());
-	}
 
 	public double fractionOfEnergyRemaining() {
 		double fraction = energyStorage.getEnergyStored() / (double)energyStorage.getMaxEnergyStored();

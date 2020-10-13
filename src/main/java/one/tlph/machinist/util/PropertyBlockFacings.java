@@ -2,9 +2,9 @@ package one.tlph.machinist.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.state.EnumProperty;
-import net.minecraft.state.IProperty;
+
 import net.minecraft.state.Property;
-import net.minecraft.util.BlockRenderLayer;
+
 import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.common.property.Properties;
@@ -100,12 +100,7 @@ public enum PropertyBlockFacings implements IStringSerializable {
     public static final EnumSet<PropertyBlockFacings> PIPES;
     public static final EnumSet<PropertyBlockFacings> PIPEENDS;
 
-
-    @Override
-    public String getName() {
-
-        return this._name;
-    }
+    
 
     PropertyBlockFacings(byte hash) {
 
@@ -131,4 +126,8 @@ public enum PropertyBlockFacings implements IStringSerializable {
         PIPEENDS = EnumSet.of(PipeEnd_DENSU, PipeEnd_DENSW, PipeEnd_DENUW, PipeEnd_DESUW, PipeEnd_DNSUW, PipeEnd_ENSUW);
     }
 
+    @Override
+    public String getString() {
+        return _name;
+    }
 }

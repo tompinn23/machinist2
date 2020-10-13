@@ -1,5 +1,6 @@
 package one.tlph.machinist.gui.elements;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fluids.IFluidTank;
@@ -24,9 +25,9 @@ public class FluidTank extends IGuiElement {
 
 
     @Override
-    public void drawBackground() {
+    public void drawBackground(MatrixStack stack) {
         RenderHelper.bindTexture(FLUID_TANK);
-        drawTexturedModalRect(xPos, yPos, 0, 0, sizeX, sizeY);
+        drawTexturedModalRect(stack, xPos, yPos, 0, 0, sizeX, sizeY);
         drawFluid();
     }
 
@@ -48,7 +49,7 @@ public class FluidTank extends IGuiElement {
 
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
+    public void drawForeground(MatrixStack stack, int mouseX, int mouseY) {
 
     }
 }

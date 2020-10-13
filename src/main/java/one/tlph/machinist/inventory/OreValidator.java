@@ -5,6 +5,7 @@ import java.util.Set;
 
 import gnu.trove.set.hash.THashSet;
 import net.minecraft.item.Item;
+import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 
@@ -16,8 +17,11 @@ public class OreValidator {
 
     public boolean validate(Item item) {
     	for(ResourceLocation grp : grps) {
-    		if(ItemTags.getCollection().get(grp).contains(item))
-    				return true;
+    		ITag tag = ItemTags.getCollection().get(grp);
+    		if(tag == null)
+    			return false;
+			if(tag.contains(item))
+				return true;
     	}
     	return false;
     }

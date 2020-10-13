@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Rotation;
@@ -31,6 +32,7 @@ import one.tlph.machinist.items.ModItems;
 import one.tlph.machinist.tileentity.CrusherTileEntity;
 import one.tlph.machinist.tileentity.SmelterTileEntity;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class Smelter extends HorizontalBlock {
@@ -56,7 +58,7 @@ public class Smelter extends HorizontalBlock {
 		return state.with(HORIZONTAL_FACING, rot.rotate(state.get(HORIZONTAL_FACING)));
 	}
 
-
+	@Override
     public boolean hasTileEntity(BlockState state) {
         return true;
     }
@@ -74,22 +76,19 @@ public class Smelter extends HorizontalBlock {
     	return new SmelterTileEntity();
 	}
 
-    
 
+
+	@Nonnull
 	@Override
-	public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-			BlockRayTraceResult hit) {
+	@Deprecated
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		if(!worldIn.isRemote) {
 			TileEntity te = worldIn.getTileEntity(pos);
-			if(te instanceof INamedContainerProvider) {
-				NetworkHooks.openGui((ServerPlayerEntity)player, (INamedContainerProvider)te, pos);
+			if(te instanceof SmelterTileEntity) {
+				NetworkHooks.openGui((ServerPlayerEntity)player, (SmelterTileEntity)te, pos);
 			}
-			else {
-				throw new IllegalStateException("Our named container provider is missing!");
-			}
-			return true;
 		}
-    	return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+		return ActionResultType.SUCCESS;
 	}
 
 

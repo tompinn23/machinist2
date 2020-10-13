@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -40,7 +41,7 @@ public final class ModEventSubscriber {
 
     @SubscribeEvent
     public static void onRegisterItems(RegistryEvent.Register<Item> event) {
-        Item.Properties properties = new Item.Properties().group(ModiItemGroup.MOD_ITEM_GROUP);
+        Item.Properties properties = new Item.Properties().group(ModItemGroup.MOD_ITEM_GROUP);
         event.getRegistry().registerAll(setup(new BlockItem(ModBlocks.MACHINE_FRAME, properties), "machine_frame"),
                 setup(new BlockItem(ModBlocks.SMELTER, properties), "smelter"),
                 setup(new BlockItem(ModBlocks.CRUSHER, properties), "crusher"),

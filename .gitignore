@@ -16,6 +16,8 @@ out
 # gradle
 build
 .gradle
+build.gradle
+logs
 
 # other
 eclipse

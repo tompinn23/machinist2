@@ -60,10 +60,7 @@ public class Machinist {
 //        proxy.Init(e);
 //    }
 //
-//    @Mod.EventHandler
-//    public void postInit(FMLPostInitializationEvent e) {
-//        initManagers();
-//
+
 //
 //    	ic2Loaded = Loader.isModLoaded("ic2");
 //        proxy.postInit(e);
