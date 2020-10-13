@@ -12,10 +12,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -35,6 +37,7 @@ public class Crusher extends HorizontalBlock {
 
     public Crusher() {
     	super(Block.Properties.create(Material.ROCK));
+    	this.setDefaultState(this.getDefaultState().with(HORIZONTAL_FACING, Direction.NORTH).with(ACTIVE, false));
     }
 
     
@@ -84,5 +87,10 @@ public class Crusher extends HorizontalBlock {
             }
         }
         super.onReplaced(state, worldIn, pos, newState, isMoving);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
     }
 }

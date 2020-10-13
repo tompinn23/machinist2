@@ -2,6 +2,7 @@ package one.tlph.machinist;
 
 
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -9,8 +10,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import one.tlph.machinist.api.multiblock.IMultiblockRegistry;
 import one.tlph.machinist.api.multiblock.MultiblockEventHandler;
 import one.tlph.machinist.api.multiblock.MultiblockRegistry;
-import one.tlph.machinist.proxy.Setup;
-import one.tlph.machinist.proxy.ModTileEntityTypes;
+import one.tlph.machinist.init.*;
 import one.tlph.machinist.recipes.BlastFurnaceManager;
 import one.tlph.machinist.recipes.CrusherManager;
 
@@ -36,6 +36,11 @@ public class Machinist {
 
     public Machinist() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        ModBlocks.BLOCKS.register(modEventBus);
+        ModItems.ITEMS.register(modEventBus);
+        ModContainerTypes.CONTAINER_TYPES.register(modEventBus);
+        ModTileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
     }
 
     private void setup(final FMLCommonSetupEvent event) {

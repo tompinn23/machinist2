@@ -10,8 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import one.tlph.machinist.blocks.ModBlocks;
-import one.tlph.machinist.proxy.ModContainerTypes;
+import one.tlph.machinist.init.ModBlocks;
+import one.tlph.machinist.init.ModContainerTypes;
 import one.tlph.machinist.tileentity.SmelterTileEntity;
 
 public class SmelterContainer extends ContainerBase {
@@ -39,7 +39,7 @@ public class SmelterContainer extends ContainerBase {
 	}
 	
 	
-	public SmelterTileEntity te;
+	public final SmelterTileEntity te;
     private final IWorldPosCallable canInteractWithCallable;
 
     public SmelterContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
@@ -47,7 +47,7 @@ public class SmelterContainer extends ContainerBase {
     }
 
     public SmelterContainer(final int windowId, final PlayerInventory playerInventory, final SmelterTileEntity tileEntity) {
-        super(ModContainerTypes.SMELTER, windowId);
+        super(ModContainerTypes.SMELTER.get(), windowId);
         this.te = tileEntity;
         this.canInteractWithCallable = IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos());
         this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.cookTime, v -> tileEntity.cookTime = (short) v));
@@ -67,7 +67,7 @@ public class SmelterContainer extends ContainerBase {
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return playerIn.world.getBlockState(te.getPos()).getBlock() == ModBlocks.SMELTER.getBlock()
+        return playerIn.world.getBlockState(te.getPos()).getBlock() == ModBlocks.SMELTER.get().getBlock()
                 && playerIn.getDistanceSq(te.getPos().getX() + 0.5, te.getPos().getY() + 0.5, te.getPos().getZ() + 0.5) <= 64.0;
     }
 }

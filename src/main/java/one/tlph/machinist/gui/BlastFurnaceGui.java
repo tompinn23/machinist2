@@ -6,6 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import one.tlph.machinist.Machinist;
 import one.tlph.machinist.container.BlastFurnaceMultiContainer;
+import one.tlph.machinist.init.ModBlocks;
 import one.tlph.machinist.tileentity.BlastFurnaceMultiBlockTileEntity;
 import one.tlph.machinist.util.RenderHelper;
 
@@ -31,7 +32,7 @@ public class BlastFurnaceGui extends ScreenBase<BlastFurnaceMultiContainer> {
     private static final ResourceLocation guiTexture = new ResourceLocation(Machinist.MODID, "textures/gui/blastfurnace.png");
 
     public BlastFurnaceGui(final BlastFurnaceMultiContainer container, final PlayerInventory inventory, final ITextComponent title) {
-        super(container, inventory, title);
+        super(container, inventory, ModBlocks.BLAST_FURNACE_CONTROLLER.get().getTranslatedName());
         xSize = WIDTH;
         ySize = HEIGHT;
     }
@@ -43,9 +44,9 @@ public class BlastFurnaceGui extends ScreenBase<BlastFurnaceMultiContainer> {
     protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderHelper.bindTexture(guiTexture);
         blit(stack, guiLeft, guiTop, 0 ,0, xSize, ySize);
-        double progress = te.getCookProgress();
+        double progress = container.tileEntity.getCookProgress();
         blit(stack,guiLeft + COOK_XPOS, guiTop + COOK_YPOS, COOK_U, COOK_V, (int)(progress * COOK_WIDTH), COOK_HEIGHT);
-        double fuelLeft = te.getFuelLeft();
+        double fuelLeft = container.tileEntity.getFuelLeft();
         blit(stack,guiLeft + FLAME_XPOS, guiTop + FLAME_YPOS + (int)((1.0 - fuelLeft) * FLAME_HEIGHT), FLAME_U, (int)((1.0 - fuelLeft) * FLAME_HEIGHT) + FLAME_V, FLAME_WIDTH, FLAME_HEIGHT - (int)((1.0 - fuelLeft) * FLAME_HEIGHT));
 
     }

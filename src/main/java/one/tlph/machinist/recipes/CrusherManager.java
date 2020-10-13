@@ -5,14 +5,11 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import one.tlph.machinist.Machinist;
 import one.tlph.machinist.inventory.ComparableItemStack;
 import one.tlph.machinist.inventory.ComparableItemStackValidated;
 import one.tlph.machinist.inventory.OreValidator;
-import one.tlph.machinist.items.ModItems;
-import one.tlph.machinist.util.ItemHelper;
+import one.tlph.machinist.init.ModItems;
 
-import java.util.Locale;
 import java.util.Map;
 
 public class CrusherManager {
@@ -55,9 +52,9 @@ public class CrusherManager {
     }
 
     public static void initalise() {
-        addRecipe(200, new ItemStack(Item.getItemFromBlock(Blocks.GOLD_ORE), 1), new ItemStack(ModItems.goldDust, 2));
-        addRecipe(200, new ItemStack(Item.getItemFromBlock(Blocks.IRON_ORE), 1), new ItemStack(ModItems.ironDust,2));
-        addRecipe(400, new ItemStack(ModItems.steelIngot), new ItemStack(ModItems.steelDust, 1));
+        addRecipe(200, new ItemStack(Item.getItemFromBlock(Blocks.GOLD_ORE), 1), new ItemStack(ModItems.GOLD_DUST.get(), 2));
+        addRecipe(200, new ItemStack(Item.getItemFromBlock(Blocks.IRON_ORE), 1), new ItemStack(ModItems.IRON_DUST.get(),2));
+        addRecipe(400, new ItemStack(ModItems.STEEL_INGOT.get()), new ItemStack(ModItems.STEEL_DUST.get(), 1));
         //String oreTy pe;
         //TODO: Fix ore dict
 //        for(String oreName : OreDictionary.getOreNames()) {

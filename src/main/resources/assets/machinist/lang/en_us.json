@@ -1,0 +1,31 @@
+{
+  "_comment": "items",
+  "item.machinist.coupler": "Electro Coupler",
+  "item.machinist.steel_ingot": "Steel Ingot",
+  "item.machinist.gold_dust": "Gold Dust",
+  "item.machinist.iron_dust": "Iron Dust",
+  "item.machinist.steel_dust": "Steel Dust",
+  "item.machinist.coal_dust": "Coal Dust",
+  "item.machinist.copper_ingot": "Copper Ingot",
+
+
+  "_comment": "blocks",
+  "block.machinist.smelter": "Smelter",
+  "block.machinist.machine_frame": "Machine Frame",
+  "block.machinist.crusher": "Crusher",
+
+  "itemGroup.machinist": "Machiniste",
+
+
+  "message.machinist.multiblock.validation.too_few_parts": "Not enough parts have been connected.",
+  "message.machinist.multiblock.validation.machine_too_large": "The machine must be %1$d blocks in the %2$s direction.",
+  "message.machinist.multiblock.validation.machine_too_small": "The machine must be %1$d blocks in the %2$s direction.",
+  "message.machinist.multiblock.validation.invalid_part": "This part cannot be used with this machine at: %1$d, %2$d, %3$d.",
+  "message.machinist.multiblock.validation.invalid_part_for_frame": "This part cannot be used for the frame: %1$d, %2$d, %3$d.",
+  "message.machinist.multiblock.validation.invalid_part_for_top": "This part cannot be used for the top at: %1$d, %2$d, %3$d.",
+  "message.machinist.multiblock.validation.invalid_part_for_bottom": "This part cannot be used for the bottom at: %1$d, %2$d, %3$d.",
+  "message.machinist.multiblock.validation.invalid_part_for_sides": "This part cannot be used for the sides: %1$d, %2$d, %3$d.",
+  "message.machinist.multiblock.validation.reactor.invalid_part_for_interior": "This part cannot be used for the interior: %1$d, %2$d, %3$d.",
+  "message.machinist.blastfurnace.multiplecontrollers": "You need exactly 1 blast furnace controller.",
+  "gui.machinist.category.crusher": "Crushing"
+}

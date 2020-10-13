@@ -1,16 +1,13 @@
 package one.tlph.machinist.tileentity;
 
-import jdk.nashorn.internal.ir.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -22,12 +19,10 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
-import one.tlph.machinist.blocks.ModBlocks;
+import one.tlph.machinist.init.ModBlocks;
 import one.tlph.machinist.container.CrusherContainer;
 import one.tlph.machinist.energy.TileEntityPowerable;
-import one.tlph.machinist.proxy.ModTileEntityTypes;
+import one.tlph.machinist.init.ModTileEntityTypes;
 import one.tlph.machinist.recipes.CrusherManager;
 
 import javax.annotation.Nonnull;
@@ -53,7 +48,7 @@ public class CrusherTileEntity extends TileEntityPowerable implements ITickable,
 
 
     public CrusherTileEntity() {
-        super(ModTileEntityTypes.CRUSHER, 10000, TRANSFER_BASE * 2, 0);
+        super(ModTileEntityTypes.CRUSHER.get(), 10000, TRANSFER_BASE * 2, 0);
     }
 
     public IItemHandler getInput() {
@@ -194,7 +189,7 @@ public class CrusherTileEntity extends TileEntityPowerable implements ITickable,
 
 	@Override
 	public ITextComponent getDisplayName() {
-		return new TranslationTextComponent(ModBlocks.CRUSHER.getTranslationKey());
+		return new TranslationTextComponent(ModBlocks.CRUSHER.get().getTranslationKey());
 	}
 
 

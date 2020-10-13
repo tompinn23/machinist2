@@ -3,19 +3,18 @@ package one.tlph.machinist.container;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import one.tlph.machinist.api.multiblock.IMultiblockPart;
-import one.tlph.machinist.proxy.ModContainerTypes;
+import one.tlph.machinist.init.ModContainerTypes;
 import one.tlph.machinist.tileentity.BlastFurnaceMultiBlockTileEntity;
-import one.tlph.machinist.tileentity.CrusherTileEntity;
 import one.tlph.machinist.util.OutputSlotHandler;
 
 import java.util.Objects;
@@ -52,7 +51,7 @@ public class BlastFurnaceMultiContainer extends ContainerBase {
     }
     
     
-    private BlastFurnaceMultiBlockTileEntity te;
+    public final BlastFurnaceMultiBlockTileEntity tileEntity;
 	private IWorldPosCallable canInteractWithCallable;
 
     
@@ -61,12 +60,20 @@ public class BlastFurnaceMultiContainer extends ContainerBase {
     }
 
     public BlastFurnaceMultiContainer(final int windowId, final PlayerInventory playerInventory, final BlastFurnaceMultiBlockTileEntity tileEntity) {
-        super(ModContainerTypes.BLAST_FURNACE, windowId);
-        this.te = tileEntity;
+        super(ModContainerTypes.BLAST_FURNACE.get(), windowId);
+        this.tileEntity = tileEntity;
         this.canInteractWithCallable = IWorldPosCallable.of(tileEntity.WORLD, tileEntity.getReferenceCoord());
         this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.cookTime, v -> tileEntity.cookTime = (short) v));
 
+        IItemHandler handler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).resolve().get();
+
         this.addPlayerSlots(playerInventory);
+        this.addSlot(new BlastFurnaceFuelSlotHandler(handler, BlastFurnaceMultiBlockTileEntity.FUEL_SLOT, 43, 56));
+        this.addSlot(new BlastFurnaceInputSlotHandler(handler, BlastFurnaceMultiBlockTileEntity.INPUT_SLOT_1, 32, 17));
+        this.addSlot(new BlastFurnaceInputSlotHandler(handler, BlastFurnaceMultiBlockTileEntity.INPUT_SLOT_2, 53, 17));
+        this.addSlot(new OutputSlotHandler(handler, BlastFurnaceMultiBlockTileEntity.OUTPUT_SLOT, 116, 35));
+
+
     }
 
     private static BlastFurnaceMultiBlockTileEntity getTileEntity(PlayerInventory playerInventory, PacketBuffer data) {
@@ -111,6 +118,6 @@ public class BlastFurnaceMultiContainer extends ContainerBase {
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return te.canInteractWith(playerIn);
+        return tileEntity.canInteractWith(playerIn);
     }
 }

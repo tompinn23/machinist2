@@ -4,12 +4,12 @@ package one.tlph.machinist.tileentity;
 import one.tlph.machinist.api.multiblock.MultiblockControllerBase;
 import one.tlph.machinist.api.multiblock.rectangular.RectangularMultiblockTileEntityBase;
 import one.tlph.machinist.api.multiblock.validation.IMultiblockValidator;
-import one.tlph.machinist.proxy.ModTileEntityTypes;
+import one.tlph.machinist.init.ModTileEntityTypes;
 
 
 public class BlastFurnaceCasingTileEntity extends RectangularMultiblockTileEntityBase {
     public BlastFurnaceCasingTileEntity() {
-        super(ModTileEntityTypes.BLAST_FURNACE_CASING);
+        super(ModTileEntityTypes.BLAST_FURNACE_CASING.get());
     }
 
     @Override

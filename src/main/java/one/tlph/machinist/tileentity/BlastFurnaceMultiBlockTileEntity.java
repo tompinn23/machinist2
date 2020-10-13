@@ -99,7 +99,7 @@ public class BlastFurnaceMultiBlockTileEntity extends RectangularMultiblockContr
 
     @Override
     protected void onBlockAdded(IMultiblockPart newPart) {
-        if(newPart instanceof BlastFurnaceControllerTileEntity) {
+            if(newPart instanceof BlastFurnaceControllerTileEntity) {
             if (connectedControllers == null) {
                 connectedControllers = new HashSet<>();
             }

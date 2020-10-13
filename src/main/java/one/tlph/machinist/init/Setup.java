@@ -1,10 +1,6 @@
-package one.tlph.machinist.proxy;
+package one.tlph.machinist.init;
 
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DeferredWorkQueue;
-import one.tlph.machinist.items.ModItems;
 import one.tlph.machinist.recipes.BlastFurnaceManager;
 import one.tlph.machinist.recipes.CrusherManager;
 

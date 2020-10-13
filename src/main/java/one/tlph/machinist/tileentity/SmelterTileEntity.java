@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.util.Direction;
@@ -26,16 +25,13 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import net.minecraftforge.items.wrapper.RangedWrapper;
-import one.tlph.machinist.blocks.ModBlocks;
+import one.tlph.machinist.init.ModBlocks;
 import one.tlph.machinist.container.SmelterContainer;
 import one.tlph.machinist.energy.TileEntityPowerable;
-import one.tlph.machinist.items.ModItems;
-import one.tlph.machinist.proxy.ModTileEntityTypes;
-import org.apache.http.impl.entity.LaxContentLengthStrategy;
-import org.omg.CORBA.ObjectHolder;
+import one.tlph.machinist.init.ModItems;
+import one.tlph.machinist.init.ModTileEntityTypes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -93,7 +89,7 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable,
 	private static final int TRANSFER_BASE = 100;
 	
 	public SmelterTileEntity() {
-		super(ModTileEntityTypes.SMELTER, CAPACITY_BASE, TRANSFER_BASE, 0);
+		super(ModTileEntityTypes.SMELTER.get(), CAPACITY_BASE, TRANSFER_BASE, 0);
 	}
 
 	@Override
@@ -274,7 +270,7 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable,
 		 * USE Energy.
 		 * 
 		 */
-		if(ModItems.coupler == stack.getItem()) {
+		if(ModItems.COUPLER.get() == stack.getItem()) {
 			return 1;
 		}
 		
@@ -289,7 +285,7 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable,
 
 	@Override
 	public ITextComponent getDisplayName() {
-		return new TranslationTextComponent(ModBlocks.SMELTER.getTranslationKey());
+		return new TranslationTextComponent(ModBlocks.SMELTER.get().getTranslationKey());
 	}
 
 }

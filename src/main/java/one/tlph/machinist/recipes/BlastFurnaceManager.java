@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import one.tlph.machinist.inventory.ComparableItemStack;
 import one.tlph.machinist.inventory.ComparableItemStackValidated;
 import one.tlph.machinist.inventory.OreValidator;
-import one.tlph.machinist.items.ModItems;
+import one.tlph.machinist.init.ModItems;
 
 import java.util.List;
 import java.util.Map;
@@ -55,7 +55,7 @@ public class BlastFurnaceManager {
     }
 
     public static void initialise() {
-        addRecipe(new ItemStack(Items.IRON_INGOT), ItemStack.EMPTY, new ItemStack(ModItems.steelIngot), 600);
+        addRecipe(new ItemStack(Items.IRON_INGOT), ItemStack.EMPTY, new ItemStack(ModItems.STEEL_INGOT.get()), 600);
     }
 
     public static BlastFurnaceRecipe addRecipe(ItemStack primary, ItemStack secondary, ItemStack output, int cookTime) {
