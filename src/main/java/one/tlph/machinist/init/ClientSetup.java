@@ -11,7 +11,6 @@ import one.tlph.machinist.Machinist;
 import one.tlph.machinist.gui.BlastFurnaceGui;
 import one.tlph.machinist.gui.CrusherGui;
 import one.tlph.machinist.gui.SmelterGui;
-import sun.awt.X11.Screen;
 
 @Mod.EventBusSubscriber(modid = Machinist.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
