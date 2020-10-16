@@ -41,6 +41,7 @@ public class Machinist {
         ModItems.ITEMS.register(modEventBus);
         ModContainerTypes.CONTAINER_TYPES.register(modEventBus);
         ModTileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
+        ModRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -52,7 +53,6 @@ public class Machinist {
             MinecraftForge.EVENT_BUS.register(s_multiblockHandler = new MultiblockEventHandler());
         return MultiblockRegistry.INSTANCE;
     }
-
 
 //    @Mod.EventHandler
 //    public void preInit(FMLPreInitializationEvent event) {

@@ -29,13 +29,18 @@ public class BlastFurnaceRecipeSerializer<T extends BlastFurnaceRecipe> extends 
         JsonElement mainInput = JSONUtils.isJsonArray(json, JsonConstants.MAIN_INPUT) ? JSONUtils.getJsonArray(json, JsonConstants.MAIN_INPUT) :
                 JSONUtils.getJsonObject(json, JsonConstants.MAIN_INPUT);
         ItemStackIngredient mainIngredient = ItemStackIngredient.deserialize(mainInput);
-        JsonElement extraInput = JSONUtils.isJsonArray(json, JsonConstants.EXTRA_INPUT) ? JSONUtils.getJsonArray(json, JsonConstants.EXTRA_INPUT) :
-                JSONUtils.getJsonObject(json, JsonConstants.EXTRA_INPUT);
-        ItemStackIngredient extraIngredient = ItemStackIngredient.deserialize(extraInput);
+        ItemStackIngredient extraIngredient = ItemStackIngredient.from(ItemStack.EMPTY);
+        if(json.has(JsonConstants.EXTRA_INPUT)) {
+            JsonElement extraInput = JSONUtils.isJsonArray(json, JsonConstants.EXTRA_INPUT) ? JSONUtils.getJsonArray(json, JsonConstants.EXTRA_INPUT) :
+                    JSONUtils.getJsonObject(json, JsonConstants.EXTRA_INPUT);
+           extraIngredient = ItemStackIngredient.deserialize(extraInput);
+        }
         ItemStack output = SerializerHelper.getItemStack(json, JsonConstants.OUTPUT);
         if(output.isEmpty()) {
             throw new JsonSyntaxException("Combiner recipe output must not be empty.");
         }
+        if(J)
+        Machinist.logger.info("Found blast furnace recipe");
         return this.factory.create(recipeId, mainIngredient, extraIngredient, output);
     }
 

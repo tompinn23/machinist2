@@ -5,6 +5,7 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import one.tlph.machinist.init.ModRecipeSerializers;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -16,16 +17,20 @@ public class BlastFurnaceRecipe extends MachinistRecipe implements BiPredicate<I
     private final ItemStackIngredient mainInput;
     private final ItemStackIngredient extraInput;
     private final ItemStack output;
+    private final int time;
 
-    public BlastFurnaceRecipe(ResourceLocation id, ItemStackIngredient mainInput, ItemStackIngredient extraInput, ItemStack output) {
+    public BlastFurnaceRecipe(ResourceLocation id, ItemStackIngredient mainInput, ItemStackIngredient extraInput, ItemStack output, int time) {
         super(id);
         this.mainInput = mainInput;
         this.extraInput = extraInput;
         this.output = output.copy();
+        this.time = time;
     }
 
     @Override
     public boolean test(ItemStack input, ItemStack extra) {
+        if(extra.isEmpty())
+            return mainInput.test(input);
         return mainInput.test(input) && extraInput.test(extra);
     }
 
@@ -36,6 +41,8 @@ public class BlastFurnaceRecipe extends MachinistRecipe implements BiPredicate<I
     public ItemStackIngredient getExtraInput() {
         return extraInput;
     }
+
+    public int getTime() { return time; }
 
     public ItemStack getOutput(@Nonnull ItemStack input, @Nonnull ItemStack extra) {
         return output.copy();
@@ -56,6 +63,7 @@ public class BlastFurnaceRecipe extends MachinistRecipe implements BiPredicate<I
         mainInput.write(buffer);
         extraInput.write(buffer);
         buffer.writeItemStack(output);
+        buffer.writeVarInt(time);
     }
 
     @Nonnull
@@ -66,7 +74,7 @@ public class BlastFurnaceRecipe extends MachinistRecipe implements BiPredicate<I
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return null;
+        return ModRecipeSerializers.BLAST_FURNACE.get();
     }
 
 }

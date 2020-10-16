@@ -8,9 +8,11 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -27,7 +29,11 @@ import one.tlph.machinist.api.multiblock.MultiblockControllerBase;
 import one.tlph.machinist.api.multiblock.rectangular.RectangularMultiblockControllerBase;
 import one.tlph.machinist.api.multiblock.validation.IMultiblockValidator;
 import one.tlph.machinist.container.BlastFurnaceMultiContainer;
+import one.tlph.machinist.inventory.IgnoredIInventory;
 import one.tlph.machinist.recipes.BlastFurnaceManager;
+import one.tlph.machinist.recipes.BlastFurnaceRecipe;
+import one.tlph.machinist.recipes.MachinistRecipe;
+import one.tlph.machinist.recipes.MachinistRecipeType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -186,9 +192,6 @@ public class BlastFurnaceMultiBlockTileEntity extends RectangularMultiblockContr
         return false;
     }
 
-    private BlastFurnaceManager.BlastFurnaceRecipe getRecipe() {
-        return BlastFurnaceManager.getRecipe(inventory.getStackInSlot(INPUT_SLOT_1), inventory.getStackInSlot(INPUT_SLOT_2));
-    }
 
     private boolean burnFuel() {
         if(burnTime > 0) {
@@ -219,39 +222,38 @@ public class BlastFurnaceMultiBlockTileEntity extends RectangularMultiblockContr
         return smeltItem(true);
     }
 
+    private BlastFurnaceRecipe getRecipe() {
+        BlastFurnaceRecipe re = MachinistRecipeType.BLAST_FURNACE.findFirst(this.WORLD, recipe -> recipe.test(inventory.getStackInSlot(INPUT_SLOT_1), inventory.getStackInSlot(INPUT_SLOT_2)));
+        return re;
+    }
+
     private boolean smeltItem(boolean doSmelt) {
-        BlastFurnaceManager.BlastFurnaceRecipe recipe = null;
+        BlastFurnaceRecipe recipe = null;
         boolean canSmelt = false;
         if(!inventory.getStackInSlot(INPUT_SLOT_1).isEmpty() || !inventory.getStackInSlot(INPUT_SLOT_2).isEmpty()) {
-            recipe = BlastFurnaceManager.getRecipe(inventory.getStackInSlot(INPUT_SLOT_1), inventory.getStackInSlot(INPUT_SLOT_2));
+            recipe = getRecipe();
         }
         if(recipe != null) {
-            if(recipe.checkIngredients(inventory.getStackInSlot(INPUT_SLOT_1), inventory.getStackInSlot(INPUT_SLOT_2))) {
+            //if(recipe.checkIngredients(inventory.getStackInSlot(INPUT_SLOT_1), inventory.getStackInSlot(INPUT_SLOT_2))) {
                 ItemStack outputStack = inventory.getStackInSlot(OUTPUT_SLOT);
                 if(!outputStack.isEmpty()) {
-                    if(outputStack.getItem() == recipe.getOutput().getItem()) {
-                        int combinedSize = outputStack.getCount() + recipe.getOutput().getCount();
+                    if(outputStack.getItem() == recipe.getOutput(inventory.getStackInSlot(INPUT_SLOT_1), inventory.getStackInSlot(INPUT_SLOT_2)).getItem()) {
+                        int combinedSize = outputStack.getCount() + recipe.getOutput(inventory.getStackInSlot(INPUT_SLOT_1), inventory.getStackInSlot(INPUT_SLOT_2)).getCount();
                         canSmelt = combinedSize <= outputStack.getMaxStackSize();
                     }
                 } else {
                     canSmelt = true;
                 }
-            }
+            //}
         }
 
         if(canSmelt) {
             if(!doSmelt) return true;
             ItemStack in1 = inventory.getStackInSlot(INPUT_SLOT_1);
             ItemStack in2 = inventory.getStackInSlot(INPUT_SLOT_2);
-            if(recipe.reversed(in1)) {
-                inventory.extractItem(INPUT_SLOT_1, recipe.getSecondInput().getCount(), false);
-                inventory.extractItem(INPUT_SLOT_2, recipe.getFirstInput().getCount(), false);
-                inventory.insertItem(OUTPUT_SLOT, recipe.getOutput().copy(), false);
-            }else {
-                inventory.extractItem(INPUT_SLOT_1, recipe.getFirstInput().getCount(), false);
-                inventory.extractItem(INPUT_SLOT_2, recipe.getSecondInput().getCount(), false);
-                inventory.insertItem(OUTPUT_SLOT, recipe.getOutput().copy(), false);
-            }
+                inventory.extractItem(INPUT_SLOT_1, recipe.getMainInput().getMatchingInstance(inventory.getStackInSlot(INPUT_SLOT_1)).getCount(), false);
+                inventory.extractItem(INPUT_SLOT_2, recipe.getMainInput().getMatchingInstance(inventory.getStackInSlot(INPUT_SLOT_2)).getCount(), false);
+                inventory.insertItem(OUTPUT_SLOT, recipe.getOutput(inventory.getStackInSlot(INPUT_SLOT_1), inventory.getStackInSlot(INPUT_SLOT_2)).copy(), false);
             return true;
         }
         return false;
@@ -259,7 +261,7 @@ public class BlastFurnaceMultiBlockTileEntity extends RectangularMultiblockContr
 
 
     public double getCookProgress() {
-        BlastFurnaceManager.BlastFurnaceRecipe recipe = getRecipe();
+        BlastFurnaceRecipe recipe = getRecipe();
         if(recipe == null) {
             return 0.0D;
         }
