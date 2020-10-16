@@ -991,7 +991,7 @@ public abstract class MultiblockControllerBase implements IMultiblockValidator {
 			for(int y = getMinimumCoord().getY(); y <= this.getMaximumCoord().getY(); y++)
 				for(int z = getMinimumCoord().getZ(); z <= this.getMaximumCoord().getZ(); z++) {
 					BlockPos p = new BlockPos(x, y, z);
-					this.WORLD.markAndNotifyBlock(p, null, WORLD.getBlockState(p), WORLD.getBlockState(p), 3, 1);
+					this.WORLD.markBlockRangeForRenderUpdate(p, WORLD.getBlockState(p), WORLD.getBlockState(p));
 				}
 	}
 

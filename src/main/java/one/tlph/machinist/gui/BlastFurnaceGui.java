@@ -40,6 +40,7 @@ public class BlastFurnaceGui extends ScreenBase<BlastFurnaceMultiContainer> {
 
 
 
+
     @Override
     protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderHelper.bindTexture(guiTexture);

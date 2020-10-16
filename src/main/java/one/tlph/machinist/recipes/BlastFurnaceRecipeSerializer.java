@@ -39,9 +39,12 @@ public class BlastFurnaceRecipeSerializer<T extends BlastFurnaceRecipe> extends 
         if(output.isEmpty()) {
             throw new JsonSyntaxException("Combiner recipe output must not be empty.");
         }
-        if(J)
+        int time = BlastFurnaceRecipe.DEFAULT_TIME;
+        if(json.has(JsonConstants.TIME)) {
+            time = json.get(JsonConstants.TIME).getAsInt();
+        }
         Machinist.logger.info("Found blast furnace recipe");
-        return this.factory.create(recipeId, mainIngredient, extraIngredient, output);
+        return this.factory.create(recipeId, mainIngredient, extraIngredient, time, output);
     }
 
     @Override
@@ -50,7 +53,8 @@ public class BlastFurnaceRecipeSerializer<T extends BlastFurnaceRecipe> extends 
             ItemStackIngredient mainInput = ItemStackIngredient.read(buffer);
             ItemStackIngredient extraInput = ItemStackIngredient.read(buffer);
             ItemStack output = buffer.readItemStack();
-            return this.factory.create(recipeId, mainInput, extraInput, output);
+            int time = buffer.readVarInt();
+            return this.factory.create(recipeId, mainInput, extraInput, time, output);
         } catch (Exception e) {
             Machinist.logger.error("Error reading blast furnace recipe from packet.", e);
             throw e;
@@ -69,6 +73,6 @@ public class BlastFurnaceRecipeSerializer<T extends BlastFurnaceRecipe> extends 
 
     @FunctionalInterface
     public interface IFactory<T extends BlastFurnaceRecipe> {
-        T create(ResourceLocation id, ItemStackIngredient mainInput, ItemStackIngredient extraInput, ItemStack output);
+        T create(ResourceLocation id, ItemStackIngredient mainInput, ItemStackIngredient extraInput, int time, ItemStack output);
     }
 }

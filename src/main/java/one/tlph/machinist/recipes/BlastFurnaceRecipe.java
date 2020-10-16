@@ -14,12 +14,13 @@ import java.util.function.BiPredicate;
 
 public class BlastFurnaceRecipe extends MachinistRecipe implements BiPredicate<ItemStack, ItemStack> {
 
+    public static final int DEFAULT_TIME = 300;
     private final ItemStackIngredient mainInput;
     private final ItemStackIngredient extraInput;
     private final ItemStack output;
     private final int time;
 
-    public BlastFurnaceRecipe(ResourceLocation id, ItemStackIngredient mainInput, ItemStackIngredient extraInput, ItemStack output, int time) {
+    public BlastFurnaceRecipe(ResourceLocation id, ItemStackIngredient mainInput, ItemStackIngredient extraInput, int time, ItemStack output) {
         super(id);
         this.mainInput = mainInput;
         this.extraInput = extraInput;
