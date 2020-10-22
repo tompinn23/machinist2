@@ -35,7 +35,6 @@ public final class MultiblockEventHandler {
 
     @SubscribeEvent
     public void onClientTick(final TickEvent.ClientTickEvent event) {
-
         if (TickEvent.Phase.START == event.phase)
             MultiblockRegistry.INSTANCE.tickStart(Minecraft.getInstance().world);
     }

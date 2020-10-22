@@ -6,15 +6,13 @@ import net.minecraft.block.material.Material;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ObjectHolder;
 import one.tlph.machinist.Machinist;
 import one.tlph.machinist.blocks.BlastFurnace.BlastFurnaceCasing;
 import one.tlph.machinist.blocks.BlastFurnace.BlastFurnaceController;
+import one.tlph.machinist.blocks.Cable;
 import one.tlph.machinist.blocks.MachineFrame;
 import one.tlph.machinist.blocks.crusher.Crusher;
 import one.tlph.machinist.blocks.smelter.Smelter;
-
-import javax.swing.*;
 
 public final class ModBlocks {
 
@@ -27,7 +25,11 @@ public final class ModBlocks {
     public static final RegistryObject<Block> CRUSHER = BLOCKS.register("crusher", () -> new Crusher());
     public static final RegistryObject<Block> BLAST_FURNACE_CONTROLLER = BLOCKS.register("blast_furnace_controller", () -> new BlastFurnaceController());
     public static final RegistryObject<Block> BLAST_FURNACE_CASING = BLOCKS.register("blast_furnace_casing", () -> new BlastFurnaceCasing());
+
+    public static final RegistryObject<Block> CABLE = BLOCKS.register("cable", () -> new Cable(AbstractBlock.Properties.create(Material.PISTON)));
 /*
+
+
     @ObjectHolder("machinist:machine_frame")
     public static MachineFrame MACHINE_FRAME;
 

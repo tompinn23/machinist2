@@ -2,14 +2,12 @@ package one.tlph.machinist.init;
 
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
 import one.tlph.machinist.Machinist;
-import one.tlph.machinist.tileentity.BlastFurnaceCasingTileEntity;
-import one.tlph.machinist.tileentity.BlastFurnaceControllerTileEntity;
-import one.tlph.machinist.tileentity.CrusherTileEntity;
-import one.tlph.machinist.tileentity.SmelterTileEntity;
+import one.tlph.machinist.tileentity.*;
 
 public class ModTileEntityTypes {
     public static final DeferredRegister<TileEntityType<?>> TILE_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, Machinist.MODID);
@@ -26,4 +24,6 @@ public class ModTileEntityTypes {
     public static final RegistryObject<TileEntityType<BlastFurnaceControllerTileEntity>> BLAST_FURNACE_CONTROLLER = TILE_ENTITY_TYPES.register("blast_furnace_controller", () ->
             TileEntityType.Builder.create(BlastFurnaceControllerTileEntity::new, ModBlocks.BLAST_FURNACE_CONTROLLER.get()).build(null));
 
+    public static final RegistryObject<TileEntityType<CableTileEntity>> CABLE_TILE_ENTITY = TILE_ENTITY_TYPES.register("cable", () ->
+            TileEntityType.Builder.create(CableTileEntity::new, ModBlocks.CABLE.get()).build(null));
 }

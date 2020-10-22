@@ -49,6 +49,7 @@ public class TileEntityPowerable extends TileEntity implements IEnergyStorage /*
 		energyStorage = new EnergyMachine(capacityBase, transferBase, i);
     }
 
+
     @Override
 	public void read(BlockState state, CompoundNBT compound) {
 		if(compound.contains("energyStorage")) {
