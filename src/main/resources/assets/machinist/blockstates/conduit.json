@@ -1,0 +1,42 @@
+{
+  "multipart": [
+    {
+      "apply": {"model": "machinist:block/conduit"}
+    }, {
+      "when": {
+        "north": true
+      },
+      "apply": {"model": "machinist:block/conduit_multipart"}
+    },
+    {
+      "when": {
+        "east": true
+      },
+      "apply": {"model": "machinist:block/conduit_multipart", "y": 90}
+    },
+    {
+      "when": {
+        "south": true
+      },
+      "apply": {"model": "machinist:block/conduit_multipart", "x": 180}
+    },
+    {
+      "when": {
+        "west": true
+      },
+      "apply": {"model": "machinist:block/conduit_multipart", "y": 270}
+    },
+    {
+      "when": {
+        "up": true
+      },
+      "apply": {"model": "machinist:block/conduit_multipart", "x": 270}
+    },
+    {
+      "when": {
+        "down": true
+      },
+      "apply": {"model": "machinist:block/conduit_multipart", "x": 90}
+    }
+  ]
+}

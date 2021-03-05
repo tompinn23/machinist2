@@ -6,213 +6,171 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 import one.tlph.machinist.api.multiblock.IMultiblockPart;
 import one.tlph.machinist.api.multiblock.MultiblockControllerBase;
 import one.tlph.machinist.api.multiblock.validation.IMultiblockValidator;
+import one.tlph.machinist.energy.EnergyUtils;
 import one.tlph.machinist.energy.ResizableEnergyStore;
+import one.tlph.machinist.energy.net.EnergyNetBase;
+import one.tlph.machinist.energy.net.IEnergyNetPart;
+import one.tlph.machinist.energy.net.IEnergyNetRegistry;
+import org.lwjgl.system.CallbackI;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class EnergyNetTileEntity extends MultiblockControllerBase {
+public class EnergyNetTileEntity extends EnergyNetBase {
 
     protected EnergyNetTileEntity(World world) {
         super(world);
         energyStorage = new ResizableEnergyStore(1000, 1000, 1000);
         acceptors = new HashMap<>();
+        suppliers = new HashMap<>();
     }
 
-    private IMultiblockPart delegatePart = null;
-    private HashMap<BlockPos, List<IEnergyStorage>> acceptors;
+
+    private IEnergyNetPart delegatePart = null;
+    private HashMap<BlockPos, TileEntity> acceptors;
+    private HashMap<BlockPos, TileEntity> suppliers;
     private ResizableEnergyStore energyStorage;
     private final int transferRate = 1000;
     private int ticksSinceLastChange = 0;
 
-    @Override
-    public void onBlockActivated(BlockPos pos) {
 
-    }
 
     @Override
-    public void onAttachedPartWithMultiblockData(IMultiblockPart part, CompoundNBT data) {
+    public void onAttachedPartWithNetData(IEnergyNetPart part, CompoundNBT data) {
         if(part != delegatePart)
             delegatePart = part;
         read(data);
     }
 
     @Override
-    protected void onBlockAdded(IMultiblockPart newPart) {
-        List<IEnergyStorage> acceptors = new ArrayList<>();
-        BlockPos pos = newPart.getWorldPosition();
+    protected void onBlockAdded(IEnergyNetPart newPart) {
+        BlockPos pos = newPart.getWorldPos();
         for(Direction d : Direction.values()) {
             if(WORLD.isBlockPresent(pos.offset(d))) {
                 TileEntity te = WORLD.getTileEntity(pos.offset(d));
-                if(te instanceof IEnergyStorage) {
-                    if(((IEnergyStorage) te).canReceive()) {
-                        acceptors.add((IEnergyStorage)te);
+                if(EnergyUtils.isPresent(te, d)) {
+                    if(EnergyUtils.canReceive(te, d)) {
+                        acceptors.put(pos.offset(d), te);
                     }
+                }
+                if(EnergyUtils.canExtract(te, d)) {
+                    suppliers.put(pos, te);
                 }
             }
         }
-        this.acceptors.put(pos, acceptors);
         recalculateEnergy();
     }
 
     private void recalculateEnergy() {
-        energyStorage.setCapacity(connectedParts.size() * 100);
+        energyStorage.setCapacity(connectedParts.size() * 1000);
     }
 
     public void onNeighbourBlockChanged(BlockPos pos, Direction side) {
         if(WORLD.isBlockPresent(pos.offset(side))) {
             TileEntity te = WORLD.getTileEntity(pos.offset(side));
-            if(te == null || te instanceof CableTileEntity)
+            if(te instanceof IEnergyNetPart)
                 return;
-            if(te instanceof IEnergyStorage)
-                acceptors.get(pos).set(side.getIndex(), (IEnergyStorage)te);
-            else {
-                acceptors.get(pos).set(side.getIndex(), null);
+            acceptors.remove(pos.offset(side));
+            suppliers.remove(pos.offset(side));
+            if(EnergyUtils.isPresent(te,side)) {
+                if(EnergyUtils.canExtract(te, side)) {
+                    suppliers.put(pos.offset(side), te);
+                }
+                if(EnergyUtils.canReceive(te, side)) {
+                    acceptors.put(pos.offset(side), te);
+                }
             }
         }
         else {
-            acceptors.get(pos).set(side.getIndex(), null);
+            acceptors.remove(pos.offset(side));
+            suppliers.remove(pos.offset(side));
         }
     }
 
     public void onNeighbourTileChanged(BlockPos pos, Direction side) {
-        if(WORLD.isBlockPresent(pos.offset(side))) {
-            TileEntity te = WORLD.getTileEntity(pos.offset(side));
-            if(te == null || te instanceof CableTileEntity)
-                return;
-            if(te instanceof IEnergyStorage)
-                acceptors.get(pos).set(side.getIndex(), (IEnergyStorage)te);
-            else {
-                acceptors.get(pos).set(side.getIndex(), null);
-            }
-        }
-        else {
-            acceptors.get(pos).set(side.getIndex(), null);
-        }
+//        if(WORLD.isBlockPresent(pos.offset(side))) {
+//            TileEntity te = WORLD.getTileEntity(pos.offset(side));
+//            if(te == null || te instanceof EnergyConduitTileEntity)
+//                return;
+//            if(te instanceof IEnergyStorage)
+//                acceptors.get(pos).set(side.getIndex(), (IEnergyStorage)te);
+//            else {
+//                acceptors.get(pos).set(side.getIndex(), null);
+//            }
+//        }
+//        else {
+//            acceptors.get(pos).set(side.getIndex(), null);
+//        }
     }
 
     @Override
-    protected void onBlockRemoved(IMultiblockPart oldPart) {
-        if(acceptors.containsKey(oldPart.getWorldPosition())) {
-            acceptors.remove(oldPart.getWorldPosition());
+    protected void onBlockRemoved(IEnergyNetPart oldPart) {
+        if(acceptors.containsKey(oldPart.getWorldPos())) {
+            acceptors.remove(oldPart.getWorldPos());
         }
         recalculateEnergy();
     }
 
     @Override
-    protected void onMachineAssembled() {
+    protected void onAssimilate(EnergyNetBase assimilated) {
 
     }
 
     @Override
-    protected void onMachineRestored() {
+    protected void onAssimilated(EnergyNetBase assimilator) {
 
     }
 
-    @Override
-    protected void onMachinePaused() {
-
-    }
-
-    @Override
-    protected void onMachineDisassembled() {
-
-    }
-
-    @Override
-    protected int getMinimumNumberOfBlocksForAssembledMachine() {
-        return 0;
-    }
-
-    @Override
-    protected int getMaximumXSize() {
-        return 0;
-    }
-
-    @Override
-    protected int getMaximumZSize() {
-        return 0;
-    }
-
-    @Override
-    protected int getMaximumYSize() {
-        return 0;
-    }
-
-    @Override
-    protected boolean isMachineWhole(IMultiblockValidator validatorCallback) {
-        return true;
-    }
-
-    @Override
-    protected void onAssimilate(MultiblockControllerBase assimilated) {
-
-    }
-
-    @Override
-    protected void onAssimilated(MultiblockControllerBase assimilator) {
-
-    }
 
     @Override
     protected boolean updateServer() {
-            energyStorage.receiveEnergy(200, false);
-        if(!energyStorage.canExtract()) {
-            return false;
-        }
-        List<IEnergyStorage> flattened = acceptors.values().stream()
-                .filter(s -> s != null)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-        if(flattened.size() == 0)
-            return false;
-        Collections.shuffle(flattened);
-        flattened.forEach((IEnergyStorage eStore) -> {
-            int drain = Math.min(energyStorage.getEnergyStored(), transferRate);
-            if(drain > 0 && eStore.receiveEnergy(drain, true) > 0) {
-                int move = eStore.receiveEnergy(drain, false);
-                energyStorage.extractEnergy(move, false);
+        boolean ret = false;
+        if(suppliers.size() > 0) {
+
+
+            Iterator<Map.Entry<BlockPos, TileEntity>> iterator = suppliers.entrySet().iterator();
+            while(iterator.hasNext()) {
+                Map.Entry<BlockPos, TileEntity> kv = iterator.next();
+                IEnergyStorage store = kv.getValue().getCapability(CapabilityEnergy.ENERGY).orElse(null);
+                if(store == null) {
+                    iterator.remove();
+                    continue;
+                }
+                int actual = energyStorage.receiveEnergy(store.extractEnergy(transferRate, true), false);
+                store.extractEnergy(actual, false);
             }
-        });
-        return true;
+            ret = true;
+        }
+
+        if(acceptors.size() > 0) {
+            int perMachine = energyStorage.getEnergyStored() / acceptors.size();
+            Iterator<Map.Entry<BlockPos, TileEntity>> iterator = acceptors.entrySet().iterator();
+            while(iterator.hasNext()) {
+                Map.Entry<BlockPos, TileEntity> kv = iterator.next();
+                if(!energyStorage.canExtract())
+                    break;
+                IEnergyStorage store = kv.getValue().getCapability(CapabilityEnergy.ENERGY).orElse(null);
+                if(store == null) {
+                    iterator.remove();
+                    continue;
+                }
+                int actual = energyStorage.extractEnergy(store.receiveEnergy(perMachine, true), false);
+                store.receiveEnergy(actual, false);
+            }
+            ret = true;
+        }
+        return ret;
     }
 
     @Override
     protected void updateClient() {
 
-    }
-
-    @Override
-    protected boolean isBlockGoodForFrame(World world, int x, int y, int z, IMultiblockValidator validatorCallback) {
-        return true;
-    }
-
-    @Override
-    protected boolean isBlockGoodForTop(World world, int x, int y, int z, IMultiblockValidator validatorCallback) {
-        return true;
-    }
-
-    @Override
-    protected boolean isBlockGoodForBottom(World world, int x, int y, int z, IMultiblockValidator validatorCallback) {
-        return true;
-    }
-
-    @Override
-    protected boolean isBlockGoodForSides(World world, int x, int y, int z, IMultiblockValidator validatorCallback) {
-        return true;
-    }
-
-    @Override
-    protected boolean isBlockGoodForInterior(World world, int x, int y, int z, IMultiblockValidator validatorCallback) {
-        return true;
     }
 
     @Override

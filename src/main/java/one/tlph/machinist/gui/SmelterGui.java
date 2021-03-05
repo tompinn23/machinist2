@@ -51,7 +51,7 @@ public class SmelterGui extends ScreenBase<SmelterContainer> {
 		xSize = WIDTH;
 		ySize = HEIGHT;
 		this.te = container.te;
-		this.bar = new EnergyBar(this, te.getCapability(CapabilityEnergy.ENERGY, null).orElse(null), ENERGY_XPOS, ENERGY_YPOS);
+		this.bar = new EnergyBar(this, te.getCapability(CapabilityEnergy.ENERGY, null).orElse(null), guiLeft + ENERGY_XPOS, guiTop + ENERGY_YPOS);
 	}
 	
 	@Override

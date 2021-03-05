@@ -1,5 +1,14 @@
 package one.tlph.machinist.energy;
 
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
+
+import javax.annotation.Nullable;
+import java.awt.image.DirectColorModel;
+
 public class EnergyUtils {
 	
 	public enum Units {
@@ -46,5 +55,21 @@ public class EnergyUtils {
 			return amt;
 		}
 	}
-	
+
+	public static boolean canReceive(@Nullable TileEntity tile, @Nullable Direction direction) {
+		return get(tile, direction).isPresent() && get(tile, direction).orElseThrow(NullPointerException::new).canReceive();
+	}
+
+	public static boolean canExtract(@Nullable TileEntity tile, @Nullable Direction direction) {
+		return get(tile, direction).isPresent() && get(tile, direction).orElseThrow(NullPointerException::new).canExtract();
+	}
+
+	public static boolean isPresent(@Nullable TileEntity tile, @Nullable Direction direction) {
+		return get(tile, direction).isPresent();
+	}
+
+	public static LazyOptional<IEnergyStorage> get(@Nullable TileEntity tile, @Nullable Direction direction) {
+		return tile == null ? LazyOptional.empty() : tile.getCapability(CapabilityEnergy.ENERGY, direction != null ? direction.getOpposite() : null);
+	}
+
 }

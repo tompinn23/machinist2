@@ -10,6 +10,9 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import one.tlph.machinist.api.multiblock.IMultiblockRegistry;
 import one.tlph.machinist.api.multiblock.MultiblockEventHandler;
 import one.tlph.machinist.api.multiblock.MultiblockRegistry;
+import one.tlph.machinist.energy.net.EnergyNetEventHandler;
+import one.tlph.machinist.energy.net.EnergyNetRegistry;
+import one.tlph.machinist.energy.net.IEnergyNetRegistry;
 import one.tlph.machinist.init.*;
 import one.tlph.machinist.recipes.BlastFurnaceManager;
 import one.tlph.machinist.recipes.CrusherManager;
@@ -31,6 +34,7 @@ public class Machinist {
     public static boolean debug = true;
 
     public static MultiblockEventHandler s_multiblockHandler;
+    public static EnergyNetEventHandler energyNetEventHandler;
 
 
 
@@ -44,8 +48,17 @@ public class Machinist {
         ModRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
     }
 
+
+
     private void setup(final FMLCommonSetupEvent event) {
         setup.init();
+    }
+
+    public static IEnergyNetRegistry initEnergyNetRegistry() {
+        if(energyNetEventHandler == null) {
+            MinecraftForge.EVENT_BUS.register(energyNetEventHandler = new EnergyNetEventHandler());
+        }
+        return EnergyNetRegistry.INSTANCE;
     }
 
     public static IMultiblockRegistry initMultiblockRegistry() {
