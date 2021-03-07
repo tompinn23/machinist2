@@ -1,13 +1,13 @@
 package one.tlph.machinist.gui.elements;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextComponent;
-import net.minecraft.util.text.TextComponentUtils;
 import net.minecraftforge.energy.IEnergyStorage;
 import one.tlph.machinist.Machinist;
+import one.tlph.machinist.energy.Energy;
 import one.tlph.machinist.gui.ScreenBase;
 import one.tlph.machinist.util.RenderHelper;
 
@@ -22,11 +22,11 @@ public class EnergyBar extends IGuiElement {
 
 
 
-    private IEnergyStorage energyStorage;
+    private TileEntity te;
 
-    public EnergyBar(ScreenBase gc, IEnergyStorage energyStorage, int xPos, int yPos) {
+    public EnergyBar(ScreenBase gc, TileEntity te, int xPos, int yPos) {
         super(gc, xPos, yPos);
-        this.energyStorage = energyStorage;
+        this.te = te;
         this.texH = 58;
         this.texW = 12;
     }
@@ -37,7 +37,8 @@ public class EnergyBar extends IGuiElement {
 
         drawTexturedModalRect(stack, xPos, yPos, 0, 0, 6, 58);
 
-        double fraction = energyStorage.getEnergyStored() / (double)energyStorage.getMaxEnergyStored();
+        IEnergyStorage store = Energy.getNullable(te, null);
+        double fraction = store.getEnergyStored() / (double)store.getMaxEnergyStored();
         fraction = MathHelper.clamp(fraction, 0.0, 1.0);
         RenderHelper.bindTexture(energyBar);
         drawTexturedModalRect(stack, xPos, yPos + (int)((1.0 - fraction) * 58), 6, (int)((1.0 - fraction) * 58), 6,58 - ((int)((1.0 - fraction) * 58)));
@@ -47,12 +48,13 @@ public class EnergyBar extends IGuiElement {
 
     public void drawForeground(MatrixStack stack, int mouseX, int mouseY) {
         List<StringTextComponent> hoveringText = new ArrayList<StringTextComponent>();
+        IEnergyStorage store = Energy.getNullable(te, null);
 
 
         // If the mouse is over one of the burn time indicator add the burn time indicator hovering text
         if (isInRect(xPos , yPos, 6, 58, mouseX, mouseY)) {
             hoveringText.add(new StringTextComponent("Energy:"));
-            hoveringText.add(new StringTextComponent(energyStorage.getEnergyStored() + "/" + energyStorage.getMaxEnergyStored() + "RF"));
+            hoveringText.add(new StringTextComponent(store.getEnergyStored() + "/" + store.getMaxEnergyStored() + "RF"));
         }
 
         // If hoveringText is not empty draw the hovering text

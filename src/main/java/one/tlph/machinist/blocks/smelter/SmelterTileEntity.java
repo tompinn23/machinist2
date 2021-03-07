@@ -1,7 +1,6 @@
-package one.tlph.machinist.tileentity;
+package one.tlph.machinist.blocks.smelter;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.texture.ITickable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -16,6 +15,7 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.FurnaceTileEntity;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -32,16 +32,15 @@ import one.tlph.machinist.container.SmelterContainer;
 import one.tlph.machinist.energy.TileEntityPowerable;
 import one.tlph.machinist.init.ModItems;
 import one.tlph.machinist.init.ModTileEntityTypes;
+import one.tlph.machinist.tileentity.AbstractPoweredTileEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Optional;
 
-public class SmelterTileEntity extends TileEntityPowerable implements ITickable, INamedContainerProvider {
+public class SmelterTileEntity extends AbstractPoweredTileEntity<Smelter> {
 
-	public static final int SIZE = 3;
-	
 	private int burnTimeRemaining = 0;
 	private int burnTimeInitialValue = 0;
 	public short cookTime;
@@ -56,40 +55,15 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable,
 	public static final int FUEL_SLOT = 1;
 	public static final int OUTPUT_SLOT = 2;
 
-	public ItemStackHandler inventory = new ItemStackHandler(3) {
-
-		@Override
-		public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-			switch (slot) {
-				case INPUT_SLOT:
-					return isItemValidInput(stack);
-				case FUEL_SLOT:
-					return isItemValidFuel(stack);
-				default:
-					return false;
-			}
-		}
-
-		@Override
-		protected void onContentsChanged(int slot) {
-			SmelterTileEntity.this.markDirty();
-		}
-	};
-
-	private final LazyOptional<ItemStackHandler> inventoryCap = LazyOptional.of(() -> this.inventory);
-	private final LazyOptional<IItemHandlerModifiable> inventoryUpCap = LazyOptional.of(() -> new RangedWrapper(this.inventory, INPUT_SLOT, INPUT_SLOT  + 1));
-	private final LazyOptional<IItemHandlerModifiable> inventoryDownCap = LazyOptional.of(() -> new RangedWrapper(this.inventory, FUEL_SLOT, FUEL_SLOT + 1));
-	private final LazyOptional<IItemHandlerModifiable> inventorySidesCap = LazyOptional.of(() -> new RangedWrapper(this.inventory, OUTPUT_SLOT, OUTPUT_SLOT + 1));
-
-
-
-
 
 	private static final int CAPACITY_BASE = 10000;
 	private static final int TRANSFER_BASE = 100;
 	
 	public SmelterTileEntity() {
-		super(ModTileEntityTypes.SMELTER.get(), CAPACITY_BASE, TRANSFER_BASE, 0);
+		super(ModTileEntityTypes.SMELTER.get());
+		this.inv.set(3);
+		this.energyStorage.setCapacity(10000);
+		this.energyStorage.setRecieve(TRANSFER_BASE * 2);
 	}
 
 	@Override
@@ -117,10 +91,8 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable,
 		return compound;
 	}
 	
-
-
     @Override
-    public void tick() {
+    public int postTick() {
     	if(!this.world.isRemote) {
 	    	if(canSmelt()) {
 	    		if(useEnergy()) {
@@ -139,13 +111,13 @@ public class SmelterTileEntity extends TileEntityPowerable implements ITickable,
 	    		}
 	    		cookTime = 0;
 	    	}
-			sendUpdates();
     	}
+    	return 4;
     }
 
 	private boolean useEnergy() {
 		if(energyStorage.getEnergyStored() >= TRANSFER_BASE) {
-			energyStorage.useEnergy(TRANSFER_BASE);
+			energyStorage.consume(TRANSFER_BASE);
 			return true;
 		}
 		return false;

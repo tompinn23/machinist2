@@ -1,13 +1,8 @@
 package one.tlph.machinist.init;
 
-import net.minecraft.block.Block;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
@@ -15,19 +10,6 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import one.tlph.machinist.Machinist;
-import one.tlph.machinist.blocks.BlastFurnace.BlastFurnaceCasing;
-import one.tlph.machinist.blocks.BlastFurnace.BlastFurnaceController;
-import one.tlph.machinist.blocks.MachineFrame;
-import one.tlph.machinist.blocks.crusher.Crusher;
-import one.tlph.machinist.blocks.smelter.Smelter;
-import one.tlph.machinist.container.CrusherContainer;
-import one.tlph.machinist.container.SmelterContainer;
-import one.tlph.machinist.items.BasicItem;
-import one.tlph.machinist.items.Coupler;
-import one.tlph.machinist.tileentity.BlastFurnaceCasingTileEntity;
-import one.tlph.machinist.tileentity.BlastFurnaceControllerTileEntity;
-import one.tlph.machinist.tileentity.CrusherTileEntity;
-import one.tlph.machinist.tileentity.SmelterTileEntity;
 
 @EventBusSubscriber(modid = Machinist.MODID, bus = EventBusSubscriber.Bus.MOD)
 public final class ModEventSubscriber {

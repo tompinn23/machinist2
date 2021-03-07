@@ -1,4 +1,4 @@
-package one.tlph.machinist.tileentity;
+package one.tlph.machinist.blocks.BlastFurnace;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;

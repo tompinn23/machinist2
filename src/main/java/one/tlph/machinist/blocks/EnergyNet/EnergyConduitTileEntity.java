@@ -1,4 +1,4 @@
-package one.tlph.machinist.tileentity;
+package one.tlph.machinist.blocks.EnergyNet;
 
 import one.tlph.machinist.energy.net.EnergyNetBase;
 import one.tlph.machinist.energy.net.EnergyNetTileEntityBase;

@@ -5,7 +5,11 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import one.tlph.machinist.Machinist;
-import one.tlph.machinist.tileentity.*;
+import one.tlph.machinist.blocks.BlastFurnace.BlastFurnaceCasingTileEntity;
+import one.tlph.machinist.blocks.BlastFurnace.BlastFurnaceControllerTileEntity;
+import one.tlph.machinist.blocks.EnergyNet.EnergyConduitTileEntity;
+import one.tlph.machinist.blocks.crusher.CrusherTileEntity;
+import one.tlph.machinist.blocks.smelter.SmelterTileEntity;
 
 public class ModTileEntityTypes {
     public static final DeferredRegister<TileEntityType<?>> TILE_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, Machinist.MODID);

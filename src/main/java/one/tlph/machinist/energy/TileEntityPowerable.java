@@ -1,10 +1,8 @@
 package one.tlph.machinist.energy;
 
 
-import com.google.common.base.Optional;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -12,15 +10,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.items.CapabilityItemHandler;
-import one.tlph.machinist.Machinist;
-import one.tlph.machinist.energy.EnergyUtils.Units;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,17 +46,27 @@ public class TileEntityPowerable extends TileEntity implements IEnergyStorage /*
 
     @Override
 	public void read(BlockState state, CompoundNBT compound) {
-		if(compound.contains("energyStorage")) {
-			energyStorage.deserializeNBT(compound.getCompound("energyStorage"));
-		}
+		this.readInternal(compound);
 		super.read(state, compound);
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
-		compound.put("energyStorage", energyStorage.serializeNBT());
+		writeInternal(compound);
 		return super.write(compound);
 	}
+
+	public void readInternal(CompoundNBT nbt) {
+		if(nbt.contains("energyStorage")) {
+			energyStorage.deserializeNBT(nbt.getCompound("energyStorage"));
+		}
+	}
+
+	public CompoundNBT writeInternal(CompoundNBT nbt) {
+		nbt.put("energyStorage", energyStorage.serializeNBT());
+		return nbt;
+	}
+
 
 	@Override
 	public int receiveEnergy(int maxReceive, boolean simulate) {
@@ -130,6 +134,12 @@ public class TileEntityPowerable extends TileEntity implements IEnergyStorage /*
 		return this.write(new CompoundNBT());
 	}
 
+
+
+	@Override
+	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+		this.readInternal(pkt.getNbtCompound());
+	}
 
 	public double fractionOfEnergyRemaining() {
 		double fraction = energyStorage.getEnergyStored() / (double)energyStorage.getMaxEnergyStored();

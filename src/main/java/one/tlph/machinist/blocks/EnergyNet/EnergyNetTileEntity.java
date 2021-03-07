@@ -1,26 +1,18 @@
-package one.tlph.machinist.tileentity;
+package one.tlph.machinist.blocks.EnergyNet;
 
-import it.unimi.dsi.fastutil.Hash;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
-import one.tlph.machinist.api.multiblock.IMultiblockPart;
-import one.tlph.machinist.api.multiblock.MultiblockControllerBase;
-import one.tlph.machinist.api.multiblock.validation.IMultiblockValidator;
-import one.tlph.machinist.energy.EnergyUtils;
+import one.tlph.machinist.energy.Energy;
 import one.tlph.machinist.energy.ResizableEnergyStore;
 import one.tlph.machinist.energy.net.EnergyNetBase;
 import one.tlph.machinist.energy.net.IEnergyNetPart;
-import one.tlph.machinist.energy.net.IEnergyNetRegistry;
-import org.lwjgl.system.CallbackI;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class EnergyNetTileEntity extends EnergyNetBase {
 
@@ -54,12 +46,12 @@ public class EnergyNetTileEntity extends EnergyNetBase {
         for(Direction d : Direction.values()) {
             if(WORLD.isBlockPresent(pos.offset(d))) {
                 TileEntity te = WORLD.getTileEntity(pos.offset(d));
-                if(EnergyUtils.isPresent(te, d)) {
-                    if(EnergyUtils.canReceive(te, d)) {
+                if(Energy.isPresent(te, d)) {
+                    if(Energy.canReceive(te, d)) {
                         acceptors.put(pos.offset(d), te);
                     }
                 }
-                if(EnergyUtils.canExtract(te, d)) {
+                if(Energy.canExtract(te, d)) {
                     suppliers.put(pos, te);
                 }
             }
@@ -78,11 +70,11 @@ public class EnergyNetTileEntity extends EnergyNetBase {
                 return;
             acceptors.remove(pos.offset(side));
             suppliers.remove(pos.offset(side));
-            if(EnergyUtils.isPresent(te,side)) {
-                if(EnergyUtils.canExtract(te, side)) {
+            if(Energy.isPresent(te,side)) {
+                if(Energy.canExtract(te, side)) {
                     suppliers.put(pos.offset(side), te);
                 }
-                if(EnergyUtils.canReceive(te, side)) {
+                if(Energy.canReceive(te, side)) {
                     acceptors.put(pos.offset(side), te);
                 }
             }
@@ -111,8 +103,11 @@ public class EnergyNetTileEntity extends EnergyNetBase {
 
     @Override
     protected void onBlockRemoved(IEnergyNetPart oldPart) {
-        if(acceptors.containsKey(oldPart.getWorldPos())) {
-            acceptors.remove(oldPart.getWorldPos());
+        for(Direction direction : Direction.values()) {
+            TileEntity te = WORLD.getTileEntity(oldPart.getWorldPos().offset(direction));
+            if(!(te instanceof IEnergyNetPart)) {
+                acceptors.remove(oldPart.getWorldPos().offset(direction));
+            }
         }
         recalculateEnergy();
     }

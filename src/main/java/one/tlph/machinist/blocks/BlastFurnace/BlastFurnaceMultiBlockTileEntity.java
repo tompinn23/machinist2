@@ -1,4 +1,4 @@
-package one.tlph.machinist.tileentity;
+package one.tlph.machinist.blocks.BlastFurnace;
 
 
 import net.minecraft.block.Blocks;
@@ -8,11 +8,9 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -29,10 +27,7 @@ import one.tlph.machinist.api.multiblock.MultiblockControllerBase;
 import one.tlph.machinist.api.multiblock.rectangular.RectangularMultiblockControllerBase;
 import one.tlph.machinist.api.multiblock.validation.IMultiblockValidator;
 import one.tlph.machinist.container.BlastFurnaceMultiContainer;
-import one.tlph.machinist.inventory.IgnoredIInventory;
-import one.tlph.machinist.recipes.BlastFurnaceManager;
 import one.tlph.machinist.recipes.BlastFurnaceRecipe;
-import one.tlph.machinist.recipes.MachinistRecipe;
 import one.tlph.machinist.recipes.MachinistRecipeType;
 
 import javax.annotation.Nonnull;

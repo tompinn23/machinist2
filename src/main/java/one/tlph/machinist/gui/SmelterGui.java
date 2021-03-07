@@ -6,11 +6,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.energy.CapabilityEnergy;
 import one.tlph.machinist.Machinist;
 import one.tlph.machinist.container.SmelterContainer;
 import one.tlph.machinist.gui.elements.EnergyBar;
-import one.tlph.machinist.tileentity.SmelterTileEntity;
+import one.tlph.machinist.blocks.smelter.SmelterTileEntity;
 import one.tlph.machinist.util.RenderHelper;
 
 import java.util.ArrayList;
@@ -51,9 +50,14 @@ public class SmelterGui extends ScreenBase<SmelterContainer> {
 		xSize = WIDTH;
 		ySize = HEIGHT;
 		this.te = container.te;
-		this.bar = new EnergyBar(this, te.getCapability(CapabilityEnergy.ENERGY, null).orElse(null), guiLeft + ENERGY_XPOS, guiTop + ENERGY_YPOS);
 	}
-	
+
+	@Override
+	protected void init() {
+		super.init();
+		this.bar = new EnergyBar(this, te, guiLeft + ENERGY_XPOS, guiTop + ENERGY_YPOS);
+	}
+
 	@Override
 	protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
 		RenderHelper.bindTexture(background);

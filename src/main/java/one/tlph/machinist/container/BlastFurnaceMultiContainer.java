@@ -8,13 +8,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import one.tlph.machinist.api.multiblock.IMultiblockPart;
 import one.tlph.machinist.init.ModContainerTypes;
-import one.tlph.machinist.tileentity.BlastFurnaceMultiBlockTileEntity;
+import one.tlph.machinist.blocks.BlastFurnace.BlastFurnaceMultiBlockTileEntity;
 import one.tlph.machinist.util.OutputSlotHandler;
 
 import java.util.Objects;

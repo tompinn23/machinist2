@@ -5,11 +5,10 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.energy.CapabilityEnergy;
 import one.tlph.machinist.Machinist;
 import one.tlph.machinist.container.CrusherContainer;
 import one.tlph.machinist.gui.elements.EnergyBar;
-import one.tlph.machinist.tileentity.CrusherTileEntity;
+import one.tlph.machinist.blocks.crusher.CrusherTileEntity;
 import one.tlph.machinist.util.RenderHelper;
 
 public class CrusherGui extends ScreenBase<CrusherContainer> {
@@ -49,7 +48,7 @@ public class CrusherGui extends ScreenBase<CrusherContainer> {
     @Override
 	protected void init() {
 		super.init();
-        this.energyBar = new EnergyBar(this, container.tileEntity.getCapability(CapabilityEnergy.ENERGY).orElse(null), guiLeft + ENERGY_XPOS, guiTop + ENERGY_YPOS);
+        this.energyBar = new EnergyBar(this, container.tileEntity, guiLeft + ENERGY_XPOS, guiTop + ENERGY_YPOS);
 
 	}
 
@@ -63,7 +62,7 @@ public class CrusherGui extends ScreenBase<CrusherContainer> {
         blit(stack, guiLeft + COOK_XPOS, guiTop + COOK_YPOS, COOK_U, COOK_V, (int)(cookProgress * COOK_WIDTH), COOK_HEIGHT);
 
 
-        double energyLeft = te.fractionOfEnergyRemaining();
+        //double energyLeft = te.fractionOfEnergyRemaining();
         energyBar.drawBackground(stack);
         //drawTexturedModalRect(guiLeft + ENERGY_XPOS, guiTop + ENERGY_YPOS + (int)((1.0 - energyLeft) * ENERGY_HEIGHT), ENERGY_U, (int)((1.0 - energyLeft) * ENERGY_HEIGHT) + ENERGY_V, ENERGY_WIDTH,ENERGY_HEIGHT - ((int)((1.0 - energyLeft) * ENERGY_HEIGHT)));
     }

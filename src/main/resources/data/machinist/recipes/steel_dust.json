@@ -1,21 +1,13 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "result": {
+  "type": "machinist:crusher",
+  "output": {
     "item": "machinist:steel_dust",
-    "count": 2
+    "count": 1
   },
-  "ingredients": [
-    {
-      "type":"forge:ore_dict",
-      "ore": "dustCoal"
+  "input" : {
+    "ingredient": {
+      "item": "machinist:steel_ingot"
     },
-    {
-      "type":"forge:ore_dict",
-      "ore": "dustIron"
-    },
-    {
-      "type":"forge:ore_dict",
-      "ore": "dustIron"
-    }
-  ]
+    "amount": 1
+  }
 }

@@ -12,7 +12,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import one.tlph.machinist.init.ModBlocks;
 import one.tlph.machinist.init.ModContainerTypes;
-import one.tlph.machinist.tileentity.SmelterTileEntity;
+import one.tlph.machinist.blocks.smelter.SmelterTileEntity;
 
 public class SmelterContainer extends ContainerBase {
 	

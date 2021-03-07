@@ -10,7 +10,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import one.tlph.machinist.init.ModBlocks;
 import one.tlph.machinist.init.ModContainerTypes;
-import one.tlph.machinist.tileentity.CrusherTileEntity;
+import one.tlph.machinist.blocks.crusher.CrusherTileEntity;
 import one.tlph.machinist.util.OutputSlotHandler;
 
 import javax.annotation.Nonnull;
@@ -32,9 +32,9 @@ public class CrusherContainer extends ContainerBase {
 
         this.addPlayerSlots(playerInventory);
 
-        this.addSlot(new CrushableSlotHandler(tileEntity.getInput(), 0, 38, 35));
-        this.addSlot(new OutputSlotHandler(tileEntity.getOutput(), 0, 95, 35));
-        this.addSlot(new OutputSlotHandler(tileEntity.getOutput(), 1, 117, 35));
+        this.addSlot(new CrushableSlotHandler(tileEntity.getInventory(), 0, 38, 35));
+        this.addSlot(new OutputSlotHandler(tileEntity.getInventory(), 1, 95, 35));
+        this.addSlot(new OutputSlotHandler(tileEntity.getInventory(), 2, 117, 35));
     }
 
     private static CrusherTileEntity getTileEntity(PlayerInventory playerInventory, PacketBuffer data) {
@@ -62,7 +62,7 @@ public class CrusherContainer extends ContainerBase {
 
         @Override
         public boolean isItemValid(@Nonnull ItemStack stack) {
-            return CrusherTileEntity.isItemValidInput(stack);
+            return tileEntity.isItemValidInput(stack);
         }
     }
 

@@ -7,7 +7,7 @@ import net.minecraft.util.text.ITextComponent;
 import one.tlph.machinist.Machinist;
 import one.tlph.machinist.container.BlastFurnaceMultiContainer;
 import one.tlph.machinist.init.ModBlocks;
-import one.tlph.machinist.tileentity.BlastFurnaceMultiBlockTileEntity;
+import one.tlph.machinist.blocks.BlastFurnace.BlastFurnaceMultiBlockTileEntity;
 import one.tlph.machinist.util.RenderHelper;
 
 public class BlastFurnaceGui extends ScreenBase<BlastFurnaceMultiContainer> {

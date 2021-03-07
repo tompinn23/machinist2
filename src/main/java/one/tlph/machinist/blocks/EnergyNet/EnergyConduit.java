@@ -3,12 +3,9 @@ package one.tlph.machinist.blocks.EnergyNet;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SixWayBlock;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -18,12 +15,9 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraftforge.energy.IEnergyStorage;
-import one.tlph.machinist.energy.EnergyUtils;
+import one.tlph.machinist.energy.Energy;
 import one.tlph.machinist.energy.net.EnergyNetBase;
 import one.tlph.machinist.energy.net.IEnergyNetPart;
-import one.tlph.machinist.tileentity.EnergyConduitTileEntity;
 
 import javax.annotation.Nullable;
 
@@ -73,7 +67,7 @@ public class EnergyConduit extends Block {
 
     public boolean canConnectEnergy(IBlockReader world, BlockPos pos, Direction direction) {
         TileEntity tile = world.getTileEntity(pos.offset(direction));
-        return !(tile instanceof EnergyConduitTileEntity) && EnergyUtils.isPresent(tile, direction);
+        return !(tile instanceof EnergyConduitTileEntity) && Energy.isPresent(tile, direction);
     }
 
     @Override

@@ -20,8 +20,6 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import one.tlph.machinist.api.multiblock.IMultiblockPart;
 import one.tlph.machinist.api.multiblock.MultiblockControllerBase;
 import one.tlph.machinist.api.multiblock.validation.ValidationError;
-import one.tlph.machinist.tileentity.BlastFurnaceControllerTileEntity;
-import one.tlph.machinist.tileentity.BlastFurnaceMultiBlockTileEntity;
 
 import javax.annotation.Nullable;
 

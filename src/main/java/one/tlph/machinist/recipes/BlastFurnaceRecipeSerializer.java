@@ -37,7 +37,7 @@ public class BlastFurnaceRecipeSerializer<T extends BlastFurnaceRecipe> extends 
         }
         ItemStack output = SerializerHelper.getItemStack(json, JsonConstants.OUTPUT);
         if(output.isEmpty()) {
-            throw new JsonSyntaxException("Combiner recipe output must not be empty.");
+            throw new JsonSyntaxException("Blast furnace recipe output must not be empty.");
         }
         int time = BlastFurnaceRecipe.DEFAULT_TIME;
         if(json.has(JsonConstants.TIME)) {

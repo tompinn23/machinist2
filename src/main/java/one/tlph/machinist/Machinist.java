@@ -15,7 +15,6 @@ import one.tlph.machinist.energy.net.EnergyNetRegistry;
 import one.tlph.machinist.energy.net.IEnergyNetRegistry;
 import one.tlph.machinist.init.*;
 import one.tlph.machinist.recipes.BlastFurnaceManager;
-import one.tlph.machinist.recipes.CrusherManager;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -84,10 +83,6 @@ public class Machinist {
 //        proxy.postInit(e);
 //    }
 
-    private void initManagers() {
-        CrusherManager.initalise();
-        BlastFurnaceManager.initialise();
-    }
 
 
 }

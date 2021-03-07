@@ -24,10 +24,14 @@ import java.util.stream.Stream;
 
 public class MachinistRecipeType<T extends MachinistRecipe> implements IRecipeType<T> {
 
+
     private static final List<MachinistRecipeType<? extends MachinistRecipe>> types = new ArrayList<>();
 
     public static final MachinistRecipeType<BlastFurnaceRecipe> BLAST_FURNACE = create("blast_furnace");
     public static final MachinistRecipeType<SmeltingRecipe> SMELTING = create("smelting");
+    public static final MachinistRecipeType<CrusherRecipe> CRUSHER = create("crusher");
+
+
 
     private static <T extends MachinistRecipe> MachinistRecipeType create(String name) {
         MachinistRecipeType<T> type = new MachinistRecipeType<>(name);
