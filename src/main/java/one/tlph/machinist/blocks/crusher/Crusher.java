@@ -46,6 +46,7 @@ public class Crusher extends AbstractHorizontalBlock {
     @Override
 	protected void fillStateContainer(Builder<Block, BlockState> builder) {
     	builder.add(ACTIVE);
+    	super.fillStateContainer(builder);
 	}
 
 

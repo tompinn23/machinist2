@@ -21,7 +21,6 @@ import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public class CrusherContainer extends ContainerTileBase<CrusherTileEntity> {
-    public CrusherTileEntity tileEntity;
 
     public CrusherContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
         this(windowId, playerInventory, getTile(playerInventory.player, data.readBlockPos()
@@ -32,9 +31,9 @@ public class CrusherContainer extends ContainerTileBase<CrusherTileEntity> {
         super(ModContainerTypes.CRUSHER.get(), windowId, playerInventory, te);
         this.addPlayerSlots(playerInventory);
 
-        this.addSlot(new CrushableSlotHandler(tileEntity.getInventory(), 0, 38, 35));
-        this.addSlot(new OutputSlotHandler(tileEntity.getInventory(), 1, 95, 35));
-        this.addSlot(new OutputSlotHandler(tileEntity.getInventory(), 2, 117, 35));
+        this.addSlot(new CrushableSlotHandler(te.getInventory(), 0, 38, 35));
+        this.addSlot(new OutputSlotHandler(te.getInventory(), 1, 95, 35));
+        this.addSlot(new OutputSlotHandler(te.getInventory(), 2, 117, 35));
     }
 
 
@@ -51,7 +50,7 @@ public class CrusherContainer extends ContainerTileBase<CrusherTileEntity> {
 
         @Override
         public boolean isItemValid(@Nonnull ItemStack stack) {
-            return tileEntity.isItemValidInput(stack);
+            return te.isItemValidInput(stack);
         }
 
     }

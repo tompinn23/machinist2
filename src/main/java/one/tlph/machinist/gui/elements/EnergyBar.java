@@ -53,8 +53,7 @@ public class EnergyBar extends IGuiElement {
 
         // If the mouse is over one of the burn time indicator add the burn time indicator hovering text
         if (isInRect(xPos , yPos, 6, 58, mouseX, mouseY)) {
-            hoveringText.add(new StringTextComponent("Energy:"));
-            hoveringText.add(new StringTextComponent(store.getEnergyStored() + "/" + store.getMaxEnergyStored() + "RF"));
+            hoveringText.add(new StringTextComponent(store.getEnergyStored() + "/" + store.getMaxEnergyStored() + "FE"));
         }
 
         // If hoveringText is not empty draw the hovering text

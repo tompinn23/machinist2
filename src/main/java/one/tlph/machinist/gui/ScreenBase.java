@@ -95,7 +95,7 @@ public abstract class ScreenBase<T extends Container> extends ContainerScreen<T>
     }
 
     public void renderFloatingTooltip(MatrixStack stack, List<? extends ITextProperties> text, int mouseX, int mouseY) {
-        this.renderWrappedToolTip(stack, text, mouseX, mouseY, this.font);
+        this.renderWrappedToolTip(stack, text, mouseX - guiLeft, mouseY - guiTop, this.font);
     }
 
 

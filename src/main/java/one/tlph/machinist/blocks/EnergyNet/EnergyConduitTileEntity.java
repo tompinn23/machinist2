@@ -21,6 +21,4 @@ public class EnergyConduitTileEntity extends EnergyNetTileEntityBase {
 
 
 
-
-
 }

@@ -5,11 +5,13 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import one.tlph.machinist.api.multiblock.IMultiblockRegistry;
 import one.tlph.machinist.api.multiblock.MultiblockEventHandler;
 import one.tlph.machinist.api.multiblock.MultiblockRegistry;
+import one.tlph.machinist.client.Client;
 import one.tlph.machinist.energy.net.EnergyNetEventHandler;
 import one.tlph.machinist.energy.net.EnergyNetRegistry;
 import one.tlph.machinist.energy.net.IEnergyNetRegistry;
@@ -18,6 +20,8 @@ import one.tlph.machinist.recipes.BlastFurnaceManager;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.function.Consumer;
 
 @Mod(Machinist.MODID)
 public class Machinist {
@@ -44,9 +48,23 @@ public class Machinist {
         ModItems.ITEMS.register(modEventBus);
         ModContainerTypes.CONTAINER_TYPES.register(modEventBus);
         ModTileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
+        
+        loadListeners();
+        
         ModRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
     }
 
+    private void loadListeners() {
+        Client mod = getClient();
+        if(mod != null) {
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(mod::client);
+            FMLJavaModLoadingContext.get().getModEventBus().addListener((Consumer<FMLClientSetupEvent>) evt -> evt.enqueueWork(() -> mod.syncClient(evt)));
+        }
+    }
+
+    public Client getClient() {
+        return Client.INSTANCE;
+    }
 
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -82,6 +100,8 @@ public class Machinist {
 //    	ic2Loaded = Loader.isModLoaded("ic2");
 //        proxy.postInit(e);
 //    }
+
+
 
 
 

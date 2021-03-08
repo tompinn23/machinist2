@@ -14,6 +14,7 @@ package one.tlph.machinist.api.multiblock;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -23,6 +24,8 @@ import net.minecraft.world.chunk.Chunk;
 import one.tlph.machinist.Machinist;
 import one.tlph.machinist.api.multiblock.validation.IMultiblockValidator;
 import one.tlph.machinist.api.multiblock.validation.ValidationError;
+import one.tlph.machinist.blocks.AbstractBlock;
+import one.tlph.machinist.tileentity.AbstractTileEntity;
 import one.tlph.machinist.util.WorldHelpers;
 
 import java.util.HashSet;

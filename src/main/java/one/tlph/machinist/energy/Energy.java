@@ -203,7 +203,7 @@ public class Energy implements IEnergyStorage {
     }
 
     public static IEnergyStorage getNullable(@Nullable TileEntity tile, @Nullable Direction direction) {
-        return get(tile, direction).orElse(null);
+        return get(tile, direction).orElse(Energy.EMPTY);
     }
 
     public static LazyOptional<IEnergyStorage> get(@Nullable TileEntity tile, @Nullable Direction direction) {

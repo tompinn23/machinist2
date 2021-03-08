@@ -35,7 +35,7 @@ import one.tlph.machinist.init.ModItems;
 import one.tlph.machinist.init.ModTileEntityTypes;
 import one.tlph.machinist.inventory.IInventoryHolder;
 import one.tlph.machinist.tileentity.AbstractPoweredTileEntity;
-import one.tlph.machinist.util.Progress;
+import one.tlph.machinist.util.Ticker;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,10 +44,9 @@ import java.util.Optional;
 
 public class SmelterTileEntity extends AbstractPoweredTileEntity<Smelter> implements IInventoryHolder {
 
-	private int burnTimeRemaining = 0;
-	private int burnTimeInitialValue = 0;
-	private Progress burnTime;
-	private Progress cookTime;
+	private Ticker cookTime;
+	private Ticker burnTime;
+	
 	private static final short COOK_TIME_FOR_COMPLETION = 200;
 
 
@@ -64,28 +63,18 @@ public class SmelterTileEntity extends AbstractPoweredTileEntity<Smelter> implem
 	
 	public SmelterTileEntity() {
 		super(ModTileEntityTypes.SMELTER.get());
-		this.cookTime = new Progress(COOK_TIME_FOR_COMPLETION);
-		this.burnTime = new Progress(0, true);
 		this.inv.set(3);
+		this.cookTime = new Ticker(COOK_TIME_FOR_COMPLETION);
+		this.burnTime = new Ticker(0, true);
 		this.energyStorage.setCapacity(10000);
 		this.energyStorage.setRecieve(TRANSFER_BASE * 2);
 	}
 
 	@Override
-	protected void readSync(CompoundNBT nbt) {
-		super.readSync(nbt);
-	}
-
-	@Override
 	public void readStorable(CompoundNBT nbt) {
+		super.readStorable(nbt);
 		this.cookTime.read(nbt, "cookTime");
 		this.burnTime.read(nbt, "burnTime", true);
-		super.readStorable(nbt);
-	}
-
-	@Override
-	protected CompoundNBT writeSync(CompoundNBT nbt) {
-		return super.writeSync(nbt);
 	}
 
 	@Override
@@ -95,8 +84,7 @@ public class SmelterTileEntity extends AbstractPoweredTileEntity<Smelter> implem
 		return super.writeStorable(nbt);
 	}
 
-	
-    @Override
+	@Override
     public int postTick() {
     	if(!this.world.isRemote) {
 	    	if(canSmelt()) {
@@ -111,12 +99,17 @@ public class SmelterTileEntity extends AbstractPoweredTileEntity<Smelter> implem
 
 	    	} else {
 	    		if(!burnTime.check()) {
-    				useEnergy();
+    				if(!useEnergy()) {
+    					useFuel();
+					}
 	    		}
 	    	}
     	}
     	return 4;
     }
+
+	private void useFuel() {
+	}
 
 	private boolean useEnergy() {
 		if(energyStorage.getEnergyStored() >= TRANSFER_BASE) {
@@ -136,18 +129,6 @@ public class SmelterTileEntity extends AbstractPoweredTileEntity<Smelter> implem
 		double fraction = energyStorage.getEnergyStored() / (double)energyStorage.getMaxEnergyStored();
 		return MathHelper.clamp(fraction, 0.0, 1.0);
 	}
-
-	@Override
-	@Nullable
-	public SUpdateTileEntityPacket getUpdatePacket() {
-		return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
-	}
-
-	@Override
-	public CompoundNBT getUpdateTag() {
-		return this.write(new CompoundNBT());
-	}
-
 
 
 	private ItemStack getRecipe(final ItemStack stack) {
@@ -191,37 +172,12 @@ public class SmelterTileEntity extends AbstractPoweredTileEntity<Smelter> implem
 			if(!performSmelt) return true;
 			this.inv.extractItem(INPUT_SLOT, 1, false);
 			this.inv.insertItem(OUTPUT_SLOT, result.copy(), false);
-			markDirty();
+			sync(4);
 			return true;
 		}
 
 		return false;
 	}
-
-
-	private final LazyOptional<RangedWrapper> inventoryUp = LazyOptional.of(() -> new RangedWrapper(this.inv, INPUT_SLOT , 1));
-	private final LazyOptional<RangedWrapper> inventorySides = LazyOptional.of(() -> new RangedWrapper(this.inv, OUTPUT_SLOT , 3));
-
-
-	@Nonnull
-	@Override
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			if(side != null) {
-				switch (side) {
-					case UP:
-						return inventoryUp.cast();
-					case EAST:
-					case WEST:
-					case NORTH:
-					case SOUTH:
-						return inventorySides.cast();
-				}
-			}
-		}
-		return super.getCapability(cap, side);
-	}
-
 
 	private Optional<FurnaceRecipe> getRecipe(final IInventory inventory) {
 		return world.getRecipeManager().getRecipe(IRecipeType.SMELTING, inventory, world);

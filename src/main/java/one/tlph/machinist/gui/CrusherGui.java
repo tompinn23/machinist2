@@ -39,7 +39,7 @@ public class CrusherGui extends ScreenBase<CrusherContainer> {
 
     public CrusherGui(CrusherContainer container, PlayerInventory inventory, final ITextComponent title) {
         super(container,inventory, new TranslationTextComponent("machinist.crusher.gui.title"));
-        this.te = container.tileEntity;
+        this.te = container.te;
         xSize = WIDTH;
         ySize = HEIGHT;
     }
@@ -48,7 +48,7 @@ public class CrusherGui extends ScreenBase<CrusherContainer> {
     @Override
 	protected void init() {
 		super.init();
-        this.energyBar = new EnergyBar(this, container.tileEntity, guiLeft + ENERGY_XPOS, guiTop + ENERGY_YPOS);
+        this.energyBar = new EnergyBar(this, this.te, guiLeft + ENERGY_XPOS, guiTop + ENERGY_YPOS);
 
 	}
 

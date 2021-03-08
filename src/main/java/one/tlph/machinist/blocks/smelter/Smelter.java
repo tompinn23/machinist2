@@ -39,8 +39,8 @@ public class Smelter extends AbstractHorizontalBlock {
 
 	@Override
 	protected void fillStateContainer(final StateContainer.Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder);
 		builder.add(ACTIVE);
+		super.fillStateContainer(builder);
 	}
 
 	@Override

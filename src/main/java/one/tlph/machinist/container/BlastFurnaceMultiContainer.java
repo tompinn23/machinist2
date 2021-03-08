@@ -20,8 +20,7 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-public class BlastFurnaceMultiContainer extends ContainerTileBase<BlastFurnaceMultiBlockTileEntity> {
-
+public class BlastFurnaceMultiContainer extends ContainerBase {
 
 
     private class BlastFurnaceInputSlotHandler extends SlotItemHandler {
@@ -49,18 +48,26 @@ public class BlastFurnaceMultiContainer extends ContainerTileBase<BlastFurnaceMu
         }
     }
     
-    
-	private IWorldPosCallable canInteractWithCallable;
+    public BlastFurnaceMultiBlockTileEntity tileEntity;
 
-    
     public BlastFurnaceMultiContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
         this(windowId, playerInventory, getTileEntity(playerInventory, data));
     }
 
+    private static BlastFurnaceMultiBlockTileEntity getTileEntity(PlayerInventory playerInventory, PacketBuffer data) {
+        Objects.requireNonNull(playerInventory, "playerInventory cannot be null");
+        Objects.requireNonNull(data, "data cannot be null");
+        final TileEntity tileEntity = playerInventory.player.world.getTileEntity(data.readBlockPos());
+        if(tileEntity instanceof IMultiblockPart)
+            return (BlastFurnaceMultiBlockTileEntity)((IMultiblockPart)tileEntity).getMultiblockController();
+        throw new IllegalStateException("Tile entity is not correct! " + tileEntity);
+    }
+
+
+
     public BlastFurnaceMultiContainer(final int windowId, final PlayerInventory playerInventory, final BlastFurnaceMultiBlockTileEntity tileEntity) {
-        super(ModContainerTypes.BLAST_FURNACE.get(), windowId, );
+        super(ModContainerTypes.BLAST_FURNACE.get(), windowId, playerInventory);
         this.tileEntity = tileEntity;
-        this.canInteractWithCallable = IWorldPosCallable.of(tileEntity.WORLD, tileEntity.getReferenceCoord());
         this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.cookTime, v -> tileEntity.cookTime = (short) v));
 
         IItemHandler handler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).resolve().get();
@@ -71,7 +78,31 @@ public class BlastFurnaceMultiContainer extends ContainerTileBase<BlastFurnaceMu
         this.addSlot(new BlastFurnaceInputSlotHandler(handler, BlastFurnaceMultiBlockTileEntity.INPUT_SLOT_2, 53, 17));
         this.addSlot(new OutputSlotHandler(handler, BlastFurnaceMultiBlockTileEntity.OUTPUT_SLOT, 116, 35));
 
+    }
 
+    @Override
+    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+        ItemStack stack = ItemStack.EMPTY;
+        Slot slot = this.inventorySlots.get(index);
+        if (slot != null && slot.getHasStack()) {
+            ItemStack stack1 = slot.getStack();
+            stack = stack1.copy();
+            int size = BlastFurnaceMultiBlockTileEntity.SIZE;
+            if (index < size) {
+                if (!mergeItemStack(stack1, size, this.inventorySlots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!mergeItemStack(stack1, 0, size, false)) {
+                return ItemStack.EMPTY;
+            }
+            if (stack1.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
+                slot.onTake(this.player, stack);
+            } else {
+                slot.onSlotChanged();
+            }
+        }
+        return stack;
     }
 
     @Override

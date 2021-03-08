@@ -90,7 +90,7 @@ public class SmelterGui extends ScreenBase<SmelterContainer> {
 		bar.drawForeground(stack, mouseX, mouseY);
 		// If hoveringText is not empty draw the hovering text
 		if (!hoveringText.isEmpty()){
-			this.renderFloatingTooltip(stack, hoveringText, mouseX - guiLeft, mouseY - guiTop);
+			this.renderFloatingTooltip(stack, hoveringText, mouseX, mouseY);
 		}
 	}
 	
