@@ -6,30 +6,30 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import one.tlph.machinist.init.ModBlocks;
 import one.tlph.machinist.init.ModContainerTypes;
 import one.tlph.machinist.blocks.crusher.CrusherTileEntity;
+import one.tlph.machinist.init.ModRecipeSerializers;
+import one.tlph.machinist.recipes.MachinistRecipeType;
+import one.tlph.machinist.tileentity.AbstractTileEntity;
 import one.tlph.machinist.util.OutputSlotHandler;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class CrusherContainer extends ContainerBase {
+public class CrusherContainer extends ContainerTileBase<CrusherTileEntity> {
     public CrusherTileEntity tileEntity;
-    private final IWorldPosCallable canInteractWithCallable;
 
     public CrusherContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
-        this(windowId, playerInventory, getTileEntity(playerInventory, data));
+        this(windowId, playerInventory, getTile(playerInventory.player, data.readBlockPos()
+        ));
     }
 
-    public CrusherContainer(final int windowId, final PlayerInventory playerInventory, final CrusherTileEntity tileEntity) {
-        super(ModContainerTypes.CRUSHER.get(), windowId);
-        this.tileEntity = tileEntity;
-        this.canInteractWithCallable = IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos());
-        this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.cookTime, v -> tileEntity.cookTime = (short) v));
-
+    public CrusherContainer(final int windowId, final PlayerInventory playerInventory, CrusherTileEntity te) {
+        super(ModContainerTypes.CRUSHER.get(), windowId, playerInventory, te);
         this.addPlayerSlots(playerInventory);
 
         this.addSlot(new CrushableSlotHandler(tileEntity.getInventory(), 0, 38, 35));
@@ -37,25 +37,14 @@ public class CrusherContainer extends ContainerBase {
         this.addSlot(new OutputSlotHandler(tileEntity.getInventory(), 2, 117, 35));
     }
 
-    private static CrusherTileEntity getTileEntity(PlayerInventory playerInventory, PacketBuffer data) {
-        Objects.requireNonNull(playerInventory, "playerInventory cannot be null");
-        Objects.requireNonNull(data, "data cannot be null");
-        final TileEntity tileEntity = playerInventory.player.world.getTileEntity(data.readBlockPos());
-        if(tileEntity instanceof CrusherTileEntity)
-            return (CrusherTileEntity)tileEntity;
-        throw new IllegalStateException("Tile entity is not correct! " + tileEntity);
-    }
 
-
-    @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return playerIn.world.getBlockState(tileEntity.getPos()).getBlock() == ModBlocks.CRUSHER.get().getBlock()
-                && playerIn.getDistanceSq(tileEntity.getPos().getX() + 0.5, tileEntity.getPos().getY() + 0.5, tileEntity.getPos().getZ() + 0.5) <= 64.0;
-    }
+//    @Override
+//    public boolean canInteractWith(PlayerEntity playerIn) {
+//        return playerIn.world.getBlockState(tileEntity.getPos()).getBlock() == ModBlocks.CRUSHER.get().getBlock()
+//                && playerIn.getDistanceSq(tileEntity.getPos().getX() + 0.5, tileEntity.getPos().getY() + 0.5, tileEntity.getPos().getZ() + 0.5) <= 64.0;
+//    }
 
     private class CrushableSlotHandler extends SlotItemHandler {
-
-
         public CrushableSlotHandler(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
             super(itemHandler, index, xPosition, yPosition);
         }
@@ -64,9 +53,6 @@ public class CrusherContainer extends ContainerBase {
         public boolean isItemValid(@Nonnull ItemStack stack) {
             return tileEntity.isItemValidInput(stack);
         }
+
     }
-
-
-
-
 }

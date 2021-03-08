@@ -8,13 +8,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import one.tlph.machinist.init.ModBlocks;
 import one.tlph.machinist.init.ModContainerTypes;
 import one.tlph.machinist.blocks.smelter.SmelterTileEntity;
 
-public class SmelterContainer extends ContainerBase {
+public class SmelterContainer extends ContainerTileBase<SmelterTileEntity> {
 	
 	public class SmeltableSlotHandler extends SlotItemHandler {
 		public SmeltableSlotHandler(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
@@ -37,33 +38,17 @@ public class SmelterContainer extends ContainerBase {
 			return te.isItemValidFuel(stack);
 		}
 	}
-	
-	
-	public final SmelterTileEntity te;
-    private final IWorldPosCallable canInteractWithCallable;
+
 
     public SmelterContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
-        this(windowId, playerInventory, getTileEntity(playerInventory, data));
-    }
-
-    public SmelterContainer(final int windowId, final PlayerInventory playerInventory, final SmelterTileEntity tileEntity) {
-        super(ModContainerTypes.SMELTER.get(), windowId);
-        this.te = tileEntity;
-        this.canInteractWithCallable = IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos());
-        this.trackInt(new FunctionalIntReferenceHolder(() -> tileEntity.cookTime, v -> tileEntity.cookTime = (short) v));
-
+        super(ModContainerTypes.SMELTER.get(), windowId, playerInventory, data);
         this.addPlayerSlots(playerInventory);
     }
 
-    private static SmelterTileEntity getTileEntity(PlayerInventory playerInventory, PacketBuffer data) {
-        Objects.requireNonNull(playerInventory, "playerInventory cannot be null");
-        Objects.requireNonNull(data, "data cannot be null");
-        final TileEntity tileEntity = playerInventory.player.world.getTileEntity(data.readBlockPos());
-        if(tileEntity instanceof SmelterTileEntity)
-            return (SmelterTileEntity)tileEntity;
-        throw new IllegalStateException("Tile entity is not correct! " + tileEntity);
-    }
-
+    public SmelterContainer(final int windowId, final PlayerInventory playerInventory, SmelterTileEntity tileEntity) {
+		super(ModContainerTypes.SMELTER.get(), windowId, playerInventory, tileEntity);
+		this.addPlayerSlots(playerInventory);
+	}
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {

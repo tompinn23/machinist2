@@ -20,6 +20,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -32,19 +33,21 @@ import one.tlph.machinist.container.SmelterContainer;
 import one.tlph.machinist.energy.TileEntityPowerable;
 import one.tlph.machinist.init.ModItems;
 import one.tlph.machinist.init.ModTileEntityTypes;
+import one.tlph.machinist.inventory.IInventoryHolder;
 import one.tlph.machinist.tileentity.AbstractPoweredTileEntity;
+import one.tlph.machinist.util.Progress;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Optional;
 
-public class SmelterTileEntity extends AbstractPoweredTileEntity<Smelter> {
+public class SmelterTileEntity extends AbstractPoweredTileEntity<Smelter> implements IInventoryHolder {
 
 	private int burnTimeRemaining = 0;
 	private int burnTimeInitialValue = 0;
-	public short cookTime;
-	
+	private Progress burnTime;
+	private Progress cookTime;
 	private static final short COOK_TIME_FOR_COMPLETION = 200;
 
 
@@ -61,55 +64,55 @@ public class SmelterTileEntity extends AbstractPoweredTileEntity<Smelter> {
 	
 	public SmelterTileEntity() {
 		super(ModTileEntityTypes.SMELTER.get());
+		this.cookTime = new Progress(COOK_TIME_FOR_COMPLETION);
+		this.burnTime = new Progress(0, true);
 		this.inv.set(3);
 		this.energyStorage.setCapacity(10000);
 		this.energyStorage.setRecieve(TRANSFER_BASE * 2);
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT compound) {
-		super.read(state, compound);
-		if(compound.contains("inventory")) {
-			inventory.deserializeNBT(compound.getCompound("inventory"));
-		}
-		if(compound.contains("energyStorage")) {
-			energyStorage.deserializeNBT(compound.getCompound("energyStorage"));
-		}
-		cookTime = compound.getShort("CookTime");
-		burnTimeRemaining = compound.getInt("burnTimeRemaining");
-		burnTimeInitialValue = compound.getInt("burnTimeInitialValue");
+	protected void readSync(CompoundNBT nbt) {
+		super.readSync(nbt);
 	}
-	
+
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
-		super.write(compound);
-		compound.put("inventory", inventory.serializeNBT());
-		compound.put("energyStorage", energyStorage.serializeNBT());
-		compound.putShort("CookTime", cookTime);
-		compound.putInt("burnTimeRemaining", burnTimeRemaining);
-		compound.putInt("burnTimeInitialValue", burnTimeInitialValue);
-		return compound;
+	public void readStorable(CompoundNBT nbt) {
+		this.cookTime.read(nbt, "cookTime");
+		this.burnTime.read(nbt, "burnTime", true);
+		super.readStorable(nbt);
 	}
+
+	@Override
+	protected CompoundNBT writeSync(CompoundNBT nbt) {
+		return super.writeSync(nbt);
+	}
+
+	@Override
+	public CompoundNBT writeStorable(CompoundNBT nbt) {
+		this.cookTime.write(nbt, "cookTime");
+		this.burnTime.write(nbt, "burnTime", true);
+		return super.writeStorable(nbt);
+	}
+
 	
     @Override
     public int postTick() {
     	if(!this.world.isRemote) {
 	    	if(canSmelt()) {
 	    		if(useEnergy()) {
-	    			cookTime++;
+	    			this.cookTime.tick();
 	    		}
 
 
-	    		if (cookTime >= COOK_TIME_FOR_COMPLETION) {
+	    		if (this.cookTime.check()) {
 	    			smeltItem();
-	    			cookTime = 0;
 	    		}
 
 	    	} else {
-	    		if(burnTimeRemaining > 0) {
+	    		if(!burnTime.check()) {
     				useEnergy();
 	    		}
-	    		cookTime = 0;
 	    	}
     	}
     	return 4;
@@ -124,7 +127,7 @@ public class SmelterTileEntity extends AbstractPoweredTileEntity<Smelter> {
 	}
 
 	public double fractionOfCookTimeComplete() {
-		double fraction = cookTime / (double)COOK_TIME_FOR_COMPLETION;
+		double fraction = cookTime.get() / (double)COOK_TIME_FOR_COMPLETION;
 		return MathHelper.clamp(fraction, 0.0, 1.0);
     }
 
@@ -167,11 +170,11 @@ public class SmelterTileEntity extends AbstractPoweredTileEntity<Smelter> {
 		ItemStack result = ItemStack.EMPTY;
 		boolean canSmelt = false;
 		
-		if(!inventory.getStackInSlot(INPUT_SLOT).isEmpty()) {
-			result = getRecipe(inventory.getStackInSlot(INPUT_SLOT));
+		if(!this.inv.getStackInSlot(INPUT_SLOT).isEmpty()) {
+			result = getRecipe(this.inv.getStackInSlot(INPUT_SLOT));
 		}
 		if(!result.isEmpty()) {
-			ItemStack outputStack = inventory.getStackInSlot(OUTPUT_SLOT);
+			ItemStack outputStack = this.inv.getStackInSlot(OUTPUT_SLOT);
 			if(!outputStack.isEmpty())
 			{
 				if(outputStack.getItem() == result.getItem()) {
@@ -186,8 +189,8 @@ public class SmelterTileEntity extends AbstractPoweredTileEntity<Smelter> {
 		
 		if(canSmelt) {
 			if(!performSmelt) return true;
-			inventory.extractItem(INPUT_SLOT, 1, false);
-			inventory.insertItem(OUTPUT_SLOT, result.copy(), false);
+			this.inv.extractItem(INPUT_SLOT, 1, false);
+			this.inv.insertItem(OUTPUT_SLOT, result.copy(), false);
 			markDirty();
 			return true;
 		}
@@ -195,22 +198,25 @@ public class SmelterTileEntity extends AbstractPoweredTileEntity<Smelter> {
 		return false;
 	}
 
+
+	private final LazyOptional<RangedWrapper> inventoryUp = LazyOptional.of(() -> new RangedWrapper(this.inv, INPUT_SLOT , 1));
+	private final LazyOptional<RangedWrapper> inventorySides = LazyOptional.of(() -> new RangedWrapper(this.inv, OUTPUT_SLOT , 3));
+
+
 	@Nonnull
 	@Override
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			if(side == null)
-				return inventoryCap.cast();
-			switch(side) {
-				case UP:
-					return inventoryUpCap.cast();
-				case DOWN:
-					return inventoryDownCap.cast();
-				case EAST:
-				case WEST:
-				case NORTH:
-				case SOUTH:
-					return inventorySidesCap.cast();
+			if(side != null) {
+				switch (side) {
+					case UP:
+						return inventoryUp.cast();
+					case EAST:
+					case WEST:
+					case NORTH:
+					case SOUTH:
+						return inventorySides.cast();
+				}
 			}
 		}
 		return super.getCapability(cap, side);
@@ -246,18 +252,26 @@ public class SmelterTileEntity extends AbstractPoweredTileEntity<Smelter> {
 			return 1;
 		}
 		
-		Map<Item, Integer> burnTime = FurnaceTileEntity.getBurnTimes();
-		return 	burnTime.getOrDefault(stack.getItem(), 0);
+		return ForgeHooks.getBurnTime(stack);
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
-		return new SmelterContainer(windowId, inventory, this);
+	public int getSlotLimit(int slot) {
+		return 64;
 	}
 
 	@Override
-	public ITextComponent getDisplayName() {
-		return new TranslationTextComponent(ModBlocks.SMELTER.get().getTranslationKey());
+	public boolean canInsert(int slot, ItemStack stack) {
+		return (slot == 0 && isItemValidFuel(stack)) || (slot == 1 && isItemValidInput(stack)) || slot == 2;
 	}
 
+	@Override
+	public boolean canExtract(int slot, ItemStack stack) {
+		return true;
+	}
+
+	@Override
+	public one.tlph.machinist.inventory.Inventory getInventory() {
+		return this.inv;
+	}
 }

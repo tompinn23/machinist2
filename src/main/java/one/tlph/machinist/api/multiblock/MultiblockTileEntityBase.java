@@ -23,6 +23,8 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import one.tlph.machinist.Machinist;
+import one.tlph.machinist.blocks.AbstractBlock;
+import one.tlph.machinist.tileentity.AbstractTileEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,7 +37,7 @@ import java.util.Set;
  * Base logic class for Multiblock-connected tile entities. Most multiblock machines
  * should derive from this and implement their game logic in certain abstract methods.
  */
-public abstract class MultiblockTileEntityBase extends TileEntity implements IMultiblockPart {
+public abstract class MultiblockTileEntityBase<B extends AbstractBlock> extends AbstractTileEntity<B> implements IMultiblockPart {
 	private MultiblockControllerBase controller;
 	private boolean visited;
 	
