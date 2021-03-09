@@ -1,6 +1,5 @@
 package one.tlph.machinist.tileentity;
 
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -8,6 +7,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.LogicalSidedProvider;
+import one.tlph.machinist.blocks.AbstractBlock;
 
 public abstract class AbstractTickableTileEntity<B extends AbstractBlock> extends AbstractTileEntity<B> implements ITickableTileEntity {
 

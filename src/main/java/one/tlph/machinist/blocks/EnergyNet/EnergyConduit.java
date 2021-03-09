@@ -3,25 +3,42 @@ package one.tlph.machinist.blocks.EnergyNet;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SixWayBlock;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
+import one.tlph.machinist.blocks.AbstractBlock;
 import one.tlph.machinist.energy.Energy;
 import one.tlph.machinist.energy.net.EnergyNetBase;
 import one.tlph.machinist.energy.net.IEnergyNetPart;
+import one.tlph.machinist.tileentity.AbstractTileEntity;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
-public class EnergyConduit extends Block {
+public class EnergyConduit extends AbstractBlock {
 
     public static final BooleanProperty NORTH = SixWayBlock.NORTH;
     public static final BooleanProperty EAST = SixWayBlock.EAST;
@@ -119,5 +136,65 @@ public class EnergyConduit extends Block {
 
     }
 
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(!worldIn.isRemote) {
+            TileEntity te = worldIn.getTileEntity(pos);
+            Optional<Direction> side = getHitSide(hit.getHitVec(), pos);
+            if(!side.isPresent())
+                return ActionResultType.PASS;
+            if(te instanceof EnergyConduitTileEntity) {
+                INamedContainerProvider provider = new INamedContainerProvider() {
+                    @Override
+                    public ITextComponent getDisplayName() {
+                        return new ItemStack(EnergyConduit.this).getDisplayName();
+                    }
 
+                    @Nullable
+                    @Override
+                    public Container createMenu(int i, PlayerInventory inventory, PlayerEntity player) {
+                        return getContainer(i, inventory, (EnergyConduitTileEntity) te, hit);
+                    }
+                };
+                Container container = provider.createMenu(0, player.inventory, player);
+                if(container != null) {
+                    if(player instanceof ServerPlayerEntity) {
+                        NetworkHooks.openGui((ServerPlayerEntity)player, provider, packetBuffer -> {
+                            packetBuffer.writeBlockPos(pos);
+                            additionalGuiData(packetBuffer, state,worldIn,pos,player, handIn, hit);
+                        });
+                    }
+                }
+            }
+        }
+        return ActionResultType.SUCCESS;
+    }
+
+    @Override
+    protected void additionalGuiData(PacketBuffer buffer, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
+        getHitSide(result.getHitVec(), pos).ifPresent(side -> buffer.writeInt(side.getIndex()));
+        super.additionalGuiData(buffer, state, world, pos, player, hand, result);
+    }
+
+    public static Optional<Direction> getHitSide(Vector3d hit, BlockPos pos) {
+        double x = hit.x - pos.getX();
+        double y = hit.y - pos.getY();
+        double z = hit.z - pos.getZ();
+        if (x > 0.0D && x < 0.4D) return Optional.of(Direction.WEST);
+        else if (x > 0.6D && x < 1.0D) return Optional.of(Direction.EAST);
+        else if (z > 0.0D && z < 0.4D) return Optional.of(Direction.NORTH);
+        else if (z > 0.6D && z < 1.0D) return Optional.of(Direction.SOUTH);
+        else if (y > 0.6D && y < 1.0D) return Optional.of(Direction.UP);
+        else if (y > 0.0D && y < 0.4D) return Optional.of(Direction.DOWN);
+        return Optional.empty();
+    }
+
+
+    @Nullable
+    public Container getContainer(int id, PlayerInventory playerInventory, EnergyConduitTileEntity tileEntity, BlockRayTraceResult result) {
+        if(tileEntity instanceof EnergyConduitTileEntity) {
+            //return new EnergyConduitContainer();
+        }
+        return null;
+    }
 }

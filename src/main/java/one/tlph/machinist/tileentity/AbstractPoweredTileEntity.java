@@ -1,6 +1,5 @@
 package one.tlph.machinist.tileentity;
 
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -9,6 +8,7 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import one.tlph.machinist.blocks.AbstractBlock;
 import one.tlph.machinist.energy.Energy;
 
 import javax.annotation.Nonnull;
@@ -20,7 +20,7 @@ public class AbstractPoweredTileEntity<B extends AbstractBlock> extends Abstract
 
 
 
-    protected final Energy energyStorage = Energy.create(0);
+    public final Energy energyStorage = Energy.create(0);
     private final LazyOptional<IEnergyStorage> ENERGY_CAP = LazyOptional.of(() -> new IEnergyStorage() {
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {

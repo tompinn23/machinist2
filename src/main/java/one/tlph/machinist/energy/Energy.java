@@ -19,6 +19,7 @@ public class Energy implements IEnergyStorage {
     private long maxExtract;
     private long maxReceive;
 
+
     protected Energy( long maxEnergy, long maxExtract, long maxReceive) {
         this.energyStored = 0;
         this.maxEnergy = maxEnergy;

@@ -36,7 +36,6 @@ public class ConduitModel extends Model {
         super(RenderType::getEntitySolid);
         this.textureWidth = 64;
         this.textureHeight = 32;
-
         this.north = new ModelRenderer(this, 0, 10);
         this.north.addBox(-1.5F, -1.5F, -7.75F, 3, 3, 6);
         this.north.setRotationPoint(0F, 14F, 0F);

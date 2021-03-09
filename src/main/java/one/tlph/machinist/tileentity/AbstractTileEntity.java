@@ -1,6 +1,5 @@
 package one.tlph.machinist.tileentity;
 
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -16,6 +15,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import one.tlph.machinist.blocks.AbstractBlock;
 import one.tlph.machinist.inventory.IInventoryHolder;
 import one.tlph.machinist.inventory.Inventory;
 

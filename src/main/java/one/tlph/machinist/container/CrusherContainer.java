@@ -23,8 +23,7 @@ import java.util.Objects;
 public class CrusherContainer extends ContainerTileBase<CrusherTileEntity> {
 
     public CrusherContainer(final int windowId, final PlayerInventory playerInventory, final PacketBuffer data) {
-        this(windowId, playerInventory, getTile(playerInventory.player, data.readBlockPos()
-        ));
+        this(windowId, playerInventory, getTile(playerInventory.player, data.readBlockPos()));
     }
 
     public CrusherContainer(final int windowId, final PlayerInventory playerInventory, CrusherTileEntity te) {
