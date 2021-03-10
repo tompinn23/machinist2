@@ -85,5 +85,4 @@ public abstract class AbstractTickableTileEntity<B extends AbstractBlock> extend
             }
         }
     }
-
 }
