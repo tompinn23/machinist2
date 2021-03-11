@@ -5,7 +5,7 @@ pipeline {
         stage('Gradle Setup') {
 			steps {
 				script {
-					sh './gradlew setupCIWorkspace'
+					sh './gradlew'
 				}
 			}
         }
