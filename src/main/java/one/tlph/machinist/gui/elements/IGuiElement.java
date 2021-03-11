@@ -22,6 +22,9 @@ public abstract class IGuiElement {
     }
 
     public abstract void drawBackground(MatrixStack stack);
+    public void drawBackgroundNoStateChange(MatrixStack stack) {
+
+    }
     public abstract void drawForeground(MatrixStack stack, int mouseX, int mouseY);
 
     public static boolean isInRect(int x, int y, int xSize, int ySize, int mouseX, int mouseY){

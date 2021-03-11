@@ -12,6 +12,7 @@ import one.tlph.machinist.blocks.AbstractBlock;
 import one.tlph.machinist.energy.Energy;
 import one.tlph.machinist.energy.SidedConfig;
 import one.tlph.machinist.energy.SidedStorage;
+import one.tlph.machinist.energy.TransferType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,42 +25,11 @@ public class AbstractPoweredTileEntity<B extends AbstractBlock> extends Abstract
 
 
     public final Energy energyStorage = Energy.create(0);
-    private final SidedStorage<IEnergyStorage> energySides = SidedStorage.create(this::createSidedEnergy);
-    private SidedConfig sidedConfig;
-    private final LazyOptional<IEnergyStorage> ENERGY_CAP = LazyOptional.of(() -> new IEnergyStorage() {
-        @Override
-        public int receiveEnergy(int maxReceive, boolean simulate) {
-            return AbstractPoweredTileEntity.this.energyStorage.receiveEnergy(maxReceive, simulate);
-        }
+    public final SidedConfig sidedConfig;
+    public final SidedStorage<LazyOptional<IEnergyStorage>> energySides = SidedStorage.create(this::createSidedEnergy);
 
-        @Override
-        public int extractEnergy(int maxExtract, boolean simulate) {
-            return AbstractPoweredTileEntity.this.energyStorage.extractEnergy(maxExtract, simulate);
-        }
-
-        @Override
-        public int getEnergyStored() {
-            return AbstractPoweredTileEntity.this.energyStorage.getEnergyStored();
-        }
-
-        @Override
-        public int getMaxEnergyStored() {
-            return AbstractPoweredTileEntity.this.energyStorage.getMaxEnergyStored();
-        }
-
-        @Override
-        public boolean canExtract() {
-            return AbstractPoweredTileEntity.this.energyStorage.canExtract();
-        }
-
-        @Override
-        public boolean canReceive() {
-            return AbstractPoweredTileEntity.this.energyStorage.canReceive();
-        }
-    });
-
-    private IEnergyStorage createSidedEnergy(Direction side) {
-        return new IEnergyStorage() {
+    private LazyOptional<IEnergyStorage> createSidedEnergy(Direction side) {
+        return LazyOptional.of(() -> new IEnergyStorage() {
             @Override
             public int receiveEnergy(int maxReceive, boolean simulate) {
                 return AbstractPoweredTileEntity.this.energyStorage.receiveEnergy(maxReceive, simulate);
@@ -89,7 +59,7 @@ public class AbstractPoweredTileEntity<B extends AbstractBlock> extends Abstract
             public boolean canReceive() {
                 return AbstractPoweredTileEntity.this.canReceive(side);
             }
-        };
+        });
     }
 
 
@@ -137,17 +107,20 @@ public class AbstractPoweredTileEntity<B extends AbstractBlock> extends Abstract
         return false;
     }
 
+
     @Override
     protected void invalidateCaps() {
         super.invalidateCaps();
-        this.ENERGY_CAP.invalidate();
+        for(Direction side : Direction.values()) {
+            this.energySides.getSide(side).invalidate();
+        }
     }
 
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if(cap ==  ENERGY_CAPABILITY) {
-            return this.ENERGY_CAP.cast();
+            return this.energySides.getSide(side).cast();
         }
         return super.getCapability(cap, side);
     }
@@ -160,5 +133,7 @@ public class AbstractPoweredTileEntity<B extends AbstractBlock> extends Abstract
         return this.sidedConfig.canExtract(side);
     }
 
-
+    public SidedConfig getSidedConfig() {
+        return sidedConfig;
+    }
 }

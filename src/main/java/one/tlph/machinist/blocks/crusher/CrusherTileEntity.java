@@ -9,6 +9,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import one.tlph.machinist.blocks.crusher.Crusher;
+import one.tlph.machinist.energy.TransferType;
 import one.tlph.machinist.init.ModTileEntityTypes;
 import one.tlph.machinist.inventory.IInventoryHolder;
 import one.tlph.machinist.inventory.Inventory;
@@ -40,6 +41,7 @@ public class CrusherTileEntity extends AbstractPoweredTileEntity<Crusher> implem
         energyStorage.setCapacity(10000);
         energyStorage.setRecieve(TRANSFER_BASE * 2);
         this.inv.set(3);
+        this.getSidedConfig().init(TransferType.IN);
     }
 
 

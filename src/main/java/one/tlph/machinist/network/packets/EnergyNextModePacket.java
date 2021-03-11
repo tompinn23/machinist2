@@ -28,8 +28,8 @@ public class EnergyNextModePacket implements IPacket<EnergyNextModePacket> {
 
     @Override
     public void encode(EnergyNextModePacket msg, PacketBuffer buffer) {
-        buffer.writeInt(side);
-        buffer.writeBlockPos(pos);
+        buffer.writeInt(msg.side);
+        buffer.writeBlockPos(msg.pos);
     }
 
     @Override
@@ -42,14 +42,19 @@ public class EnergyNextModePacket implements IPacket<EnergyNextModePacket> {
         ctx.get().enqueueWork(() -> {
             ServerPlayerEntity player = ctx.get().getSender();
             if(player != null) {
-                if (player.world.isBlockPresent(pos)) {
-                    TileEntity entity = player.world.getTileEntity(pos);
+                if (player.world.isBlockPresent(msg.pos)) {
+                    TileEntity entity = player.world.getTileEntity(msg.pos);
                     if(entity instanceof AbstractPoweredTileEntity) {
                         AbstractPoweredTileEntity te = (AbstractPoweredTileEntity)entity;
-
+                        te.getSidedConfig().next(msg.side > 5 ? null : Direction.values()[msg.side]);
+                        if(msg.side > 5) {
+                            te.getSidedConfig().setSides(te.getSidedConfig().get(null));
+                        }
+                        te.sync();
                     }
                 }
             }
         });
+        ctx.get().setPacketHandled(true);
     }
 }

@@ -9,6 +9,7 @@ import one.tlph.machinist.Machinist;
 import one.tlph.machinist.container.CrusherContainer;
 import one.tlph.machinist.gui.elements.EnergyBar;
 import one.tlph.machinist.blocks.crusher.CrusherTileEntity;
+import one.tlph.machinist.gui.elements.EnergyConfig;
 import one.tlph.machinist.util.RenderHelper;
 
 public class CrusherGui extends ScreenBase<CrusherContainer> {
@@ -30,12 +31,15 @@ public class CrusherGui extends ScreenBase<CrusherContainer> {
     final int COOK_WIDTH = 28;
     final int COOK_HEIGHT = 19;
 
+    final int CONFIG_XPOS = 176;
+    final int CONFIG_YPOS = 14;
 
 
     private CrusherTileEntity te;
     private static final ResourceLocation background = new ResourceLocation(Machinist.MODID, "textures/gui/crusher.png");
 
     private EnergyBar energyBar;
+    private EnergyConfig energyConfig;
 
     public CrusherGui(CrusherContainer container, PlayerInventory inventory, final ITextComponent title) {
         super(container,inventory, new TranslationTextComponent("machinist.crusher.gui.title"));
@@ -44,12 +48,17 @@ public class CrusherGui extends ScreenBase<CrusherContainer> {
         ySize = HEIGHT;
     }
 
-    
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        energyConfig.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
     @Override
 	protected void init() {
 		super.init();
         this.energyBar = new EnergyBar(this, this.te, guiLeft + ENERGY_XPOS, guiTop + ENERGY_YPOS);
-
+        //this.energyConfig = new EnergyConfig(this, guiLeft + CONFIG_XPOS, guiTop + CONFIG_YPOS, this.te);
 	}
 
 
@@ -64,11 +73,13 @@ public class CrusherGui extends ScreenBase<CrusherContainer> {
 
         //double energyLeft = te.fractionOfEnergyRemaining();
         energyBar.drawBackground(stack);
+        //energyConfig.drawBackground(stack);
         //drawTexturedModalRect(guiLeft + ENERGY_XPOS, guiTop + ENERGY_YPOS + (int)((1.0 - energyLeft) * ENERGY_HEIGHT), ENERGY_U, (int)((1.0 - energyLeft) * ENERGY_HEIGHT) + ENERGY_V, ENERGY_WIDTH,ENERGY_HEIGHT - ((int)((1.0 - energyLeft) * ENERGY_HEIGHT)));
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
         energyBar.drawForeground(stack, mouseX, mouseY);
+        //energyConfig.drawForeground(stack, mouseX, mouseY);
     }
 }

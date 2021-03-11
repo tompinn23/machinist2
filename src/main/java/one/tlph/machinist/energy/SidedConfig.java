@@ -10,7 +10,7 @@ import java.util.EnumMap;
 
 public class SidedConfig {
 
-    private final TransferType[] sides = new TransferType[6];
+    private final TransferType[] sides = new TransferType[7];
     private final AbstractPoweredTileEntity te;
 
     public SidedConfig(AbstractPoweredTileEntity te) {
@@ -39,8 +39,24 @@ public class SidedConfig {
         }
     }
 
+    public void setSides(TransferType type) {
+        for(int i = 0; i < sides.length; i++) {
+            sides[i] = type;
+        }
+    }
+
     public void next(Direction side) {
+        if(side == null) {
+            sides[6] = sides[6].next();
+            return;
+        }
         sides[side.getIndex()] = sides[side.getIndex()].next();
+    }
+
+    public TransferType get(Direction side) {
+        if(side ==null)
+            return sides[6];
+        return sides[side.getIndex()];
     }
 
 

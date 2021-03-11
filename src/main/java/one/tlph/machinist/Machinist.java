@@ -16,6 +16,7 @@ import one.tlph.machinist.energy.net.EnergyNetEventHandler;
 import one.tlph.machinist.energy.net.EnergyNetRegistry;
 import one.tlph.machinist.energy.net.IEnergyNetRegistry;
 import one.tlph.machinist.init.*;
+import one.tlph.machinist.network.Network;
 import one.tlph.machinist.recipes.BlastFurnaceManager;
 
 import org.apache.logging.log4j.LogManager;
@@ -29,6 +30,7 @@ public class Machinist {
     public static final String MODNAME = "Machinist";
     public static final String MODVERSION = "0.1.0";
 
+    public static final Network NETWORK = new Network(MODID);
     public static Setup setup = new Setup();
 
     public static boolean ic2Loaded = false;

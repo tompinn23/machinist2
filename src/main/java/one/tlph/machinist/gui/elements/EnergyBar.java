@@ -27,8 +27,8 @@ public class EnergyBar extends IGuiElement {
     public EnergyBar(ScreenBase gc, TileEntity te, int xPos, int yPos) {
         super(gc, xPos, yPos);
         this.te = te;
-        this.texH = 58;
-        this.texW = 12;
+        this.texH = 64;
+        this.texW = 16;
     }
 
 
