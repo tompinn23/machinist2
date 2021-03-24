@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "machinist:copper_ore"
+  },
+  "result": "machinist:copper_ingot",
+  "experience": 0.5,
+  "cookingtime": 200
+}

@@ -1,0 +1,17 @@
+{
+  "name" : "machinist:under_nether",
+  "ultrawarm": true,
+  "natural": false,
+  "coordinate_scale": 16,
+  "piglin_safe": false,
+  "bed_works": true,
+  "respawn_anchor_works": true,
+  "has_raids": false,
+  "has_skylight": false,
+  "has_ceiling": true,
+  "fixed_time": 18000,
+  "ambient_light": 0.4,
+  "logical_height": 128,
+  "infiniburn": "minecraft:infiniburn_nether",
+  "effects": "minecraft:the_nether"
+}

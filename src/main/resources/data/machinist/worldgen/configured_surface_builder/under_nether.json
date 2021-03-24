@@ -1,0 +1,14 @@
+{
+  "config": {
+    "top_material": {
+      "Name": "machinist:under_netherrack"
+    },
+    "under_material": {
+      "Name": "machinist:under_netherrack"
+    },
+    "underwater_material": {
+      "Name": "machinist:remelted_netherrack"
+    }
+  },
+  "type": "minecraft:nether"
+}

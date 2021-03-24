@@ -1,0 +1,10 @@
+{
+  "type": "machinist:crusher",
+  "input": {
+    "tag": "forge:ores/iron"
+  },
+  "output": {
+    "item": "machinist:iron_dust",
+    "count": 2
+  }
+}
