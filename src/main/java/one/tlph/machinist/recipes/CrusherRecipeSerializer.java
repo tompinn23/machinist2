@@ -3,14 +3,15 @@ package one.tlph.machinist.recipes;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import one.tlph.machinist.Machinist;
+import one.tlph.machinist.util.Constants;
 import one.tlph.machinist.util.SerializerHelper;
 
 import javax.annotation.Nullable;
@@ -25,21 +26,20 @@ public class CrusherRecipeSerializer<T extends CrusherRecipe> extends ForgeRegis
 
     @Override
     public T read(ResourceLocation recipeId, JsonObject json) {
-        JsonElement mainInput = JSONUtils.isJsonArray(json, JsonConstants.INPUT) ? JSONUtils.getJsonArray(json, JsonConstants.INPUT) :
-                JSONUtils.getJsonObject(json, JsonConstants.INPUT);
-        ItemStackIngredient input = ItemStackIngredient.deserialize(mainInput);
+        JsonElement mainInput = JSONUtils.getJsonObject(json, Constants.JSON.INPUT);
+        Ingredient input = Ingredient.deserialize(mainInput.getAsJsonObject());
 
-        ItemStack output = SerializerHelper.getItemStack(json, JsonConstants.OUTPUT);
+        ItemStack output = SerializerHelper.getItemStack(json, Constants.JSON.OUTPUT);
         if(output.isEmpty()) {
             throw new JsonSyntaxException("Crusher output must be valid.");
         }
         float chance = 1.0f;
         ItemStack extraOutput = ItemStack.EMPTY;
-        if(json.has(JsonConstants.CHANCE)) {
-            chance = json.get(JsonConstants.CHANCE).getAsFloat();
+        if(json.has(Constants.JSON.CHANCE)) {
+            chance = json.get(Constants.JSON.CHANCE).getAsFloat();
         }
-        if(json.has(JsonConstants.EXTRA_OUTPUT)) {
-            extraOutput = SerializerHelper.getItemStack(json, JsonConstants.EXTRA_OUTPUT);
+        if(json.has(Constants.JSON.EXTRA_OUTPUT)) {
+            extraOutput = SerializerHelper.getItemStack(json, Constants.JSON.EXTRA_OUTPUT);
         }
         return this.factory.create(recipeId, input, output, extraOutput, chance);
     }
@@ -48,7 +48,7 @@ public class CrusherRecipeSerializer<T extends CrusherRecipe> extends ForgeRegis
     @Override
     public T read(ResourceLocation recipeId, PacketBuffer buffer) {
         try {
-            ItemStackIngredient input = ItemStackIngredient.read(buffer);
+            Ingredient input = Ingredient.read(buffer);
             ItemStack output = buffer.readItemStack();
             ItemStack extraOutput = buffer.readItemStack();
             float chance = buffer.readFloat();
@@ -71,7 +71,7 @@ public class CrusherRecipeSerializer<T extends CrusherRecipe> extends ForgeRegis
 
     @FunctionalInterface
     public interface IFactory<T extends CrusherRecipe> {
-        T create(ResourceLocation id, ItemStackIngredient input, ItemStack output, ItemStack extraOutput, float chance);
+        T create(ResourceLocation id, Ingredient input, ItemStack output, ItemStack extraOutput, float chance);
     }
 
 }

@@ -15,10 +15,7 @@ import one.tlph.machinist.inventory.IgnoredIInventory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.crypto.Mac;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -86,18 +83,18 @@ public class MachinistRecipeType<T extends MachinistRecipe> implements IRecipeTy
                     if (!smeltingRecipe.isDynamic() && !recipeOutput.isEmpty()) {
                         //TODO: Can Smelting recipes even "dynamic", if so can we add some sort of checker to make getOutput return the correct result
                         NonNullList<Ingredient> ingredients = smeltingRecipe.getIngredients();
-                        ItemStackIngredient input;
+                        Ingredient input;
                         if (ingredients.isEmpty()) {
                             //Something went wrong
                             continue;
                         } else if (ingredients.size() == 1) {
-                            input = ItemStackIngredient.from(ingredients.get(0));
+                            input = ingredients.get(0);
                         } else {
-                            ItemStackIngredient[] itemIngredients = new ItemStackIngredient[ingredients.size()];
+                            Ingredient[] itemIngredients = new Ingredient[ingredients.size()];
                             for (int i = 0; i < ingredients.size(); i++) {
-                                itemIngredients[i] = ItemStackIngredient.from(ingredients.get(i));
+                                itemIngredients[i] = ingredients.get(i);
                             }
-                            input = ItemStackIngredient.createMulti(itemIngredients);
+                            input = Ingredient.merge(Arrays.asList(itemIngredients));
                         }
                         recipes.add((T) new SmeltingRecipe(entry.getKey(), input, recipeOutput));
                     }

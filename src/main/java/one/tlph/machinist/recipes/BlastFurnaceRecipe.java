@@ -3,9 +3,10 @@ package one.tlph.machinist.recipes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
-import one.tlph.machinist.init.ModRecipeSerializers;
+import one.tlph.machinist.init.registries.ModRecipeSerializers;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -15,12 +16,12 @@ import java.util.function.BiPredicate;
 public class BlastFurnaceRecipe extends MachinistRecipe implements BiPredicate<ItemStack, ItemStack> {
 
     public static final int DEFAULT_TIME = 300;
-    private final ItemStackIngredient mainInput;
-    private final ItemStackIngredient extraInput;
+    private final Ingredient mainInput;
+    private final Ingredient extraInput;
     private final ItemStack output;
     private final int time;
 
-    public BlastFurnaceRecipe(ResourceLocation id, ItemStackIngredient mainInput, ItemStackIngredient extraInput, int time, ItemStack output) {
+    public BlastFurnaceRecipe(ResourceLocation id, Ingredient mainInput, Ingredient extraInput, int time, ItemStack output) {
         super(id);
         this.mainInput = mainInput;
         this.extraInput = extraInput;
@@ -35,11 +36,11 @@ public class BlastFurnaceRecipe extends MachinistRecipe implements BiPredicate<I
         return mainInput.test(input) && extraInput.test(extra);
     }
 
-    public ItemStackIngredient getMainInput() {
+    public Ingredient getMainInput() {
         return mainInput;
     }
 
-    public ItemStackIngredient getExtraInput() {
+    public Ingredient getExtraInput() {
         return extraInput;
     }
 

@@ -2,30 +2,21 @@ package one.tlph.machinist.blocks.crusher;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import one.tlph.machinist.blocks.crusher.Crusher;
 import one.tlph.machinist.energy.TransferType;
-import one.tlph.machinist.init.ModTileEntityTypes;
+import one.tlph.machinist.init.registries.ModTileEntityTypes;
 import one.tlph.machinist.inventory.IInventoryHolder;
 import one.tlph.machinist.inventory.Inventory;
 import one.tlph.machinist.recipes.CrusherRecipe;
 import one.tlph.machinist.recipes.MachinistRecipeType;
 import one.tlph.machinist.tileentity.AbstractPoweredTileEntity;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 public class CrusherTileEntity extends AbstractPoweredTileEntity<Crusher> implements IInventoryHolder {
 
     private static int TRANSFER_BASE = 40;
 
 
-    private static final int COOK_TIME_FOR_COMPLETION = 150;
+    public static final int COOK_TIME_FOR_COMPLETION = 150;
     public int cookTime = 0;
 
 

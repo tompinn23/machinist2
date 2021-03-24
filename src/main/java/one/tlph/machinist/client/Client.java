@@ -1,10 +1,11 @@
 package one.tlph.machinist.client;
 
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import one.tlph.machinist.client.renderer.CableRenderer;
-import one.tlph.machinist.init.ModTileEntityTypes;
+import one.tlph.machinist.client.renderer.PortalHeater;
+import one.tlph.machinist.init.registries.ModTileEntityTypes;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,6 +22,7 @@ public enum Client {
      */
     public void client(FMLClientSetupEvent event) {
         ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.CABLE_TILE_ENTITY.get(), CableRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.PORTAL_HEATER.get(), PortalHeater::new);
     }
 
     /**

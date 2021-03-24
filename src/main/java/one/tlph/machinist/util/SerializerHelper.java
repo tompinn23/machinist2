@@ -1,5 +1,6 @@
 package one.tlph.machinist.util;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.item.ItemStack;
@@ -22,5 +23,19 @@ public class SerializerHelper {
     public static ItemStack getItemStack(@Nonnull JsonObject json, @Nonnull String key) {
         validateKey(json, key);
         return ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, key));
+    }
+
+    public static JsonElement serializeItemStack(ItemStack stack) {
+        JsonObject json = new JsonObject();
+        json.addProperty(Constants.JSON.ITEM, stack.getItem().getRegistryName().toString());
+        if (stack.getCount() > 1)
+        {
+            json.addProperty(Constants.JSON.COUNT, stack.getCount());
+        }
+        if (stack.hasTag())
+        {
+            json.addProperty(Constants.JSON.NBT, stack.getTag().toString());
+        }
+        return json;
     }
 }

@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "machinist:blocks/conduit",
-		"particle": "machinist:blocks/conduit"
+		"0": "machinist:block/conduit",
+		"particle": "machinist:block/conduit"
 	},
 	"elements": [
 		{

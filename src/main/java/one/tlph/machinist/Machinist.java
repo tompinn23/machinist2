@@ -16,13 +16,17 @@ import one.tlph.machinist.energy.net.EnergyNetEventHandler;
 import one.tlph.machinist.energy.net.EnergyNetRegistry;
 import one.tlph.machinist.energy.net.IEnergyNetRegistry;
 import one.tlph.machinist.init.*;
+import one.tlph.machinist.init.registries.*;
 import one.tlph.machinist.network.Network;
-import one.tlph.machinist.recipes.BlastFurnaceManager;
 
+import one.tlph.machinist.world.Features;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.function.Consumer;
+
+import static one.tlph.machinist.init.ModFlags.GEN_COPPER;
+import static one.tlph.machinist.init.ModFlags.setFlag;
 
 @Mod(Machinist.MODID)
 public class Machinist {
@@ -44,9 +48,11 @@ public class Machinist {
 
 
     public Machinist() {
+        setFeatureFlags();
+
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        ModBlocks.BLOCKS.register(modEventBus);
+        ModBlocks.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModContainerTypes.CONTAINER_TYPES.register(modEventBus);
         ModTileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
@@ -54,6 +60,12 @@ public class Machinist {
         loadListeners();
         
         ModRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
+
+        Config.register();
+    }
+
+    private void setFeatureFlags() {
+        setFlag(GEN_COPPER, true);
     }
 
     private void loadListeners() {
@@ -71,7 +83,9 @@ public class Machinist {
 
     private void setup(final FMLCommonSetupEvent event) {
         setup.init();
+        event.enqueueWork(Features::setup);
     }
+
 
     public static IEnergyNetRegistry initEnergyNetRegistry() {
         if(energyNetEventHandler == null) {

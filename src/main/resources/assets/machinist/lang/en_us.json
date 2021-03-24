@@ -13,6 +13,8 @@
   "block.machinist.smelter": "Smelter",
   "block.machinist.machine_frame": "Machine Frame",
   "block.machinist.crusher": "Crusher",
+  "block.machinist.copper_ore": "Copper Ore",
+  "block.machinist.under_netherrack": "Crispy Netherrack",
 
   "itemGroup.machinist": "Machiniste",
 
@@ -27,5 +29,5 @@
   "message.machinist.multiblock.validation.invalid_part_for_sides": "This part cannot be used for the sides: %1$d, %2$d, %3$d.",
   "message.machinist.multiblock.validation.reactor.invalid_part_for_interior": "This part cannot be used for the interior: %1$d, %2$d, %3$d.",
   "message.machinist.blastfurnace.multiplecontrollers": "You need exactly 1 blast furnace controller.",
-  "gui.machinist.category.crusher": "Crushing"
+  "jei.machinist.category.crusher": "Crushing"
 }

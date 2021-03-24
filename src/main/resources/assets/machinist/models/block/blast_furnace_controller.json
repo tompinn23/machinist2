@@ -1,12 +1,12 @@
 {
   "parent": "block/cube",
   "textures": {
-    "particle": "machinist:blocks/blast_furnace_controller_front_off",
-    "down": "machinist:blocks/blast_furnace_casing",
-    "up": "machinist:blocks/blast_furnace_casing",
-    "east": "machinist:blocks/blast_furnace_casing",
-    "west": "machinist:blocks/blast_furnace_casing",
-    "north": "machinist:blocks/blast_furnace_controller_front_off",
-    "south": "machinist:blocks/blast_furnace_casing"
+    "particle": "machinist:block/blast_furnace_controller_front_off",
+    "down": "machinist:block/blast_furnace_casing",
+    "up": "machinist:block/blast_furnace_casing",
+    "east": "machinist:block/blast_furnace_casing",
+    "west": "machinist:block/blast_furnace_casing",
+    "north": "machinist:block/blast_furnace_controller_front_off",
+    "south": "machinist:block/blast_furnace_casing"
   }
 }

@@ -1,24 +1,15 @@
 package one.tlph.machinist.container;
 
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import one.tlph.machinist.init.ModBlocks;
-import one.tlph.machinist.init.ModContainerTypes;
+import one.tlph.machinist.init.registries.ModContainerTypes;
 import one.tlph.machinist.blocks.crusher.CrusherTileEntity;
-import one.tlph.machinist.init.ModRecipeSerializers;
-import one.tlph.machinist.recipes.MachinistRecipeType;
-import one.tlph.machinist.tileentity.AbstractTileEntity;
 import one.tlph.machinist.util.OutputSlotHandler;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 public class CrusherContainer extends ContainerTileBase<CrusherTileEntity> {
 

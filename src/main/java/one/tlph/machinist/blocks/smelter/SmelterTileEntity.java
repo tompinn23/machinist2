@@ -1,45 +1,21 @@
 package one.tlph.machinist.blocks.smelter;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.FurnaceTileEntity;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 
-import net.minecraftforge.items.wrapper.RangedWrapper;
-import one.tlph.machinist.init.ModBlocks;
-import one.tlph.machinist.container.SmelterContainer;
-import one.tlph.machinist.energy.TileEntityPowerable;
-import one.tlph.machinist.init.ModItems;
-import one.tlph.machinist.init.ModTileEntityTypes;
+import one.tlph.machinist.init.registries.ModItems;
+import one.tlph.machinist.init.registries.ModTileEntityTypes;
 import one.tlph.machinist.inventory.IInventoryHolder;
 import one.tlph.machinist.tileentity.AbstractPoweredTileEntity;
 import one.tlph.machinist.util.Ticker;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Map;
 import java.util.Optional;
 
 public class SmelterTileEntity extends AbstractPoweredTileEntity<Smelter> implements IInventoryHolder {

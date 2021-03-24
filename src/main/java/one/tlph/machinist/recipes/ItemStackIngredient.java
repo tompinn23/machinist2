@@ -19,8 +19,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
+/*
+public abstract class ItemStackIngredient extends Ingredient implements InputIngredient<ItemStack> {
 
-public abstract class ItemStackIngredient implements InputIngredient<ItemStack> {
+    protected ItemStackIngredient(Stream<? extends IItemList> itemLists) {
+        super(itemLists);
+    }
 
     public static ItemStackIngredient from(@Nonnull ItemStack stack) {
         return from(stack, stack.getCount());
@@ -153,6 +158,7 @@ public abstract class ItemStackIngredient implements InputIngredient<ItemStack> 
         }
 
 
+        @Nonnull
         @Override
         public List<ItemStack> getRepresentations() {
             //TODO: Can this be cached some how
@@ -260,3 +266,4 @@ public abstract class ItemStackIngredient implements InputIngredient<ItemStack> 
         MULTI
     }
 }
+*/

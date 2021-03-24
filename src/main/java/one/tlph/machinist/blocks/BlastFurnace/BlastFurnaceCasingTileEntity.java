@@ -4,7 +4,7 @@ package one.tlph.machinist.blocks.BlastFurnace;
 import one.tlph.machinist.api.multiblock.MultiblockControllerBase;
 import one.tlph.machinist.api.multiblock.rectangular.RectangularMultiblockTileEntityBase;
 import one.tlph.machinist.api.multiblock.validation.IMultiblockValidator;
-import one.tlph.machinist.init.ModTileEntityTypes;
+import one.tlph.machinist.init.registries.ModTileEntityTypes;
 
 
 public class BlastFurnaceCasingTileEntity extends RectangularMultiblockTileEntityBase {

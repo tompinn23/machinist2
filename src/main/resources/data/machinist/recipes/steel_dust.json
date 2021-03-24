@@ -5,9 +5,7 @@
     "count": 1
   },
   "input" : {
-    "ingredient": {
       "item": "machinist:steel_ingot"
     },
-    "amount": 1
-  }
+  "amount": 1
 }

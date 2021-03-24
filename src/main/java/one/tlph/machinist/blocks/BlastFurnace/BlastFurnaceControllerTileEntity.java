@@ -6,7 +6,7 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import one.tlph.machinist.api.multiblock.MultiblockControllerBase;
 import one.tlph.machinist.api.multiblock.rectangular.RectangularMultiblockTileEntityBase;
 import one.tlph.machinist.api.multiblock.validation.IMultiblockValidator;
-import one.tlph.machinist.init.ModTileEntityTypes;
+import one.tlph.machinist.init.registries.ModTileEntityTypes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -1,4 +1,4 @@
-package one.tlph.machinist.init;
+package one.tlph.machinist.init.registries;
 
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;

@@ -1,18 +1,13 @@
 package one.tlph.machinist.container;
 
-import java.util.Objects;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import one.tlph.machinist.init.ModBlocks;
-import one.tlph.machinist.init.ModContainerTypes;
+import one.tlph.machinist.init.registries.ModBlocks;
+import one.tlph.machinist.init.registries.ModContainerTypes;
 import one.tlph.machinist.blocks.smelter.SmelterTileEntity;
 
 public class SmelterContainer extends ContainerTileBase<SmelterTileEntity> {

@@ -5,12 +5,17 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 repositories {
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
     maven { url 'https://modmaven.dev/' }
     maven { url "https://www.cursemaven.com" }
 }
@@ -24,6 +29,18 @@ archivesBaseName = 'machinist'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+        resources {
+            include '**/**'
+            srcDirs += 'src/generated/'
+            exclude '.cache'
+        }
+    }
+}
 
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
@@ -84,7 +101,9 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'machinist', '--all', '--output', file('src/generated/resources/')
+            args  '--all', '--output', file('src/generated/resources/'),
+                    '--mod', 'machinist',
+                    '--existing', file('src/main/resources/')
 
             mods {
                 machinist {
@@ -102,10 +121,15 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.16.5-36.0.48'
-    compile 'net.sf.trove4j:experimental:3.1.0'
+    minecraft 'net.minecraftforge:forge:1.16.4-35.1.37'
+    compileOnly 'net.sf.trove4j:experimental:3.1.0'
 
     compileOnly "mekanism:Mekanism:${mekanism_version}:api"
+
+    // compile against the JEI API but do not include it at runtime
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
+    // at runtime, use the full JEI jar
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 
 
     // If you want to test/use Mekanism & its modules during `runClient` invocation, use the following

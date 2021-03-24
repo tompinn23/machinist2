@@ -8,7 +8,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import one.tlph.machinist.energy.Energy;
-import one.tlph.machinist.energy.ResizableEnergyStore;
 import one.tlph.machinist.energy.net.EnergyNetBase;
 import one.tlph.machinist.energy.net.IEnergyNetPart;
 
@@ -18,7 +17,9 @@ public class EnergyNetTileEntity extends EnergyNetBase {
 
     protected EnergyNetTileEntity(World world) {
         super(world);
-        energyStorage = new ResizableEnergyStore(1000, 1000, 1000);
+        energyStorage = Energy.create(1000);
+        energyStorage.setRecieve(1000);
+        energyStorage.setExtract(1000);
         acceptors = new HashMap<>();
         suppliers = new HashMap<>();
     }
@@ -27,7 +28,7 @@ public class EnergyNetTileEntity extends EnergyNetBase {
     private IEnergyNetPart delegatePart = null;
     private HashMap<BlockPos, TileEntity> acceptors;
     private HashMap<BlockPos, TileEntity> suppliers;
-    private ResizableEnergyStore energyStorage;
+    private Energy energyStorage;
     private final int transferRate = 1000;
     private int ticksSinceLastChange = 0;
 

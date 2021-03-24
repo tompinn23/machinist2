@@ -3,6 +3,7 @@ package one.tlph.machinist.init;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import one.tlph.machinist.Machinist;
+import one.tlph.machinist.init.registries.ModItems;
 
 import java.util.function.Supplier;
 

@@ -1,9 +1,7 @@
 {
   "type": "machinist:blast_furnace",
   "mainInput": {
-    "ingredient": {
-      "item": "minecraft:iron_ingot"
-    },
+    "item": "minecraft:iron_ingot",
     "amount": 2
   },
   "output": {

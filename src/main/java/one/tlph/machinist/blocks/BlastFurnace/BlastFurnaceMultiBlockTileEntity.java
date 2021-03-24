@@ -234,8 +234,8 @@ public class BlastFurnaceMultiBlockTileEntity extends RectangularMultiblockContr
             if(!doSmelt) return true;
             ItemStack in1 = inventory.getStackInSlot(INPUT_SLOT_1);
             ItemStack in2 = inventory.getStackInSlot(INPUT_SLOT_2);
-                inventory.extractItem(INPUT_SLOT_1, recipe.getMainInput().getMatchingInstance(inventory.getStackInSlot(INPUT_SLOT_1)).getCount(), false);
-                inventory.extractItem(INPUT_SLOT_2, recipe.getMainInput().getMatchingInstance(inventory.getStackInSlot(INPUT_SLOT_2)).getCount(), false);
+                inventory.extractItem(INPUT_SLOT_1, recipe.getMainInput().getMatchingStacks()[0].getCount(), false);
+                inventory.extractItem(INPUT_SLOT_2, recipe.getMainInput().getMatchingStacks()[0].getCount(), false);
                 inventory.insertItem(OUTPUT_SLOT, recipe.getOutput(inventory.getStackInSlot(INPUT_SLOT_1), inventory.getStackInSlot(INPUT_SLOT_2)).copy(), false);
             return true;
         }

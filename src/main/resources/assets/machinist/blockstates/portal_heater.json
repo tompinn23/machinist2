@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "machinist:block/portal_heater",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "machinist:block/portal_heater"
+    },
+    "facing=south": {
+      "model": "machinist:block/portal_heater",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "machinist:block/portal_heater",
+      "y": 270
+    }
+  }
+}

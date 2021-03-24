@@ -6,8 +6,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
-import one.tlph.machinist.energy.SidedStorage;
-import one.tlph.machinist.energy.TileEntityPowerable;
 import one.tlph.machinist.network.IPacket;
 import one.tlph.machinist.tileentity.AbstractPoweredTileEntity;
 

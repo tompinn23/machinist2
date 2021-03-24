@@ -1,83 +1,113 @@
 package one.tlph.machinist.integration.jei.crusher;
-//
-//import mezz.jei.api.IGuiHelper;
-//import mezz.jei.api.gui.IDrawable;
-//import mezz.jei.api.gui.IDrawableAnimated;
-//import mezz.jei.api.gui.IGuiItemStackGroup;
-//import mezz.jei.api.gui.IRecipeLayout;
-//import mezz.jei.api.ingredients.IIngredients;
-//import mezz.jei.api.recipe.IRecipeCategory;
-//import mezz.jei.api.recipe.IRecipeWrapper;
-//import net.minecraft.client.Minecraft;
-//import net.minecraft.item.ItemStack;
-//import net.minecraft.util.ResourceLocation;
-//import net.minecraft.util.text.TextComponentTranslation;
-//import one.tlph.machinist.Machinist;
-//import one.tlph.machinist.ModBlocks;
-//import one.tlph.machinist.integration.jei.MachinistUIDS;
-//
-//import javax.annotation.Nullable;
-//
-//public class CrusherRecipeCategory<CrusherRecipe extends IRecipeWrapper> implements IRecipeCategory<CrusherRecipe> {
-//
-//    protected static final int inputSlot = 0;
-//    protected static final int outputSlot1 = 1;
-//    protected static final int outputSlot2 = 2;
-//
-//    private static final ResourceLocation GUI = new ResourceLocation(Machinist.MODID, "textures/gui/crusher.png");
-//
-//
-//    private final IDrawable background;
-//    private final IDrawable icon;
-//    private final IDrawableAnimated arrow;
-//    private final String localizedName;
-//
-//    public CrusherRecipeCategory(IGuiHelper guiHelper) {
-//        background = guiHelper.createDrawable(GUI, 37, 34, 97, 18);
-//        arrow = guiHelper.drawableBuilder(GUI, 176, 12, 28, 19).buildAnimated(300, IDrawableAnimated.StartDirection.LEFT, false);
-//        icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.crusher));
-//        localizedName = new TextComponentTranslation("gui.machinist.category.crusher").getFormattedText();
-//    }
-//
-//    @Override
-//    public String getUid() {
-//        return MachinistUIDS.CRUSHER;
-//    }
-//
-//    @Override
-//    public String getTitle() {
-//        return localizedName;
-//    }
-//
-//    @Override
-//    public String getModName() {
-//        return Machinist.MODNAME;
-//    }
-//
-//    @Override
-//    public IDrawable getBackground() {
-//        return background;
-//    }
-//
-//    @Nullable
-//    @Override
-//    public IDrawable getIcon() {
-//        return icon;
-//    }
-//
-//    @Override
-//    public void drawExtras(Minecraft minecraft) {
-//        arrow.draw(minecraft, 23, 0);
-//    }
-//
-//    @Override
-//    public void setRecipe(IRecipeLayout iRecipeLayout, CrusherRecipe crusherRecipe, IIngredients iIngredients) {
-//        IGuiItemStackGroup guiItemStacks = iRecipeLayout.getItemStacks();
-//        guiItemStacks.init(inputSlot, true, 0, 0);
-//        guiItemStacks.init(outputSlot1, false, 57, 0);
-//        guiItemStacks.init(outputSlot2, false, 79, 0);
-//
-//        guiItemStacks.set(iIngredients);
-//    }
-//
-//}
+
+
+
+
+import com.google.common.collect.Lists;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableAnimated;
+import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.ResourceLocation;
+import one.tlph.machinist.Machinist;
+import one.tlph.machinist.blocks.crusher.CrusherTileEntity;
+import one.tlph.machinist.init.registries.ModBlocks;
+import one.tlph.machinist.integration.jei.MachinistUIDS;
+import one.tlph.machinist.recipes.CrusherRecipe;
+
+import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.List;
+
+public class CrusherRecipeCategory implements IRecipeCategory<CrusherRecipe> {
+
+    private static final int INPUT_SLOT = 0;
+    private static final int OUTPUT_SLOT = 1;
+    private static final int OUTPUT_SLOT_2 = 2;
+    public static final ResourceLocation UID = new ResourceLocation(Machinist.MODID, MachinistUIDS.CRUSHER);
+    private static final ResourceLocation GUI = new ResourceLocation(Machinist.MODID, "textures/gui/crusher.png");
+
+    @Nonnull
+    private final IDrawable background;
+    private final IDrawable icon;
+    private final IDrawableAnimated progress;
+
+
+    public CrusherRecipeCategory(IGuiHelper helper) {
+        icon = helper.createDrawableIngredient(new ItemStack(ModBlocks.CRUSHER.get()));
+        background = helper.createDrawable(GUI, 6, 6, 163, 73);
+        this.progress = helper.drawableBuilder(GUI, 176, 12, 28, 19)
+                .buildAnimated(CrusherTileEntity.COOK_TIME_FOR_COMPLETION, IDrawableAnimated.StartDirection.LEFT, false);
+    }
+
+
+    @Override
+    public ResourceLocation getUid() {
+        return UID;
+    }
+
+    @Override
+    public Class<? extends CrusherRecipe> getRecipeClass() {
+        return CrusherRecipe.class;
+    }
+
+    @Override
+    public String getTitle() {
+        return I18n.format("jei.machinist.category.crusher");
+    }
+
+    @Override
+    public IDrawable getBackground() {
+        return background;
+    }
+
+    @Override
+    public IDrawable getIcon() {
+        return icon;
+    }
+
+    @Override
+    public void draw(CrusherRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+        progress.draw(matrixStack, 54, 28);
+    }
+
+    @Override
+    public void setIngredients(CrusherRecipe crusherRecipe, IIngredients ingredients) {
+        List<Ingredient> ingredientList = Lists.newArrayList();
+        ingredientList.add(crusherRecipe.getInput());
+        ingredients.setInputIngredients(ingredientList);
+        ingredientList.clear();
+        List<ItemStack> outputs = Lists.newArrayList();
+        outputs.add(crusherRecipe.getOutput());
+        if(!crusherRecipe.getExtraOutput().isEmpty())
+            outputs.add(crusherRecipe.getExtraOutput());
+        ingredients.setOutputs(VanillaTypes.ITEM, outputs);
+    }
+
+    @Override
+    public void setRecipe(IRecipeLayout iRecipeLayout, CrusherRecipe crusherRecipe, IIngredients iIngredients) {
+        ItemStack[] inputs = crusherRecipe.getInput().getMatchingStacks();
+        IGuiItemStackGroup guiItemStacks = iRecipeLayout.getItemStacks();
+        guiItemStacks.init(INPUT_SLOT, true, 31, 28);
+        guiItemStacks.set(INPUT_SLOT, Arrays.asList(inputs));
+
+        ItemStack output = crusherRecipe.getOutput();
+        ItemStack extraOutput = crusherRecipe.getExtraOutput();
+        guiItemStacks.init(OUTPUT_SLOT, false, 88, 28);
+
+        guiItemStacks.set(OUTPUT_SLOT, output);
+        if(!extraOutput.isEmpty()) {
+            guiItemStacks.init(OUTPUT_SLOT_2, false, 110, 28);
+            guiItemStacks.set(OUTPUT_SLOT_2, extraOutput);
+        }
+        guiItemStacks.set(iIngredients);
+    }
+}

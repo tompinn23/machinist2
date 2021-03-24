@@ -50,7 +50,7 @@ public class CrusherGui extends ScreenBase<CrusherContainer> {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        energyConfig.mouseClicked(mouseX, mouseY, button);
+        //energyConfig.mouseClicked(mouseX, mouseY, button);
         return super.mouseClicked(mouseX, mouseY, button);
     }
 

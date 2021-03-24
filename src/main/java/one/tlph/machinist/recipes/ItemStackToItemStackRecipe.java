@@ -2,6 +2,7 @@ package one.tlph.machinist.recipes;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
@@ -15,10 +16,10 @@ import java.util.function.Predicate;
 @MethodsReturnNonnullByDefault
 public abstract class ItemStackToItemStackRecipe extends MachinistRecipe implements Predicate<ItemStack> {
 
-    private final ItemStackIngredient input;
+    private final Ingredient input;
     private final ItemStack output;
 
-    public ItemStackToItemStackRecipe(ResourceLocation id, ItemStackIngredient input, ItemStack output) {
+    public ItemStackToItemStackRecipe(ResourceLocation id, Ingredient input, ItemStack output) {
         super(id);
         this.input = input;
         this.output = output;
@@ -29,7 +30,7 @@ public abstract class ItemStackToItemStackRecipe extends MachinistRecipe impleme
         return this.input.test(itemStack);
     }
 
-    public ItemStackIngredient getInput() {
+    public Ingredient getInput() {
         return input;
     }
 

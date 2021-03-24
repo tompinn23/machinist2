@@ -1,4 +1,4 @@
-package one.tlph.machinist.init;
+package one.tlph.machinist.init.registries;
 
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraftforge.common.extensions.IForgeContainerType;

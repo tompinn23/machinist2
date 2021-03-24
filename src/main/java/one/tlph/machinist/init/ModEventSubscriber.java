@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import one.tlph.machinist.Machinist;
+import one.tlph.machinist.init.registries.ModBlocks;
 
 @EventBusSubscriber(modid = Machinist.MODID, bus = EventBusSubscriber.Bus.MOD)
 public final class ModEventSubscriber {
@@ -19,6 +20,14 @@ public final class ModEventSubscriber {
         final IForgeRegistry<Item> registry = event.getRegistry();
 
         ModBlocks.BLOCKS.getEntries().stream()
+                .map(RegistryObject::get)
+                .forEach(block -> {
+                    final Item.Properties properties = new Item.Properties().group(ModItemGroup.MOD_ITEM_GROUP);
+                    final BlockItem blockItem = new BlockItem(block, properties);
+                    blockItem.setRegistryName(block.getRegistryName());
+                    registry.register(blockItem);
+                });
+        ModBlocks.BASIC_BLOCKS.getEntries().stream()
                 .map(RegistryObject::get)
                 .forEach(block -> {
                     final Item.Properties properties = new Item.Properties().group(ModItemGroup.MOD_ITEM_GROUP);
