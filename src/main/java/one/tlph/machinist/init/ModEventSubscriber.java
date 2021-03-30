@@ -2,15 +2,21 @@ package one.tlph.machinist.init;
 
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.potion.Effect;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import one.tlph.machinist.Machinist;
+import one.tlph.machinist.init.registries.Dimensions;
 import one.tlph.machinist.init.registries.ModBlocks;
+import one.tlph.machinist.potion.HeatstrokeEffect;
+import one.tlph.machinist.world.UnderNetherHandler;
 
 @EventBusSubscriber(modid = Machinist.MODID, bus = EventBusSubscriber.Bus.MOD)
 public final class ModEventSubscriber {
@@ -47,7 +53,6 @@ public final class ModEventSubscriber {
         );
     }
 */
-
 
     public static <T extends IForgeRegistryEntry<T>> T setup(final T entry, final String name) {
     	return setup(entry, new ResourceLocation(Machinist.MODID, name));

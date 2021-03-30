@@ -32,7 +32,7 @@ public class PortalHeater extends TileEntityRenderer<PortalHeaterTileEntity> {
         if(tileEntityIn.getBlockState().get(BlockPortalHeater.ACTIVE)) {
             long i = tileEntityIn.getWorld().getGameTime();
             Direction direction = tileEntityIn.getBlockState().get(BlockPortalHeater.FACING);
-            renderBeamSegment(matrixStackIn, bufferIn, partialTicks, i, 1, 2, new float[]{1F, 1F, 1F}, direction);
+            renderBeamSegment(matrixStackIn, bufferIn, partialTicks, i, 1, tileEntityIn.laserDistance, new float[]{1F, 1F, 1F}, direction);
         }
     }
 
@@ -40,6 +40,10 @@ public class PortalHeater extends TileEntityRenderer<PortalHeaterTileEntity> {
         renderBeamSegment(matrixStackIn, bufferIn, TEXTURE_BEACON_BEAM, partialTicks, 1.5F, totalWorldTime, yOffset, height, colors, 0.1F, 0.15F, direction);
     }
 
+    @Override
+    public boolean isGlobalRenderer(PortalHeaterTileEntity te) {
+        return true;
+    }
 
     public static void renderBeamSegment(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, ResourceLocation textureLocation, float partialTicks, float textureScale, long totalWorldTime, int yOffset, int height, float[] colors, float beamRadius, float glowRadius, Direction direction) {
         int i = yOffset + height;
@@ -50,7 +54,7 @@ public class PortalHeater extends TileEntityRenderer<PortalHeaterTileEntity> {
                 matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180.0f));
                 break;
             case SOUTH:
-                matrixStackIn.translate(0.5D, 0.55D, -0.4D);
+                matrixStackIn.translate(0.5D, 0.55D,  -0.4D);
                 matrixStackIn.rotate(Vector3f.YP.rotationDegrees(0f));
                 break;
             case EAST:

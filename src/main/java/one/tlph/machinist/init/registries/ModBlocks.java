@@ -7,13 +7,10 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import one.tlph.machinist.Machinist;
-import one.tlph.machinist.blocks.AbstractBlock;
-import one.tlph.machinist.blocks.BasicBlock;
+import one.tlph.machinist.blocks.*;
 import one.tlph.machinist.blocks.BlastFurnace.BlastFurnaceCasing;
 import one.tlph.machinist.blocks.BlastFurnace.BlastFurnaceController;
-import one.tlph.machinist.blocks.CopperOre;
 import one.tlph.machinist.blocks.EnergyNet.EnergyConduit;
-import one.tlph.machinist.blocks.MachineFrame;
 import one.tlph.machinist.blocks.PortalHeater.BlockPortalHeater;
 import one.tlph.machinist.blocks.RemeltedNetherrack.RemeltedNetherrack;
 import one.tlph.machinist.blocks.crusher.Crusher;
@@ -33,6 +30,7 @@ public final class ModBlocks {
     public static final RegistryObject<Block> BLAST_FURNACE_CASING = BLOCKS.register("blast_furnace_casing", BlastFurnaceCasing::new);
     public static final RegistryObject<Block> PORTAL_HEATER = BLOCKS.register("portal_heater", BlockPortalHeater::new);
     public static final RegistryObject<Block> REMELTED_NETHERRACK = BLOCKS.register("remelted_netherrack", RemeltedNetherrack::new);
+    public static final RegistryObject<Block> PORTAL_BLOCK = BLOCKS.register("portal_block", PortalBlock::new);
 
 
     public static final RegistryObject<Block> ENERGY_CONDUIT = BLOCKS.register("conduit", () -> new EnergyConduit(AbstractBlock.Properties.create(Material.PISTON)));

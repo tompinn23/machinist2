@@ -28,6 +28,7 @@ public class ClientSetup {
             ScreenManager.registerFactory(ModContainerTypes.BLAST_FURNACE.get(), BlastFurnaceGui::new);
         });
         RenderTypeLookup.setRenderLayer(ModBlocks.MACHINE_FRAME.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.REMELTED_NETHERRACK.get(), RenderType.getCutout());
     }
 
 }

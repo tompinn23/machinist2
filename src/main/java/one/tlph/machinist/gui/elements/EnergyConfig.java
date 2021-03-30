@@ -208,8 +208,8 @@ public class EnergyConfig extends IGuiElement {
         List<IFormattableTextComponent> hoveringText = new ArrayList<IFormattableTextComponent>();
         for(int i = 0; i < 7; i++) {
             if(energyButtons[i].isMouseIn(mouseX, mouseY)) {
-                hoveringText.add(new StringTextComponent("Facing: ").append(new StringTextComponent(buttonSides[i] > 5 ? "ALL" : Direction.values()[buttonSides[i]].toString()).mergeStyle(TextFormatting.GOLD)));
-                hoveringText.add(new StringTextComponent("Mode: ").append(new StringTextComponent(tileEntity.getSidedConfig().get(buttonSides[i] > 5 ? null : Direction.values()[buttonSides[i]]).toString()).mergeStyle(TextFormatting.GOLD)));
+                hoveringText.add(new StringTextComponent("Facing: ").appendSibling(new StringTextComponent(buttonSides[i] > 5 ? "ALL" : Direction.values()[buttonSides[i]].toString()).mergeStyle(TextFormatting.GOLD)));
+                hoveringText.add(new StringTextComponent("Mode: ").appendSibling(new StringTextComponent(tileEntity.getSidedConfig().get(buttonSides[i] > 5 ? null : Direction.values()[buttonSides[i]]).toString()).mergeStyle(TextFormatting.GOLD)));
                 break;
             }
         }

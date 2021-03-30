@@ -23,6 +23,7 @@ public enum Client {
     public void client(FMLClientSetupEvent event) {
         ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.CABLE_TILE_ENTITY.get(), CableRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.PORTAL_HEATER.get(), PortalHeater::new);
+
     }
 
     /**

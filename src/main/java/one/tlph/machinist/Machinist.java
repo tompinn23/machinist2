@@ -12,6 +12,7 @@ import one.tlph.machinist.api.multiblock.IMultiblockRegistry;
 import one.tlph.machinist.api.multiblock.MultiblockEventHandler;
 import one.tlph.machinist.api.multiblock.MultiblockRegistry;
 import one.tlph.machinist.client.Client;
+import one.tlph.machinist.client.ClientHandler;
 import one.tlph.machinist.energy.net.EnergyNetEventHandler;
 import one.tlph.machinist.energy.net.EnergyNetRegistry;
 import one.tlph.machinist.energy.net.IEnergyNetRegistry;
@@ -20,6 +21,7 @@ import one.tlph.machinist.init.registries.*;
 import one.tlph.machinist.network.Network;
 
 import one.tlph.machinist.world.Features;
+import one.tlph.machinist.world.UnderNetherHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,6 +46,7 @@ public class Machinist {
 
     public static MultiblockEventHandler s_multiblockHandler;
     public static EnergyNetEventHandler energyNetEventHandler;
+    public static UnderNetherHandler underNetherHandler;
 
 
 
@@ -56,7 +59,9 @@ public class Machinist {
         ModItems.ITEMS.register(modEventBus);
         ModContainerTypes.CONTAINER_TYPES.register(modEventBus);
         ModTileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
-        
+        PointOfInterest.POI.register(modEventBus);
+        ModEffects.EFFECTS.register(modEventBus);
+
         loadListeners();
         
         ModRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
@@ -74,6 +79,8 @@ public class Machinist {
             FMLJavaModLoadingContext.get().getModEventBus().addListener(mod::client);
             FMLJavaModLoadingContext.get().getModEventBus().addListener((Consumer<FMLClientSetupEvent>) evt -> evt.enqueueWork(() -> mod.syncClient(evt)));
         }
+        MinecraftForge.EVENT_BUS.register(new ClientHandler());
+        MinecraftForge.EVENT_BUS.register(underNetherHandler = new UnderNetherHandler());
     }
 
     public Client getClient() {

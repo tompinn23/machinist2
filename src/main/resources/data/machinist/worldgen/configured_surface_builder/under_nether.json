@@ -7,7 +7,7 @@
       "Name": "machinist:under_netherrack"
     },
     "underwater_material": {
-      "Name": "machinist:remelted_netherrack"
+      "Name": "machinist:under_netherrack"
     }
   },
   "type": "minecraft:nether"

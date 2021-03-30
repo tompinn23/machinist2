@@ -31,7 +31,7 @@ public class Features {
                 new ConfiguredOreFeature<>(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD, ModBlocks.COPPER_ORE.get().getDefaultState(), 9), getFlag(GEN_COPPER))
                 .withPlacement(Placement.RANGE.configure(topRange(40, 80)))
                 .square()
-                .func_242731_b(6));
+                .count(6));
 
 
     }

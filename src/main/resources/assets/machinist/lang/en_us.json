@@ -15,9 +15,11 @@
   "block.machinist.crusher": "Crusher",
   "block.machinist.copper_ore": "Copper Ore",
   "block.machinist.under_netherrack": "Crispy Netherrack",
+  "block.machinist.remelted_netherrack": "Remelted Netherrack",
 
-  "itemGroup.machinist": "Machiniste",
+  "itemGroup.machinist": "Machinist",
 
+  "effect.machinist.heatstroke": "Heatstroke",
 
   "message.machinist.multiblock.validation.too_few_parts": "Not enough parts have been connected.",
   "message.machinist.multiblock.validation.machine_too_large": "The machine must be %1$d blocks in the %2$s direction.",
